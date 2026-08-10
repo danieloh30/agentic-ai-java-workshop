@@ -1,0 +1,20 @@
+target/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/
+.DS_Store
+.env
+*.orig
+*.rej
+.flattened-pom.xml
+
+# MkDocs build output
+site/
+# AI-generated artifacts (except lab/AGENTS.md which is intentional for Exercise 5)
+solutions/**/.mcp.json
+solutions/**/AGENTS.md
+solutions/**/CLAUDE.md
+!solutions/05-ai-governance/AGENTS.md

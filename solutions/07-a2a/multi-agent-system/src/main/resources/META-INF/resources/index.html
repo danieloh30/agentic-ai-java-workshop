@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Systems - Incident Command Center</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="brand-logo">A</div>
+        <span class="brand-text">APEX SYSTEMS</span>
+        <div class="top-bar-title">Incident Command Center</div>
+        <div class="top-bar-actions">
+            <button id="theme-toggle" class="btn-icon" title="Toggle theme">&#9788; Light</button>
+            <div class="user-avatar" title="Workshop User">
+                <div class="avatar-circle">WU</div>
+                <span class="avatar-name">Workshop User</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+            <div id="stats-row" class="stats-row"></div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Active Incidents <span id="incident-count" class="card-count"></span></h2>
+                    <div class="filter-container">
+                        <input type="text" id="incident-filter" placeholder="Search incidents..." class="filter-input">
+                        <select id="filter-field" class="filter-select">
+                            <option value="all">All Fields</option>
+                            <option value="id">Incident #</option>
+                            <option value="system">System</option>
+                            <option value="service">Service</option>
+                            <option value="priority">Priority</option>
+                            <option value="description">Description</option>
+                            <option value="status">Status</option>
+                        </select>
+                        <button id="clear-filter" class="btn-secondary">Clear</button>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="id">Incident # <span class="sort-icon"></span></th>
+                                <th class="sortable" data-sort="system">System <span class="sort-icon"></span></th>
+                                <th class="sortable" data-sort="service">Service <span class="sort-icon"></span></th>
+                                <th class="sortable" data-sort="priority">Priority <span class="sort-icon"></span></th>
+                                <th>Description</th>
+                                <th class="sortable" data-sort="status">Status <span class="sort-icon"></span></th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incident-status-table-body">
+                            <tr>
+                                <td colspan="7" class="empty-state">Loading incidents...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </main>
+
+    <!-- Detail Slide-Out Panel -->
+    <div class="detail-overlay" id="detail-overlay"></div>
+    <aside class="detail-panel" id="detail-panel">
+        <div class="detail-header">
+            <h3 id="detail-title">Incident Details</h3>
+            <button class="detail-close" id="detail-close">&times;</button>
+        </div>
+        <div class="detail-body" id="detail-body"></div>
+    </aside>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Floating Approval Notification Button -->
+    <button id="approval-notification-btn" class="approval-float-btn" style="display: none;" onclick="openApprovalModal()">
+        <span class="approval-count-badge">0</span>
+        <span class="approval-text">Approval Needed</span>
+    </button>
+
+    <!-- Approval Modal Overlay -->
+    <div id="approval-modal" class="approval-modal" style="display: none;">
+        <div class="approval-modal-content">
+            <div class="approval-modal-header">
+                <h2>Human Approval Required</h2>
+                <button class="approval-modal-close" onclick="closeApprovalModal()">&times;</button>
+            </div>
+            <div class="approval-modal-body" id="approval-modal-body"></div>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

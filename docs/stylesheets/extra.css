@@ -1,0 +1,102 @@
+/* Exercise-type badges */
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.75em;
+  border-radius: 1em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.badge--code-along {
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+}
+
+.badge--run-read {
+  background: var(--md-accent-fg-color);
+  color: #fff;
+}
+
+.badge--opencode {
+  background: #6d4aff;
+  color: #fff;
+}
+
+/* "Done when" callout */
+.done-when {
+  border-left: 4px solid var(--md-accent-fg-color);
+  background: var(--md-accent-fg-color--transparent);
+  padding: 0.5rem 1rem;
+  border-radius: 0 0.25rem 0.25rem 0;
+  margin: 1.5rem 0;
+}
+
+.done-when p:last-child {
+  margin-bottom: 0;
+}
+
+.done-when h2:first-child {
+  margin-top: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.done-when .task-list-control + .task-list-indicator + span,
+.done-when li {
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.done-when ul.task-list {
+  margin-bottom: 0.25rem;
+}
+
+.done-when ul.task-list li {
+  margin-bottom: 0.1em;
+}
+
+/* Full-width, compact tables */
+.md-typeset__table {
+  width: 100%;
+}
+
+.md-typeset table:not([class]) {
+  display: table;
+  width: 100%;
+}
+
+.md-typeset table td,
+.md-typeset table th {
+  padding: 0.5em 0.75em;
+}
+
+/* Mermaid diagrams */
+.md-typeset .mermaid {
+  text-align: center;
+  margin: 1.5rem auto;
+  font-size: 1rem;
+}
+
+.md-typeset pre:has(.mermaid) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.mermaid .node rect,
+.mermaid .node polygon,
+.mermaid .node circle {
+  rx: 12px;
+  ry: 12px;
+}
+
+.mermaid .edgeLabel {
+  font-size: 0.85rem;
+}
+
+.mermaid .label {
+  font-size: 0.95rem;
+}

@@ -1,0 +1,308 @@
+version: 2
+
+updates:
+  # ── lab project (the main working copy attendees edit) ─────────────────────
+  - package-ecosystem: maven
+    directory: /lab
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 01 ────────────────────────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/01-first-agent
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 02 ────────────────────────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/02-maintenance-agent
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 03 ────────────────────────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/03-parallel-workflow
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 04 ────────────────────────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/04-supervisor
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 05 — MCP client ───────────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/05-ai-governance
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 05 — weather MCP server ──────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/05-ai-governance/weather-mcp-server
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 06 ────────────────────────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/06-hitl-observability
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 06 — observability reference ─────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/06-hitl-observability/observability-reference
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 07 — multi-agent system ──────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/07-a2a/multi-agent-system
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 07 — remote A2A agent ────────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/07-a2a/remote-a2a-agent
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+
+  # ── exercise 08 — lab (Quarkus Flow) ──────────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/08-quarkus-flow/lab
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+      quarkus-flow:
+        patterns:
+          - "io.quarkiverse.flow*"
+
+  # ── exercise 08 — solution (Quarkus Flow) ────────────────────────────────
+  - package-ecosystem: maven
+    directory: /solutions/08-quarkus-flow
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      quarkus-platform:
+        patterns:
+          - "io.quarkus*"
+          - "io.quarkus.platform*"
+      quarkus-langchain4j:
+        patterns:
+          - "io.quarkiverse.langchain4j*"
+      quarkus-flow:
+        patterns:
+          - "io.quarkiverse.flow*"
+
+  # ── GitHub Actions workflows ───────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "chore(deps)"

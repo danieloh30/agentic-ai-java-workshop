@@ -1,0 +1,96 @@
+site_name: "Enterprise Agentic AI: Architecting Autonomous Java Systems for Production"
+site_description: Enterprise Agentic AI — Architecting Autonomous Java Systems for Production
+site_author: Daniel Oh
+site_url: https://danieloh30.github.io/agentic-ai-java-workshop/
+
+repo_name: danieloh30/agentic-ai-java-workshop
+repo_url: https://github.com/danieloh30/agentic-ai-java-workshop
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+exclude_docs: |
+  README.md
+
+theme:
+  name: material
+  logo: images/logo.png
+  favicon: images/logo.png
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.tabs
+    - navigation.footer
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+
+nav:
+  - Home: index.md
+  - Lab Overview: 00-intro/SPEAKER_NOTES.md
+  - Exercises:
+      - "1. Agent + tool": 01-first-agent/START_HERE.md
+      - "2. Policy as prompt": 02-maintenance-agent/START_HERE.md
+      - "3. Parallel agents": 03-parallel-workflow/START_HERE.md
+      - "4. Supervisor orchestration": 04-supervisor/START_HERE.md
+      - "5. AI governance": 05-ai-governance/START_HERE.md
+      - "6. Human gate + tracing": 06-hitl-observability/START_HERE.md
+      - "7. Remote agents (A2A)": 07-a2a/START_HERE.md
+      - "8. Quality loop (bonus)": 08-quarkus-flow/START_HERE.md
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/danieloh30/agentic-ai-java-workshop
