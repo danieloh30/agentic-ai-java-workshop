@@ -1,6 +1,10 @@
+<img src="images/cover_page.png" alt="Workshop cover" style="width:100%;max-width:960px;display:block;margin:0 auto 1.5rem auto;">
+
 # Enterprise Agentic AI: Architecting Autonomous Java Systems for Production
 
 **Hands-On Workshop · 90 min**
+
+Build intelligent, secure, and observable multi-agent applications on **Quarkus** — from a single agent to a full supervisor orchestration with human-in-the-loop, OpenTelemetry tracing, and A2A remote agents.
 
 ## Prerequisites
 
