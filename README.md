@@ -1,3 +1,5 @@
+![Workshop cover](docs/images/cover_page.png)
+
 [![Deploy docs to GitHub Pages](https://github.com/danieloh30/agentic-ai-java-workshop/workflows/Deploy%20docs%20to%20GitHub%20Pages/badge.svg)](https://github.com/danieloh30/agentic-ai-java-workshop/actions/workflows/docs.yml)
 
 # Enterprise Agentic AI: Architecting Autonomous Java Systems for Production
@@ -6,7 +8,7 @@
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)  
 **Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/
 
-Build a multi-agent incident management system with **Quarkus**, **Quarkus LangChain4j**, and **OpenCode CLI** — covering workflow patterns, supervisor orchestration, human-in-the-loop, observability, and A2A.
+Build intelligent, secure, and observable multi-agent applications on **Quarkus** with **Quarkus LangChain4j** and **OpenCode CLI** — from a single agent to a full supervisor orchestration with human-in-the-loop, OpenTelemetry tracing, and A2A remote agents.
 
 ## Repository layout
 
