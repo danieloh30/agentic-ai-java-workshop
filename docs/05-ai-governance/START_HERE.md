@@ -55,8 +55,9 @@ Before using OpenCode, configure it to connect to the workshop's LLM endpoint. C
   "provider": {
     "workshop": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Workshop LLM",
+      "name": "LiteMaaS AI Gateway",
       "options": {
+        "apiKey": "sk-xxxxxxxxxxxxxxx",
         "baseURL": "https://litemaas.rhoai.rh-aiservices-bu.com/v1"
       },
       "models": {
@@ -70,13 +71,7 @@ Before using OpenCode, configure it to connect to the workshop's LLM endpoint. C
 ```
 
 !!! note "Your instructor will provide"
-    - The **API key** — set it as an environment variable before launching OpenCode:
-
-    ```bash
-    export OPENAI_API_KEY=sk-your-lab-key-here
-    ```
-
-    OpenCode uses `OPENAI_API_KEY` by default. If your instructor provides a different key name, use the `/connect` command inside OpenCode to configure it.
+    The **API key** — replace `sk-xxxxxxxxxxxxxxx` in the `apiKey` field above with the key provided by your instructor.
 
 ---
 
