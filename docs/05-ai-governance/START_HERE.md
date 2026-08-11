@@ -57,7 +57,7 @@ Before using OpenCode, configure it to connect to the workshop's LLM endpoint. C
       "npm": "@ai-sdk/openai-compatible",
       "name": "Workshop LLM",
       "options": {
-        "baseURL": "https://your-workshop-endpoint.com/v1"
+        "baseURL": "https://litemaas.rhoai.rh-aiservices-bu.com/v1"
       },
       "models": {
         "Qwen3.6-35B-A3B": {
@@ -70,7 +70,6 @@ Before using OpenCode, configure it to connect to the workshop's LLM endpoint. C
 ```
 
 !!! note "Your instructor will provide"
-    - The **base URL** for the model endpoint — replace `https://your-workshop-endpoint.com/v1` above
     - The **API key** — set it as an environment variable before launching OpenCode:
 
     ```bash
