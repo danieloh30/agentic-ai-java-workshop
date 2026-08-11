@@ -45,9 +45,45 @@ redundant codebase scans.
 
 ---
 
+## Step 0 — Configure OpenCode CLI (1 min)
+
+Before using OpenCode, configure it to connect to the workshop's LLM endpoint. Create an `opencode.json` file in the `lab/` directory:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "workshop": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Workshop LLM",
+      "options": {
+        "baseURL": "https://your-workshop-endpoint.com/v1"
+      },
+      "models": {
+        "Qwen3.6-35B-A3B": {
+          "name": "Qwen 3.6 35B"
+        }
+      }
+    }
+  }
+}
+```
+
+!!! note "Your instructor will provide"
+    - The **base URL** for the model endpoint — replace `https://your-workshop-endpoint.com/v1` above
+    - The **API key** — set it as an environment variable before launching OpenCode:
+
+    ```bash
+    export OPENAI_API_KEY=sk-your-lab-key-here
+    ```
+
+    OpenCode uses `OPENAI_API_KEY` by default. If your instructor provides a different key name, use the `/connect` command inside OpenCode to configure it.
+
+---
+
 ## Step 1 — Open OpenCode CLI (2 min)
 
-1. Open your terminal, navigate to `lab/`, and run `opencode`. OpenCode reads `AGENTS.md` automatically when it starts.
+1. Open your terminal, navigate to `lab/`, and run `opencode`. OpenCode reads `AGENTS.md` automatically when it starts. Select the **workshop/Qwen3.6-35B-A3B** model from the model picker.
 
 2. Open [`lab/AGENTS.md`](https://github.com/danieloh30/agentic-ai-java-workshop/blob/main/lab/AGENTS.md){:target="_blank"} and skim it — this is the governance file OpenCode reads on every request. Note the agents table, domain types, and the 10 project rules. This is what grounds OpenCode's answers instead of hallucination.
 
