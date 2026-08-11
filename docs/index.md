@@ -4,6 +4,9 @@
 
 **Hands-On Workshop · 90 min**
 
+!!! tip "Quick access"
+    Short URL for this guide: **[bit.ly/agents-labs](https://bit.ly/agents-labs){:target="_blank"}** — share it or bookmark it.
+
 Build intelligent, secure, and observable multi-agent applications on **Quarkus** — from a single agent to a full supervisor orchestration with human-in-the-loop, OpenTelemetry tracing, and A2A remote agents.
 
 ## Prerequisites
