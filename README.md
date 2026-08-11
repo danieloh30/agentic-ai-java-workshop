@@ -6,7 +6,7 @@
 
 **Hands-On Workshop**  
 **Duration:** 90 minutes (10 min intro · 80 min hands-on)  
-**Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/
+**Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/ (short URL: [bit.ly/agents-labs](https://bit.ly/agents-labs))
 
 Build intelligent, secure, and observable multi-agent applications on **Quarkus** with **Quarkus LangChain4j** and **OpenCode CLI** — from a single agent to a full supervisor orchestration with human-in-the-loop, OpenTelemetry tracing, and A2A remote agents.
 
