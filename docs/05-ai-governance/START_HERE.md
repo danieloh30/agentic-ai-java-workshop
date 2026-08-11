@@ -75,7 +75,7 @@ Before using OpenCode, configure it to connect to the workshop's LLM endpoint. C
 
 ---
 
-## Step 1 — Open OpenCode CLI (2 min)
+## Step 1 — Open OpenCode CLI (1 min)
 
 1. Open your terminal, navigate to `lab/`, and run `opencode`. OpenCode reads `AGENTS.md` automatically when it starts. Select the **workshop/Qwen3.6-35B-A3B** model from the model picker.
 
