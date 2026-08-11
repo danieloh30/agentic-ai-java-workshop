@@ -254,7 +254,7 @@ Try several incidents to see how the loop adapts — P1 incidents with more comp
 
 | | Declarative annotations | Programmatic builders |
 |--|---|---|
-| **Loops** | Not possible | `loopBuilder().exitCondition(...)` |
+| **Loops** | `@LoopAgent` (with [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/langchain4j.html){:target="_blank"} extension) | `loopBuilder().exitCondition(...)` |
 | **Conditionals** | `@ConditionalAgent` (single gate) | `conditionalBuilder()` (multi-branch) |
 | **Data flow** | Automatic via `AgenticScope` keys | Explicit `scope.readState/writeState` |
 | **Orchestration** | `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` | `sequenceBuilder()`, `parallelBuilder()`, `loopBuilder()` |
