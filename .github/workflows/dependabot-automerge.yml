@@ -24,14 +24,7 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge for Quarkus / extension / Actions updates
-        # Automerge Quarkus platform, Quarkiverse, LangChain4j, MCP, A2A bumps, and GitHub Actions
-        if: |
-          contains(steps.metadata.outputs.dependency-names, 'quarkus') ||
-          contains(steps.metadata.outputs.dependency-names, 'langchain4j') ||
-          contains(steps.metadata.outputs.dependency-names, 'mcp') ||
-          contains(steps.metadata.outputs.dependency-names, 'a2a') ||
-          steps.metadata.outputs.package-ecosystem == 'github_actions'
+      - name: Auto-merge Dependabot PR
         run: gh pr merge --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
