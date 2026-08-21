@@ -8,9 +8,6 @@ import com.incidentmanagement.agentic.agents.TriageAgent;
 import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.model.IncidentStatus;
 
-/**
- * Service for managing IT incident processing.
- */
 @ApplicationScoped
 public class IncidentManagementService {
 
@@ -18,13 +15,6 @@ public class IncidentManagementService {
     @Inject
     TriageAgent triageAgent;
 
-    /**
-     * Process an incident report.
-     *
-     * @param incidentNumber The incident number
-     * @param report Optional incident report
-     * @return Result of the processing
-     */
     @Transactional
     public String processIncident(Integer incidentNumber, String report) {
         IncidentInfo incidentInfo = IncidentInfo.findById(incidentNumber);
@@ -32,7 +22,6 @@ public class IncidentManagementService {
             return "Incident not found with number: " + incidentNumber;
         }
 
-        // Process the incident through the triage agent
         String result = triageAgent.processTriage(incidentInfo, incidentNumber, report);
 
         if (result.toUpperCase().contains("TRIAGE_NOT_REQUIRED")) {

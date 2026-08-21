@@ -2,9 +2,8 @@ package com.incidentmanagement.resource;
 
 import com.incidentmanagement.model.IncidentInfo;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/incidents")
@@ -17,13 +16,11 @@ public class IncidentResource {
 
     @GET
     @Path("/{id}")
-    public Response getIncidentById(@PathParam("id") Integer id) {
+    public IncidentInfo getIncidentById(Integer id) {
         IncidentInfo incident = IncidentInfo.findById(id);
         if (incident == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Incident with ID " + id + " not found")
-                    .build();
+            throw new NotFoundException("Incident with ID " + id + " not found");
         }
-        return Response.ok(incident).build();
+        return incident;
     }
 }
