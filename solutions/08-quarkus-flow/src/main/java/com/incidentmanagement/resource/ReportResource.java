@@ -14,7 +14,6 @@ import com.incidentmanagement.agentic.workflow.IncidentReportFlow;
 import com.incidentmanagement.model.IncidentInfo;
 
 import io.quarkus.logging.Log;
-import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
@@ -27,7 +26,7 @@ public class ReportResource {
 
     @POST
     @Path("/{incidentId}")
-    public Map<String, Object> generateReport(@RestPath Integer incidentId) {
+    public Map<String, Object> generateReport(Integer incidentId) {
         IncidentInfo incident = IncidentInfo.findById(incidentId);
         if (incident == null) {
             throw new NotFoundException("Incident not found: " + incidentId);

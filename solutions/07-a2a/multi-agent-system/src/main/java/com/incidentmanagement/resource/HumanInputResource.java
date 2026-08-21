@@ -5,7 +5,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import io.quarkus.logging.Log;
-import org.jboss.resteasy.reactive.RestPath;
 
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class HumanInputResource {
 
     @POST
     @Path("/{requestId}")
-    public Map<String, String> provideInput(@RestPath String requestId, Map<String, String> request) {
+    public Map<String, String> provideInput(String requestId, Map<String, String> request) {
         String decision = request.get("decision");
         if (decision == null || decision.isBlank()) {
             throw new BadRequestException("Decision is required");

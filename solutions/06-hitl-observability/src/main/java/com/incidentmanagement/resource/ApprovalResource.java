@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import io.quarkus.logging.Log;
 
-import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
@@ -48,7 +47,7 @@ public class ApprovalResource {
 
     @GET
     @Path("/{proposalId}")
-    public ApprovalProposal getProposal(@RestPath Integer proposalId) {
+    public ApprovalProposal getProposal(Integer proposalId) {
         ApprovalProposal proposal = approvalService.getProposal(proposalId);
         if (proposal == null) {
             throw new NotFoundException("Proposal not found");
@@ -58,7 +57,7 @@ public class ApprovalResource {
 
     @POST
     @Path("/{proposalId}/approve")
-    public ApprovalProposal approveProposal(@RestPath Integer proposalId, Map<String, String> request) {
+    public ApprovalProposal approveProposal(Integer proposalId, Map<String, String> request) {
         String reason = request.getOrDefault("reason", "Approved by human reviewer");
         String approvedBy = request.getOrDefault("approvedBy", "Workshop User");
 
@@ -69,7 +68,7 @@ public class ApprovalResource {
 
     @POST
     @Path("/{proposalId}/reject")
-    public ApprovalProposal rejectProposal(@RestPath Integer proposalId, Map<String, String> request) {
+    public ApprovalProposal rejectProposal(Integer proposalId, Map<String, String> request) {
         String reason = request.getOrDefault("reason", "Rejected by human reviewer");
         String approvedBy = request.getOrDefault("approvedBy", "Workshop User");
 
@@ -80,7 +79,7 @@ public class ApprovalResource {
 
     @POST
     @Path("/{proposalId}/decide")
-    public ApprovalProposal decideProposal(@RestPath Integer proposalId, Map<String, String> request) {
+    public ApprovalProposal decideProposal(Integer proposalId, Map<String, String> request) {
         String decision = request.get("decision");
         String reason = request.getOrDefault("reason", "Decision by human reviewer");
         String approvedBy = request.getOrDefault("approvedBy", "Workshop User");
