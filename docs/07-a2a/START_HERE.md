@@ -157,6 +157,89 @@ The key observation: `impact-agent` appears in the execution tree on port 8080, 
 
 ---
 
+## Multimodal log analysis — wire the vision agent (5 min)
+
+<span class="badge badge--code-along">Code</span>
+
+During a real incident, an SRE rarely has a clean written report — they have a **screenshot**: a log console, a Grafana panel, a stack trace. In this task you'll let the system *read that image* by wiring in a multimodal agent, then feed it a picture instead of prose.
+
+The incident detail panel already has a **Choose File** button (`accept="image/*"`), and `IncidentLogAnalysisAgent` already exists — but it isn't wired into the workflow yet, so the upload currently has **no effect**. You'll connect it.
+
+### How it works
+
+`IncidentLogAnalysisAgent` is a vision agent: it takes the current `report` plus an `ImageContent`, sends both to the multimodal model (`gpt-4o`), and rewrites the report with what it sees — merged into a single description.
+
+```java title="IncidentLogAnalysisAgent.java (already in the project)"
+@SystemMessage("""
+    You are a log analysis specialist... If a screenshot of logs, dashboards, or error
+    messages is provided, analyze it and rewrite the incident report taking account of
+    your visual observations (error patterns, stack traces, resource utilization,
+    anomalous metrics, alert states, etc.)...
+    """)
+@UserMessage("Report: {report}")
+@Agent(description = "Enriches incident reports with visual observations from log screenshots.",
+        outputKey = "report", optional = true)   // (1)
+String analyzeIncidentLogs(String report, @UserMessage @V("logImage") ImageContent logImage);
+```
+
+1. `outputKey = "report"` means this agent **overwrites** the `report` variable. So it must run **before** the parallel analysis reads it — i.e. it has to be the first step in the sequence.
+
+### Your task
+
+Open `solutions/07-a2a/multi-agent-system/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java` and add `IncidentLogAnalysisAgent.class` as the **first** sub-agent (there's a `TODO` marking the spot):
+
+=== "Before"
+
+    ```java
+    @SequenceAgent(outputKey = "incidentProcessingAgentResult",
+            subAgents = {
+                          IncidentAnalysisWorkflow.class,
+                          IncidentSupervisorAgent.class,
+                          EscalationProposalAgent.class,
+                          HumanApprovalAgent.class,
+                          ResolutionAgent.class })
+    ```
+
+=== "After"
+
+    ```java
+    @SequenceAgent(outputKey = "incidentProcessingAgentResult",
+            subAgents = {
+                          IncidentLogAnalysisAgent.class,   // (1) runs first, enriches "report"
+                          IncidentAnalysisWorkflow.class,
+                          IncidentSupervisorAgent.class,
+                          EscalationProposalAgent.class,
+                          HumanApprovalAgent.class,
+                          ResolutionAgent.class })
+    ```
+
+    1. Add the import too: `import com.incidentmanagement.agentic.agents.IncidentLogAnalysisAgent;`
+
+!!! info "Why first?"
+    The sequence passes variables by name through the agentic scope. `logImage` enters at `processIncident(...)`; the vision agent consumes it and rewrites `report`; every downstream agent (parallel analysis, supervisor, resolution) then works from the *enriched* report. Put it anywhere later and the analysis would already have run on the raw text.
+
+Save — Quarkus dev mode hot-reloads. (If you edited while stopped, restart Terminal 2 with `./mvnw quarkus:dev`.)
+
+### Try it with a log screenshot
+
+A ready-made sample screenshot ships with the project — a mock observability console for the checkout-api 503 incident (real, readable text so the model can actually parse it):
+
+<img src="../../images/checkout-api-503-incident.png" alt="Mock observability log console showing checkout-api 503 errors, HikariCP pool exhaustion, and payment-processor timeouts" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+
+1. Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** and click **View** on Incident **#1** (payment-gateway / checkout-api).
+2. Click **Choose File** and select `solutions/07-a2a/multi-agent-system/sample-data/checkout-api-503-incident.png`.
+3. Leave the report box **empty** (or add a short note) and process the incident.
+
+**How to confirm:** In the [Execution History](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}, the tree now starts with `analyzeIncidentLogs`, and its output `report` contains details that only appear in the image — HikariCP connection-pool exhaustion (50/50, 128 waiting), upstream `payment-processor` timeouts, and the circuit breaker in `OPEN` state. Those observations then flow into severity/impact analysis and the escalation decision.
+
+!!! tip "Compare with and without the image"
+    Process once with no file and once with the screenshot. Same incident, but the enriched run gives the downstream agents far more to reason about — that's the multimodal payoff.
+
+!!! warning "Vision needs a multimodal model"
+    This works because `application.properties` uses `gpt-4o`. A text-only model would reject the `ImageContent`. `IncidentLogAnalysisAgent` is `optional = true`, so if no image is uploaded it returns the report unchanged and the workflow proceeds normally.
+
+---
+
 ## MCP vs A2A — when to use each (1 min)
 
 You haven't built an MCP integration in this lab, but the distinction matters for architecture decisions:
@@ -197,6 +280,7 @@ Stop both Quarkus processes (`Ctrl+C` in each terminal) before moving to Exercis
 
 - [ ] A2A: impact assessment ran in `:8888` (confirmed in remote process logs)
 - [ ] AgentCard verified via `curl`
+- [ ] Multimodal: `IncidentLogAnalysisAgent` wired in, and an uploaded log screenshot enriched the report
 - [ ] You can contrast MCP vs A2A in one sentence each
 - [ ] You can explain when to keep an agent local vs make it remote
 

@@ -18,7 +18,13 @@ import java.util.List;
 public interface IncidentProcessingWorkflow extends MonitoredAgent {
 
     @SequenceAgent(outputKey = "incidentProcessingAgentResult",
-            subAgents = { IncidentAnalysisWorkflow.class,
+            subAgents = {
+                          // TODO (Exercise 7 — multimodal task): add IncidentLogAnalysisAgent.class
+                          //   here as the FIRST sub-agent. It reads the uploaded log screenshot and
+                          //   rewrites "report" (outputKey = "report") before the parallel analysis
+                          //   consumes it. Without this line the "Choose File" upload has no effect.
+                          //   See docs/07-a2a/START_HERE.md → "Multimodal log analysis".
+                          IncidentAnalysisWorkflow.class,
                           IncidentSupervisorAgent.class,
                           EscalationProposalAgent.class,
                           HumanApprovalAgent.class,

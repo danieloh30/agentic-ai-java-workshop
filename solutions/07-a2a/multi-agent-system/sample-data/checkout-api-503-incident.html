@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --muted:#8b949e;
+    --text:#e6edf3; --red:#ff7b72; --amber:#e3b341; --green:#3fb950;
+    --blue:#58a6ff; --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--mono);
+       width:1280px;padding:22px 26px 28px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;
+          padding-bottom:14px;border-bottom:1px solid var(--border)}
+  .brand{font-weight:700;font-size:16px;letter-spacing:.3px}
+  .brand .dot{color:var(--green)}
+  .ctx{color:var(--muted);font-size:12.5px}
+  .ctx b{color:var(--text)}
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+  .tile{background:var(--panel);border:1px solid var(--border);border-radius:8px;
+        padding:12px 14px}
+  .tile .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+  .tile .v{font-size:24px;font-weight:700;margin-top:6px}
+  .tile .d{font-size:11.5px;margin-top:4px}
+  .up{color:var(--red)} .warn{color:var(--amber)} .ok{color:var(--green)}
+  .logwrap{background:var(--panel);border:1px solid var(--border);border-radius:8px;
+           overflow:hidden}
+  .loghead{display:flex;justify-content:space-between;background:#12161d;
+           padding:8px 14px;border-bottom:1px solid var(--border);
+           color:var(--muted);font-size:12px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.5}
+  td{padding:3px 10px;vertical-align:top;white-space:pre-wrap}
+  td.ts{color:var(--muted);white-space:nowrap;width:96px}
+  td.lvl{white-space:nowrap;width:64px;font-weight:700}
+  td.svc{color:var(--blue);white-space:nowrap;width:150px}
+  tr:nth-child(even){background:rgba(255,255,255,.02)}
+  .ERROR{color:var(--red)} .WARN{color:var(--amber)} .INFO{color:var(--green)}
+  .msg .hl{color:var(--amber)}
+  .msg .err{color:var(--red)}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">◆ ObserviLog <span class="dot">●</span> <span style="color:var(--muted);font-weight:400">Log Explorer</span></div>
+    <div class="ctx">service:<b>checkout-api</b> &nbsp; env:<b>prod</b> &nbsp; namespace:<b>payment-gateway</b> &nbsp; window:<b>last 15m</b> &nbsp; 14:32:07 UTC</div>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="k">HTTP 5xx rate</div><div class="v up">37.4%</div><div class="d up">▲ from 0.2% baseline</div></div>
+    <div class="tile"><div class="k">p99 latency</div><div class="v warn">8,940 ms</div><div class="d warn">▲ SLA 500ms breached</div></div>
+    <div class="tile"><div class="k">DB pool (HikariCP)</div><div class="v up">50 / 50</div><div class="d up">0 idle · 128 waiting</div></div>
+    <div class="tile"><div class="k">Throughput</div><div class="v">1,204 rpm</div><div class="d ok">peak-hour traffic</div></div>
+  </div>
+
+  <div class="logwrap">
+    <div class="loghead"><span>timestamp · level · logger · message</span><span>489 hits · ERROR 182 · WARN 96</span></div>
+    <table>
+      <tr><td class="ts">14:31:58.204</td><td class="lvl WARN">WARN</td><td class="svc">HikariPool-1</td><td class="msg">Connection pool <span class="hl">exhausted</span>: active=50, idle=0, waiting=128, timeout=30000ms</td></tr>
+      <tr><td class="ts">14:31:58.611</td><td class="lvl ERROR">ERROR</td><td class="svc">CheckoutResource</td><td class="msg"><span class="err">503 Service Unavailable</span> — could not obtain JDBC connection within 30000ms</td></tr>
+      <tr><td class="ts">14:31:59.033</td><td class="lvl ERROR">ERROR</td><td class="svc">PaymentClient</td><td class="msg"><span class="err">upstream timeout</span> calling payment-processor: read timed out after 5000ms (POST /v2/charge)</td></tr>
+      <tr><td class="ts">14:31:59.418</td><td class="lvl ERROR">ERROR</td><td class="svc">CheckoutResource</td><td class="msg">Unhandled: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30001ms</td></tr>
+      <tr><td class="ts">14:32:00.102</td><td class="lvl WARN">WARN</td><td class="svc">CircuitBreaker</td><td class="msg">Circuit <span class="hl">OPEN</span> for payment-processor (failureRatio=0.78 over 20 calls)</td></tr>
+      <tr><td class="ts">14:32:00.774</td><td class="lvl ERROR">ERROR</td><td class="svc">CheckoutResource</td><td class="msg"><span class="err">503 Service Unavailable</span> — downstream dependency payment-processor unavailable</td></tr>
+      <tr><td class="ts">14:32:01.336</td><td class="lvl WARN">WARN</td><td class="svc">worker-pool</td><td class="msg">Executor queue depth 512/512, rejecting new tasks (RejectedExecutionException)</td></tr>
+      <tr><td class="ts">14:32:02.019</td><td class="lvl ERROR">ERROR</td><td class="svc">OrderService</td><td class="msg"><span class="err">Transaction rolled back</span>: unable to persist order #A-88213 — connection pool timeout</td></tr>
+      <tr><td class="ts">14:32:02.885</td><td class="lvl INFO">INFO</td><td class="svc">HealthCheck</td><td class="msg">readiness probe FAILED: db=DOWN, dependencies=[payment-processor:DOWN]</td></tr>
+      <tr><td class="ts">14:32:03.540</td><td class="lvl ERROR">ERROR</td><td class="svc">CheckoutResource</td><td class="msg"><span class="err">503 Service Unavailable</span> (retry 3/3 exhausted) — cart 7f3a checkout aborted</td></tr>
+      <tr><td class="ts">14:32:04.271</td><td class="lvl WARN">WARN</td><td class="svc">HikariPool-1</td><td class="msg">Thread starvation or clock leap detected (housekeeper delta=41s)</td></tr>
+      <tr><td class="ts">14:32:05.660</td><td class="lvl ERROR">ERROR</td><td class="svc">CheckoutResource</td><td class="msg"><span class="err">503 Service Unavailable</span> — 182 requests failed in last 60s (peak-hour load)</td></tr>
+    </table>
+  </div>
+</body>
+</html>
