@@ -18,7 +18,11 @@
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
         <quarkus-langchain4j.version>1.13.0</quarkus-langchain4j.version>
-        <a2a.version>1.3.0.Final</a2a.version>
+        <!-- Must match the a2a-java-sdk version pulled transitively by
+             langchain4j-agentic-a2a on the client (multi-agent-system).
+             Newer versions (1.2.x/1.3.x) change streaming/task semantics and
+             cause "TaskNotFoundError" against the 1.1.0 client. -->
+        <a2a.version>1.1.0.Final</a2a.version>
     </properties>
 
     <dependencyManagement>
