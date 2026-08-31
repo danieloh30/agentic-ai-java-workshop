@@ -157,9 +157,15 @@ The key observation: `impact-agent` appears in the execution tree on port 8080, 
 
 ---
 
-## Multimodal log analysis — wire the vision agent (5 min)
+## Bonus — Multimodal log analysis (5 min)
 
 <span class="badge badge--code-along">Code</span>
+
+!!! note "Optional bonus — separate from A2A"
+    This task is about **multimodal input** (an agent that *reads an image*), which is
+    independent of the A2A material above. It lives here only because the complete
+    incident-management app is in this exercise — skip it freely without missing
+    anything about remote agents.
 
 During a real incident, an SRE rarely has a clean written report — they have a **screenshot**: a log console, a Grafana panel, a stack trace. In this task you'll let the system *read that image* by wiring in a multimodal agent, then feed it a picture instead of prose.
 
