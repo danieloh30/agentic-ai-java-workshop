@@ -25,7 +25,24 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto-merge Dependabot PR
-        run: gh pr merge --squash --auto "$PR_URL"
+        # When several Dependabot PRs land at once (e.g. a grouped quarkus-platform
+        # bump across every module), each merge advances `main` and the others fail
+        # with "Base branch was modified. Review and try the merge again."
+        # `--auto` only queues when branch protection requires a check; this repo has
+        # none, so gh merges immediately and races. Retry with jittered backoff to
+        # ride out the race, then fall back to a plain squash merge.
+        run: |
+          for attempt in $(seq 1 6); do
+            if gh pr merge --squash --auto "$PR_URL"; then
+              echo "Merge succeeded/queued on attempt $attempt"
+              exit 0
+            fi
+            sleep_for=$(( (RANDOM % 15) + 15 ))
+            echo "Attempt $attempt failed (base branch likely moved); retrying in ${sleep_for}s..."
+            sleep "$sleep_for"
+          done
+          echo "Retries exhausted; attempting a final direct squash merge..."
+          gh pr merge --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
