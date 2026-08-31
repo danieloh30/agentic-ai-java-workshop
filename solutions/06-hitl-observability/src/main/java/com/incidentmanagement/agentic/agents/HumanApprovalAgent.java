@@ -27,8 +27,15 @@ public interface HumanApprovalAgent {
             return "Human Decision: SKIPPED — No escalation proposed";
         }
 
-        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [P%d]",
-                incidentNumber, incidentInfo.system, incidentInfo.service, incidentInfo.priority);
+        // Priority data is a String that is "P2" in some exercises and a bare "2" in others.
+        // Normalize to a single "P"-prefixed label so we never emit "PP2", and use %s (not %d)
+        // since the field is a String — %d here throws IllegalFormatConversionException at runtime.
+        String priorityLabel = incidentInfo.priority != null && incidentInfo.priority.startsWith("P")
+                ? incidentInfo.priority
+                : "P" + incidentInfo.priority;
+
+        Log.infof("HITL Tool: Creating escalation approval proposal for incident %d - %s / %s [%s]",
+                incidentNumber, incidentInfo.system, incidentInfo.service, priorityLabel);
         Log.info("WORKFLOW PAUSED - Waiting for human approval decision via UI");
 
         ApprovalService approvalService = Arc.container().instance(ApprovalService.class).get();
@@ -37,7 +44,7 @@ public interface HumanApprovalAgent {
             CompletableFuture<ApprovalProposal> approvalFuture =
                     approvalService.createProposalAndWaitForDecision(
                             incidentNumber, incidentInfo.system, incidentInfo.service,
-                            "P" + incidentInfo.priority, incidentAnalysisResults.impactAnalysis(),
+                            priorityLabel, incidentAnalysisResults.impactAnalysis(),
                             escalationProposal, null, incidentInfo.description, report
                     );
 
