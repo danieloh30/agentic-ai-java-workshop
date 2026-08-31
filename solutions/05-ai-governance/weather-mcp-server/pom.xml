@@ -20,7 +20,7 @@
         <quarkus.platform.version>3.38.3</quarkus.platform.version>
 
         <quarkus-langchain4j.version>1.13.0</quarkus-langchain4j.version>
-        <quarkus-mcp.version>1.13.1</quarkus-mcp.version>
+        <quarkus-mcp.version>1.13.2</quarkus-mcp.version>
 
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.6</surefire-plugin.version>
