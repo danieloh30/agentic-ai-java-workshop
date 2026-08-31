@@ -157,15 +157,64 @@ The key observation: `impact-agent` appears in the execution tree on port 8080, 
 
 ---
 
-## Bonus — Multimodal log analysis (5 min)
+## MCP vs A2A — when to use each (1 min)
+
+You haven't built an MCP integration in this lab, but the distinction matters for architecture decisions:
+
+| | MCP (Model Context Protocol) | A2A (Agent-to-Agent) |
+|--|-----|-----|
+| **What crosses the wire** | Tool call (function + typed args) | Agent task (goal + natural language) |
+| **Who reasons** | Local LLM uses remote tool | Remote LLM reasons independently |
+| **Team ownership** | Shared capability (weather, search, DB lookup) | Autonomous team agent (impact assessment, legal review) |
+| **State** | Stateless per call | Optionally stateful (task lifecycle) |
+| **Best for** | Shared functionality any agent can call | Delegated decision-making by another team |
+| **Quarkus annotation** | `@McpToolBox("name")` | `@A2AClientAgent` |
+
+**Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
+
+---
+
+## Trade-offs (1 min)
+
+| Factor | Local agent (Ex 4) | Remote A2A agent |
+|--------|-------------|-----------------|
+| **Latency** | In-process | HTTP round-trip |
+| **Ownership** | Shared codebase | Independent repo + release |
+| **Scaling** | Scale whole app | Scale impact service independently |
+| **Failure mode** | Shared crash domain | Network partition risk |
+| **Reuse** | Single app | Any A2A-compatible client |
+
+!!! tip "When to go remote"
+    Start local. Extract to A2A when the agent needs **independent scaling**, **separate ownership** (another team maintains it), or **cross-system reuse** (multiple apps call the same agent). The network hop is a real cost — don't pay it unless you get one of these benefits.
+
+Stop both Quarkus processes (`Ctrl+C` in each terminal) before moving to Exercise 8 — or keep them running for the optional **Bonus — Multimodal log analysis** at the end of this page.
+
+---
+
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
+
+- [ ] A2A: impact assessment ran in `:8888` (confirmed in remote process logs)
+- [ ] AgentCard verified via `curl`
+- [ ] You can contrast MCP vs A2A in one sentence each
+- [ ] You can explain when to keep an agent local vs make it remote
+- [ ] *(Bonus)* `IncidentLogAnalysisAgent` wired in, and an uploaded log screenshot enriched the report
+
+</div>
+
+---
+
+## Bonus — Multimodal log analysis (optional, +5 min)
 
 <span class="badge badge--code-along">Code</span>
 
 !!! note "Optional bonus — separate from A2A"
     This task is about **multimodal input** (an agent that *reads an image*), which is
-    independent of the A2A material above. It lives here only because the complete
-    incident-management app is in this exercise — skip it freely without missing
-    anything about remote agents.
+    independent of the A2A material above and adds ~5 min beyond the 10-min exercise.
+    It lives here only because the complete incident-management app is in this exercise —
+    skip it freely without missing anything about remote agents. You'll need **both**
+    Quarkus processes still running (or restart them).
 
 During a real incident, an SRE rarely has a clean written report — they have a **screenshot**: a log console, a Grafana panel, a stack trace. In this task you'll let the system *read that image* by wiring in a multimodal agent, then feed it a picture instead of prose.
 
@@ -244,50 +293,4 @@ A ready-made sample screenshot ships with the project — a mock observability c
 !!! warning "Vision needs a multimodal model"
     This works because `application.properties` uses `gpt-4o`. A text-only model would reject the `ImageContent`. `IncidentLogAnalysisAgent` is `optional = true`, so if no image is uploaded it returns the report unchanged and the workflow proceeds normally.
 
----
-
-## MCP vs A2A — when to use each (1 min)
-
-You haven't built an MCP integration in this lab, but the distinction matters for architecture decisions:
-
-| | MCP (Model Context Protocol) | A2A (Agent-to-Agent) |
-|--|-----|-----|
-| **What crosses the wire** | Tool call (function + typed args) | Agent task (goal + natural language) |
-| **Who reasons** | Local LLM uses remote tool | Remote LLM reasons independently |
-| **Team ownership** | Shared capability (weather, search, DB lookup) | Autonomous team agent (impact assessment, legal review) |
-| **State** | Stateless per call | Optionally stateful (task lifecycle) |
-| **Best for** | Shared functionality any agent can call | Delegated decision-making by another team |
-| **Quarkus annotation** | `@McpToolBox("name")` | `@A2AClientAgent` |
-
-**Rule of thumb:** If the remote service just *does something* when told exactly what to do → MCP. If it *decides something* using its own reasoning → A2A.
-
----
-
-## Trade-offs (1 min)
-
-| Factor | Local agent (Ex 4) | Remote A2A agent |
-|--------|-------------|-----------------|
-| **Latency** | In-process | HTTP round-trip |
-| **Ownership** | Shared codebase | Independent repo + release |
-| **Scaling** | Scale whole app | Scale impact service independently |
-| **Failure mode** | Shared crash domain | Network partition risk |
-| **Reuse** | Single app | Any A2A-compatible client |
-
-!!! tip "When to go remote"
-    Start local. Extract to A2A when the agent needs **independent scaling**, **separate ownership** (another team maintains it), or **cross-system reuse** (multiple apps call the same agent). The network hop is a real cost — don't pay it unless you get one of these benefits.
-
-Stop both Quarkus processes (`Ctrl+C` in each terminal) before moving to Exercise 8.
-
----
-
-<div class="done-when" markdown>
-
-## :material-check-circle: Done when
-
-- [ ] A2A: impact assessment ran in `:8888` (confirmed in remote process logs)
-- [ ] AgentCard verified via `curl`
-- [ ] Multimodal: `IncidentLogAnalysisAgent` wired in, and an uploaded log screenshot enriched the report
-- [ ] You can contrast MCP vs A2A in one sentence each
-- [ ] You can explain when to keep an agent local vs make it remote
-
-</div>
+When you're done, stop both Quarkus processes (`Ctrl+C` in each terminal) before moving to Exercise 8.
