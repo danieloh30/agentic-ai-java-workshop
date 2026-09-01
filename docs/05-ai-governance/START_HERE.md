@@ -47,37 +47,54 @@ redundant codebase scans.
 
 ## Step 0 — Configure OpenCode CLI (1 min)
 
-Before using OpenCode, configure it to connect to the workshop's LLM endpoint. Create an `opencode.json` file in the `lab/` directory:
+Before using OpenCode, export the API key provided by your instructor:
+
+```bash
+export LITEMAAS_API_KEY="<your-api-key>"
+```
+
+Then configure OpenCode to connect to the workshop's LLM endpoint. Create an `opencode.json` file in the `lab/` directory:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
+  "model": "private-provider/Qwen3.8-27B",
   "provider": {
-    "workshop": {
+    "private-provider": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "LiteMaaS AI Gateway",
       "options": {
-        "apiKey": "sk-xxxxxxxxxxxxxxx",
-        "baseURL": "https://litemaas.rhoai.rh-aiservices-bu.com/v1"
+        "baseURL": "https://litemaas.rhoai.rh-aiservices-bu.com/v1",
+        "apiKey": "{env:LITEMAAS_API_KEY}"
       },
       "models": {
-        "Qwen3.6-35B-A3B": {
-          "name": "Qwen 3.6 35B"
+        "Qwen3.8-27B": {
+          "name": "Qwen 3.8 (27B)",
+          "options": {
+            "reasoning": {
+              "enabled": false
+            }
+          }
         }
       }
+    }
+  },
+  "mcp": {
+    "quarkus-agent": {
+      "enabled": false
     }
   }
 }
 ```
 
 !!! note "Your instructor will provide"
-    The **API key** — replace `sk-xxxxxxxxxxxxxxx` in the `apiKey` field above with the key provided by your instructor.
+    The **API key** — export it as `LITEMAAS_API_KEY` before starting OpenCode. The configuration reads it from the environment, so the key is not stored in `opencode.json`.
 
 ---
 
 ## Step 1 — Open OpenCode CLI (1 min)
 
-1. Open your terminal, navigate to `lab/`, and run `opencode`. OpenCode reads `AGENTS.md` automatically when it starts. Select the **workshop/Qwen3.6-35B-A3B** model from the model picker.
+1. Open your terminal, navigate to `lab/`, and run `opencode`. OpenCode reads `AGENTS.md` automatically when it starts and uses **private-provider/Qwen3.8-27B** as the default model.
 
 2. Open [`lab/AGENTS.md`](https://github.com/danieloh30/agentic-ai-java-workshop/blob/main/lab/AGENTS.md){:target="_blank"} and skim it — this is the governance file OpenCode reads on every request. Note the agents table, domain types, and the 10 project rules. This is what grounds OpenCode's answers instead of hallucination.
 
