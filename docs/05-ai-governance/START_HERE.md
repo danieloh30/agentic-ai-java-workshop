@@ -70,18 +70,15 @@ Then configure OpenCode to connect to the workshop's LLM endpoint. Create an `op
       "models": {
         "Qwen3.8-27B": {
           "name": "Qwen 3.8 (27B)",
-          "options": {
-            "reasoning": {
-              "enabled": false
-            }
-          }
+          "reasoning": false
         }
       }
     }
   },
-  "mcp": {
-    "quarkus-agent": {
-      "enabled": false
+  "agent": {
+    "build": {
+      "steps": 12,
+      "temperature": 0.1
     }
   }
 }
