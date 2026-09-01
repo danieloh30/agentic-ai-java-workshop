@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "private-provider/Qwen3.8-27B",
+  "provider": {
+    "private-provider": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteMaaS AI Gateway",
+      "options": {
+        "baseURL": "https://litemaas.rhoai.rh-aiservices-bu.com/v1",
+        "apiKey": "{env:LITEMAAS_API_KEY}"
+      },
+      "models": {
+        "Qwen3.8-27B": {
+          "name": "Qwen 3.8 (27B)",
+          "reasoning": false
+        }
+      }
+    }
+  },
+  "agent": {
+    "build": {
+      "steps": 3,
+      "temperature": 0.1
+    }
+  }
+}
