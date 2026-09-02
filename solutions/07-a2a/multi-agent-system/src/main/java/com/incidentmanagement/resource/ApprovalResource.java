@@ -33,6 +33,11 @@ public class ApprovalResource {
     }
 
     @ServerExceptionMapper
+    public RestResponse<Map<String, String>> mapBadRequest(BadRequestException e) {
+        return RestResponse.status(Response.Status.BAD_REQUEST, Map.of("error", e.getMessage()));
+    }
+
+    @ServerExceptionMapper
     public RestResponse<Map<String, String>> mapGeneral(Exception e) {
         Log.error("Error processing request", e);
         return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR,
