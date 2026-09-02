@@ -20,8 +20,8 @@ public interface ResolutionAgent {
 
         Rules:
         - CRITICAL: The human approval decision OVERRIDES all other signals.
-          If approvalDecision contains "KEEP_AT_TEAM" or "SKIPPED" → NEVER use ESCALATE.
-          Use INVESTIGATE or TRIAGE instead based on the analysis.
+          If approvalDecision contains "RESOLVE_INCIDENT" → use RESOLVE.
+          If approvalDecision contains "SKIPPED" → NEVER use ESCALATE; use INVESTIGATE or TRIAGE based on the analysis.
         - Only use ESCALATE if the human approved the escalation (approvalDecision contains "ESCALATE_INCIDENT" or "APPROVED").
         - If no human override applies, fall back to analysis:
           - If supervisorDecision mentions ESCALATE_P1/ASSIGN_TEAM (but NOT CLOSE) → ESCALATE

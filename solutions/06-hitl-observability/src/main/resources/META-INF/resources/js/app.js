@@ -467,7 +467,7 @@ function createApprovalCard(proposal) {
             </div>
         </div>
         <div class="approval-card-footer">
-            <button class="btn-approve" onclick="handleProposalDecision(${proposal.id}, 'KEEP_AT_TEAM')">Keep at Team Level</button>
+            <button class="btn-approve" onclick="handleProposalDecision(${proposal.id}, 'RESOLVE_INCIDENT')">Resolve Incident</button>
             <button class="btn-reject" onclick="handleProposalDecision(${proposal.id}, 'ESCALATE_INCIDENT')">Escalate to Management</button>
         </div>
     `;
@@ -484,13 +484,13 @@ async function handleProposalDecision(proposalId, decision) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 decision: decision,
-                reason: reason || `${decision === 'KEEP_AT_TEAM' ? 'Keep at team level' : 'Escalate to management'} decision by human reviewer`,
+                reason: reason || `${decision === 'RESOLVE_INCIDENT' ? 'Resolve incident' : 'Escalate to management'} decision by human reviewer`,
                 approvedBy: 'Workshop User'
             })
         });
 
         if (response.ok) {
-            const actionText = decision === 'KEEP_AT_TEAM' ? 'KEEP AT TEAM' : 'ESCALATE';
+            const actionText = decision === 'RESOLVE_INCIDENT' ? 'RESOLVE' : 'ESCALATE';
             showToast(`Decision: ${actionText} - Workflow will complete shortly`);
             const card = document.getElementById(`approval-${proposalId}`);
             if (card) {

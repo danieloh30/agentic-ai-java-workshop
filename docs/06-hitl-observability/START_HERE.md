@@ -29,17 +29,17 @@ flowchart TD
     EPA(["EscalationProposalAgent<br/>proposed action ESCALATE_P1"])
     HITL{"HumanInTheLoop gate<br/>Awaiting Approval"}
     ESC([ESCALATED])
-    INV(["IN_PROGRESS<br/>reassessment"])
+    RES([RESOLVED])
 
     ISA --> EPA --> HITL
     HITL -->|Escalate to Management| ESC
-    HITL -->|Keep at Team Level| INV
+    HITL -->|Resolve Incident| RES
 
     style ISA fill:#FFE4CC,stroke:#B87333
     style EPA fill:#D8F0D8,stroke:#3D7A3D
     style HITL fill:#FFF8DC,stroke:#C4A000
     style ESC fill:#D8F0D8,stroke:#3D7A3D
-    style INV fill:#D4E6F1,stroke:#2E6B8A
+    style RES fill:#D4E6F1,stroke:#2E6B8A
 ```
 
 ---
@@ -92,7 +92,7 @@ Complete checkout failure, all transactions failing, revenue loss confirmed at $
 **How to confirm:** The UI shows an **"Awaiting Approval"** modal with two buttons. This is the HITL gate — the system has paused and is waiting for a human decision.
 
 - Click **Escalate to Management** → check that the UI status changes to `ESCALATED`
-- Now press `s` in the Quarkus terminal to restart (reset the database), then **reload the browser**. Process Incident **#1** again with the same report → this time click **Keep at Team Level** → check that the UI status changes to `IN_PROGRESS`
+- Now press `s` in the Quarkus terminal to restart (reset the database), then **reload the browser**. Process Incident **#1** again with the same report → this time click **Resolve Incident** → check that the UI status changes to `RESOLVED`
 
 In the Quarkus terminal logs, look for `WORKFLOW PAUSED` and `WORKFLOW RESUMED` showing the approval decision.
 
@@ -151,9 +151,8 @@ cd ../../lab
 
 - [ ] You can explain `@HumanInTheLoop` vs regular `@Agent` — what makes the workflow pause
 - [ ] HITL gate paused and escalated after clicking **Escalate to Management** → status `ESCALATED`
-- [ ] HITL gate paused and kept at team level after clicking **Keep at Team Level** → status `IN_PROGRESS`
+- [ ] HITL gate paused and resolved after clicking **Resolve Incident** → status `RESOLVED`
 - [ ] Grafana/Tempo shows the span waterfall with agent names (e.g., `EscalationProposalAgent`, `completion gpt-4o`) and durations
 - [ ] You understand the FinOps insight: tracing reveals per-agent token cost so you can catch runaway spending
 
 </div>
-

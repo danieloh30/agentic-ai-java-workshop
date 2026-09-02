@@ -33,6 +33,11 @@ public class ApprovalResource {
     }
 
     @ServerExceptionMapper
+    public RestResponse<Map<String, String>> mapBadRequest(BadRequestException e) {
+        return RestResponse.status(Response.Status.BAD_REQUEST, Map.of("error", e.getMessage()));
+    }
+
+    @ServerExceptionMapper
     public RestResponse<Map<String, String>> mapGeneral(Exception e) {
         Log.error("Error processing request", e);
         return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR,
@@ -84,8 +89,8 @@ public class ApprovalResource {
         String reason = request.getOrDefault("reason", "Decision by human reviewer");
         String approvedBy = request.getOrDefault("approvedBy", "Workshop User");
 
-        if (decision == null || (!decision.equals("KEEP_AT_TEAM") && !decision.equals("ESCALATE_INCIDENT"))) {
-            throw new BadRequestException("Decision must be either KEEP_AT_TEAM or ESCALATE_INCIDENT");
+        if (decision == null || (!decision.equals("RESOLVE_INCIDENT") && !decision.equals("ESCALATE_INCIDENT"))) {
+            throw new BadRequestException("Decision must be either RESOLVE_INCIDENT or ESCALATE_INCIDENT");
         }
 
         Log.infof("Decision '%s' received for proposal %d by %s", decision, proposalId, approvedBy);
