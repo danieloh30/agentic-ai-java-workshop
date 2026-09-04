@@ -139,13 +139,15 @@ Exact wording and detail may vary; focus on whether the answer applies the proje
 
 ```text
 Look at lab/src/main/java/com/incidentmanagement/agentic/.
-All agent interfaces are now implemented from Exercises 1-4.
-Confirm that lab/AGENTS.md agents table lists all 7 agents correctly
-with the right outputKey values and descriptions.
+Audit the current code against the agents table in lab/AGENTS.md.
+For each of the 7 agent interfaces, report its implementation status
+and verify its outputKey and description when those annotations exist.
 Flag any inconsistencies.
 ```
 
-**Expected:** OpenCode reads all 7 agent files in parallel, cross-references the agents table in `AGENTS.md`, and produces an audit table like:
+**Expected:** OpenCode checks the code instead of assuming that Exercises 1–4 are complete. The result depends on the current state of your `lab/` directory.
+
+If you completed Exercises 1–4 in `lab/`, OpenCode should produce an audit table like:
 
 | # | Interface | AGENTS.md outputKey | Actual outputKey | Match? |
 |---|-----------|---------------------|------------------|--------|
@@ -157,7 +159,19 @@ Flag any inconsistencies.
 | 6 | ResolutionAgent | incidentOutcome | incidentOutcome | OK |
 | 7 | IncidentSupervisorAgent | supervisorDecision | supervisorDecision | OK |
 
-OpenCode may also flag documentation gaps — e.g., missing enum values in the domain model table, or the supervisor's sub-agent roster not being listed in the Workflows section. These are documentation improvements, not code bugs.
+If you used the solution directories and left `lab/` untouched, OpenCode should challenge the premise and report the TODO stubs instead:
+
+| File | Expected finding |
+|------|------------------|
+| `TriageAgent.java` | Method present; Exercise 1 annotations are TODO |
+| `DiagnosticAgent.java` | Method present; Exercise 2 annotations are TODO |
+| `IncidentAnalysisAgent.java` | Method present; Exercise 3 annotations are TODO |
+| `ImpactAgent.java` | Exercise 4 implementation is TODO |
+| `EscalationAgent.java` | Exercise 4 implementation is TODO |
+| `ResolutionAgent.java` | Exercise 4 implementation is TODO |
+| `IncidentSupervisorAgent.java` | `@SupervisorAgent` and `@SupervisorRequest` are TODO |
+
+In that state, the `outputKey` values in `AGENTS.md` describe the target state and cannot yet be verified from `lab/` code. OpenCode may also correctly flag documentation gaps such as `TriageWorkflow` being absent from the workflows table or `MonitoredAgent` not being explained.
 
 ---
 
