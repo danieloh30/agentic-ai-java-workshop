@@ -6,9 +6,9 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import com.incidentmanagement.agentic.agents.DiagnosticAgent;
-import com.incidentmanagement.agentic.agents.TriageAgent;
 import com.incidentmanagement.agentic.workflow.IncidentAnalysisWorkflow;
 import com.incidentmanagement.agentic.workflow.IncidentProcessingWorkflow;
+import com.incidentmanagement.agentic.workflow.TriageWorkflow;
 import com.incidentmanagement.model.IncidentOutcome;
 import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.model.IncidentStatus;
@@ -30,7 +30,7 @@ public class IncidentManagementService {
     Instance<IncidentAnalysisWorkflow> incidentAnalysisWorkflow;
 
     @Inject
-    Instance<TriageAgent> triageAgent;
+    Instance<TriageWorkflow> triageWorkflow;
 
     @Transactional
     public String processIncident(Integer incidentNumber, String report) {
@@ -73,8 +73,8 @@ public class IncidentManagementService {
             return incidentOutcome.resolution();
         }
 
-        if (triageAgent.isResolvable()) {
-            String result = triageAgent.get().processTriage(incidentInfo, incidentNumber, report);
+        if (triageWorkflow.isResolvable()) {
+            String result = triageWorkflow.get().processTriage(incidentInfo, incidentNumber, report);
 
             if (result.toUpperCase().contains("TRIAGE_NOT_REQUIRED")) {
                 incidentInfo.status = IncidentStatus.RESOLVED;
