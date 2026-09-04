@@ -1,7 +1,7 @@
 # Reference Solutions
 
-Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:dev`.
-**Only open these if you get stuck on a step** — the exercise guides link to the relevant solution at the top.
+Most folders are **finished** Quarkus projects you can run with `./mvnw quarkus:dev`.
+Exercise 5 is documentation-only and keeps a README placeholder instead. **Only open solutions if you get stuck on a step** — the exercise guides link to the relevant folder at the top.
 
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
@@ -9,7 +9,7 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 | Ex 2 | [`02-maintenance-agent/`](02-maintenance-agent/) | `DiagnosticAgent` + `@SequenceAgent` chain |
 | Ex 3 | [`03-parallel-workflow/`](03-parallel-workflow/) | `IncidentAnalysisWorkflow` + `@ParallelMapperAgent` |
 | Ex 4 | [`04-supervisor/`](04-supervisor/) | Complete multi-agent supervisor pipeline |
-| Ex 5 | [`05-ai-governance/`](05-ai-governance/) | `AGENTS.md` + OpenCode CLI governance |
+| Ex 5 | [`05-ai-governance/`](05-ai-governance/) | Documentation-only placeholder; exercise uses `lab/AGENTS.md` + OpenCode CLI |
 | Ex 6 | [`06-hitl-observability/`](06-hitl-observability/) | `@HumanInTheLoop` + OTel |
 | Ex 7 | [`07-a2a/`](07-a2a/) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
 | Ex 8 (bonus) | [`08-quarkus-flow/`](08-quarkus-flow/) | Programmatic loop with `AgenticServices.loopBuilder()` + Quarkus Flow |
@@ -18,7 +18,6 @@ Each folder is a **finished** Quarkus project you can run with `./mvnw quarkus:d
 
 | Folder | What it shows |
 |--------|--------------|
-| [`05-ai-governance/weather-mcp-server`](05-ai-governance/weather-mcp-server) | MCP SSE weather server (port 8081) |
 | [`06-hitl-observability/observability-reference`](06-hitl-observability/observability-reference) | Prompt injection guard + observability |
 | [`08-quarkus-flow/lab/`](08-quarkus-flow/lab/) | Bonus exercise starter project (TODO stubs) |
 

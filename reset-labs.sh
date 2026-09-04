@@ -44,7 +44,7 @@ cleanup_artifacts() {
     while IFS= read -r -d '' f; do
         rm -f "$f" && count=$((count + 1))
     done < <(find solutions/ lab/ \( -name ".mcp.json" -o -name "AGENTS.md" -o -name "CLAUDE.md" \) -print0 | \
-             grep -z -v -e "solutions/05-ai-governance" -e "lab/AGENTS.md")
+             grep -z -v -e "lab/AGENTS.md")
     if [ "$count" -gt 0 ]; then
         echo "  Removed $count artifact(s) (.mcp.json, AGENTS.md, CLAUDE.md)"
     fi

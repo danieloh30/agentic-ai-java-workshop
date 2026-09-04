@@ -55,11 +55,6 @@
             <artifactId>quarkus-langchain4j-pgvector</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkiverse.langchain4j</groupId>
-            <artifactId>quarkus-langchain4j-mcp</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
