@@ -35,6 +35,14 @@ function applyTheme(theme) {
     if (btn) btn.innerHTML = theme === 'light' ? '&#9790; Dark' : '&#9788; Light';
 }
 
+function getPriorityPresentation(priority) {
+    const match = String(priority ?? '').trim().match(/^P?(\d+)$/i);
+    if (!match) return { label: 'N/A', cssClass: '', sortValue: 0 };
+
+    const level = match[1];
+    return { label: `P${level}`, cssClass: `priority-${level}`, sortValue: Number(level) };
+}
+
 function loadAllIncidents() {
     fetch('/incidents')
         .then(response => {
@@ -115,6 +123,9 @@ function sortIncidents() {
         if (currentSortColumn === 'status') {
             va = getStatusDisplay(a.status);
             vb = getStatusDisplay(b.status);
+        } else if (currentSortColumn === 'priority') {
+            va = getPriorityPresentation(a.priority).sortValue;
+            vb = getPriorityPresentation(b.priority).sortValue;
         } else {
             va = a[currentSortColumn];
             vb = b[currentSortColumn];
@@ -173,13 +184,13 @@ function populateIncidentTable() {
         }
 
         const statusClass = getStatusClass(incident.status);
-        const priorityLabel = String(incident.priority).startsWith('P') ? incident.priority : 'P' + incident.priority;
+        const priority = getPriorityPresentation(incident.priority);
 
         row.innerHTML = `
             <td><span style="color:var(--accent);font-weight:600">#${incident.id}</span></td>
             <td>${incident.system}</td>
             <td>${incident.service}</td>
-            <td><span class="priority-badge priority-${incident.priority}">${priorityLabel}</span></td>
+            <td><span class="priority-badge ${priority.cssClass}">${priority.label}</span></td>
             <td>${incident.description || 'N/A'}</td>
             <td><span class="status-indicator ${statusClass}"><span class="status-dot"></span><span class="status-text">${getStatusDisplay(incident.status)}</span></span></td>
             <td><button class="btn-view" onclick="openDetailPanel(${incident.id}); event.stopPropagation();">View</button></td>
@@ -201,7 +212,7 @@ function openDetailPanel(incidentId) {
     title.textContent = `Incident #${incident.id}`;
 
     const statusClass = getStatusClass(incident.status);
-    const priorityLabel = String(incident.priority).startsWith('P') ? incident.priority : 'P' + incident.priority;
+    const priority = getPriorityPresentation(incident.priority);
     body.innerHTML = `
         <div class="detail-field">
             <div class="detail-label">Status</div>
@@ -209,7 +220,7 @@ function openDetailPanel(incidentId) {
         </div>
         <div class="detail-field">
             <div class="detail-label">Priority</div>
-            <div class="detail-value"><span class="priority-badge priority-${incident.priority}">${priorityLabel}</span></div>
+            <div class="detail-value"><span class="priority-badge ${priority.cssClass}">${priority.label}</span></div>
         </div>
         <div class="detail-field">
             <div class="detail-label">System</div>
