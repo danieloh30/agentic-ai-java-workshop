@@ -122,14 +122,16 @@ Based on AGENTS.md, explain:
 4. What happens if I add @ApplicationScoped to TriageAgent?
 ```
 
-**Expected:** OpenCode uses AGENTS.md as its primary context and reads a few Java files to verify implementation details. Look for grounded, specific answers — not generic LLM guesses.
+**Expected:** OpenCode grounds its answer in `AGENTS.md`. Because that file does not document `processIncident()` method-by-method, a good response may say so and then explain the processing flow from the endpoint and workflow tables.
 
 OpenCode should cover:
 
-> 1. `processIncident()` is a cascading dispatcher — runs the most complete pipeline available, falling back to simpler agents via `Instance<>` lazy resolution.
-> 2. `TriageTool` is `@Transactional` because `entity.persist()` needs an active transaction — the LLM call boundary breaks propagation from the service method (rule 5).
-> 3. `outputKey` is how `AgenticScope` routes outputs between steps — without it, the result is lost and the next agent gets nothing (rule 4).
-> 4. Adding `@ApplicationScoped` violates rule 2 — Quarkus generates the CDI proxy automatically; a duplicate scope causes `AmbiguousResolutionException`.
+> 1. `processIncident()` is not explicitly documented in `AGENTS.md`, but `POST /incident-management/process/{incidentNumber}` triggers `IncidentProcessingWorkflow`: `IncidentAnalysisWorkflow` runs three parallel analysis tasks, `IncidentSupervisorAgent` orchestrates the action agents, and `ResolutionAgent` produces the final `IncidentOutcome`.
+> 2. `TriageTool` is `@Transactional` because it changes an `IncidentInfo` entity and calls `persist()`; the database update requires an active transaction (rule 5).
+> 3. `outputKey` stores each workflow agent's result in `AgenticScope` so downstream agents can resolve it. Omitting the key breaks workflow data flow (rule 4).
+> 4. Adding `@ApplicationScoped` to `TriageAgent` violates rule 2. Quarkus generates the agent implementation and manages its CDI registration, so adding a scope to the interface can conflict with framework-managed registration.
+
+Exact wording and detail may vary; focus on whether the answer applies the project-specific facts and rules correctly.
 
 ---
 
