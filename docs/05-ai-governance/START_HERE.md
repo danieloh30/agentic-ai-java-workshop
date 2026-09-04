@@ -211,11 +211,27 @@ OpenCode may also offer to create a clearly labeled workshop mock. It should not
 
 ```text
 Based on AGENTS.md rules 6 and 7:
-- List every @UserMessage template in the lab stubs that could expose PII.
-- Suggest a concrete mitigation for each one using Quarkus logging config.
+- Inspect the current lab agent code and list any @UserMessage or
+  @SupervisorRequest prompt content that could expose PII.
+- If the prompt annotations are still TODOs, say so and identify the future
+  exposure surface from the method parameters and workflow inputs instead.
+- Review application.properties and recommend concrete logging, tracing,
+  and input-handling mitigations. Distinguish telemetry controls from
+  redacting data before it is sent to the model.
 ```
 
-**Expected:** OpenCode audits all 7 agents' `@UserMessage` templates and identifies PII vectors. Key findings to look for:
+**Expected:** OpenCode reports the current implementation state before claiming to have audited prompt templates.
+
+If you used the solution directories and left `lab/` untouched, OpenCode should find no implemented `@UserMessage` or `@SupervisorRequest` templates. It can still identify the future exposure surface:
+
+| Agent code | Future sensitive inputs |
+|------------|-------------------------|
+| `TriageAgent` | `report`, `incidentInfo` |
+| `DiagnosticAgent` | `diagnosticRequest`, `incidentInfo` |
+| `IncidentAnalysisAgent` | `report`, `incidentInfo` |
+| Exercise 4 agent stubs | Report and incident data passed through `AgenticScope` |
+
+If you completed Exercises 1–4 in `lab/`, OpenCode should audit the implemented prompts and identify risks such as:
 
 > **High-risk fields** — `{report}` (raw caller input) and `{incidentInfo.description}` (free-text database field) appear across multiple agents:
 >
@@ -226,28 +242,26 @@ Based on AGENTS.md rules 6 and 7:
 > | `IncidentAnalysisAgent` | `{report}` + `{incidentInfo.description}` — two vectors | **Highest** |
 > | `ImpactAgent` | `{incidentDescription}` — free-text from caller | High |
 > | `EscalationAgent` | `{report}` + `{incidentDescription}` — longest chain carrying raw input | High |
-> | `ResolutionAgent` | LLM-generated strings only — no raw user input | Low |
+> | `ResolutionAgent` | Upstream analysis and supervisor text may reproduce sensitive input | Medium |
 > | `IncidentSupervisorAgent` | `incidentInfo.description` concatenated in `@SupervisorRequest` | High |
 >
-> **Existing safeguard** — `log-requests=false` / `log-responses=false` in `application.properties` prevents full prompts from being logged.
+> **Existing safeguard** — `log-requests=false` and `log-responses=false` in `application.properties` prevent full prompts and completions from being logged.
 >
-> **Consolidated mitigation** — OpenCode suggests `application.properties` additions (no code changes):
+> **Production telemetry backstop:**
 >
 > ```properties
-> # Prod: never log LLM requests/responses (contain raw report and description)
 > %prod.quarkus.langchain4j.log-requests=false
 > %prod.quarkus.langchain4j.log-responses=false
 >
-> # Prod: if Exercise 6 OTel tracing is enabled, suppress prompt/tool content
 > %prod.quarkus.langchain4j.tracing.include-prompt=false
+> %prod.quarkus.langchain4j.tracing.include-completion=false
 > %prod.quarkus.langchain4j.tracing.include-tool-arguments=false
+> %prod.quarkus.langchain4j.tracing.include-tool-result=false
 >
-> # Prod: suppress supervisor prompt debug log (contains incidentInfo.description)
-> %prod.quarkus.log.category."dev.langchain4j.agentic.supervisor".level=WARN
-> %prod.quarkus.log.category."dev.langchain4j.agentic".level=WARN
+> %prod.quarkus.log.category."com.incidentmanagement".level=INFO
 > ```
 
-This is **shift-left security** — catching PII exposure risks before deployment, using only configuration changes.
+Configuration prevents sensitive content from being copied into logs and traces; it does **not** redact prompt data sent to the model. The application must also minimize or redact free-text reports and descriptions before building prompts, never place secrets in prompt templates, and use only synthetic data if payload tracing is enabled for an Exercise 6 development demo.
 
 ---
 
