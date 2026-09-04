@@ -2,7 +2,7 @@
 
 <span class="badge badge--opencode">OpenCode CLI</span>
 
-**Timebox:** 10 minutes  
+**Timebox:** 10 minutes of hands-on work, plus model response time<br>
 **Persona:** Jordan — Java platform engineer  
 **You work in:** `lab/` (with OpenCode CLI in your terminal)  
 **This exercise produces:** a validated `lab/AGENTS.md` governance file using OpenCode CLI
@@ -42,6 +42,9 @@ redundant codebase scans.
 
 !!! note "OpenCode CLI's responses are non-deterministic"
     Screenshots in this exercise show **one possible response** from OpenCode CLI. Because LLM outputs vary between runs, your results will differ in wording, detail level, and structure — but the key facts and conclusions should be consistent. Focus on whether OpenCode's answers are **grounded in AGENTS.md and source files**, not on matching the screenshots exactly.
+
+!!! note "Allow time for every response"
+    When using `private-provider/Qwen3.8-27B`, each OpenCode request in this exercise may take a few minutes. This is expected — wait for the response to finish and avoid resubmitting the prompt. Step time estimates exclude model response time.
 
 ---
 
