@@ -104,7 +104,11 @@ API endpoints, and rules you must follow.
 Do not scan Java files — all context is in AGENTS.md.
 ```
 
-**What you should see:** OpenCode acknowledges the file, lists all 7 agents, the two workflows, and the key rules — then asks "What would you like to work on?"
+**What you should see:** OpenCode confirms that it read `AGENTS.md` and loaded the project context. A concise response like this is expected:
+
+> Read. Ready for your question — context loaded: `@Agent` interface model, 7 agents, 2 workflows, domain model, endpoints, and all 10 project rules.
+
+Exact wording and detail may vary; OpenCode does not need to enumerate every agent or rule at this stage.
 
 ---
 
