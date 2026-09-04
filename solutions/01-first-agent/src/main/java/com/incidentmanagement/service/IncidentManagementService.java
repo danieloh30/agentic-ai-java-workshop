@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
-import com.incidentmanagement.agentic.agents.TriageAgent;
+import com.incidentmanagement.agentic.workflow.TriageWorkflow;
 import com.incidentmanagement.model.IncidentInfo;
 import com.incidentmanagement.model.IncidentStatus;
 
@@ -13,7 +13,7 @@ public class IncidentManagementService {
 
     // --8<-- [start:processIncident]
     @Inject
-    TriageAgent triageAgent;
+    TriageWorkflow triageWorkflow;
 
     @Transactional
     public String processIncident(Integer incidentNumber, String report) {
@@ -22,7 +22,7 @@ public class IncidentManagementService {
             return "Incident not found with number: " + incidentNumber;
         }
 
-        String result = triageAgent.processTriage(incidentInfo, incidentNumber, report);
+        String result = triageWorkflow.processTriage(incidentInfo, incidentNumber, report);
 
         if (result.toUpperCase().contains("TRIAGE_NOT_REQUIRED")) {
             incidentInfo.status = IncidentStatus.RESOLVED;

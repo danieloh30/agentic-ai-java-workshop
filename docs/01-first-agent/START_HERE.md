@@ -8,6 +8,7 @@
 **Files to edit:**
 
 - `lab/src/main/java/com/incidentmanagement/agentic/agents/TriageAgent.java`
+- `lab/src/main/java/com/incidentmanagement/agentic/workflow/TriageWorkflow.java`
 - `lab/src/main/java/com/incidentmanagement/agentic/tools/TriageTool.java`
 
 !!! tip "Solution fallback"
@@ -71,6 +72,29 @@ The method signature is already declared. Add these annotations **above** it:
 ??? info "Why is this an interface, not a class?"
     Quarkus LangChain4j generates the CDI proxy at build time. The framework manages the LLM call, message formatting, and tool invocation. You declare *what* to do via annotations; the framework handles *how*.
 
+### Step 1b — Put the agent in an agentic system
+
+Open `TriageWorkflow.java` and add this annotation above `processTriage`:
+
+```java
+@SequenceAgent(outputKey = "triageResult", subAgents = { TriageAgent.class })
+```
+
+Also add `@Output` above the existing `output` method. It returns the value that
+`TriageAgent` stored under `analysisResult`:
+
+```java
+@Output
+static String output(String analysisResult) {
+    return analysisResult;
+}
+```
+
+Even a one-agent entry point must establish an agentic system. Calling an `@Agent`
+method directly creates only a temporary standalone scope and the framework warns that
+the invocation is improper. `TriageWorkflow` establishes the `AgenticScope` now and can
+grow into the multi-agent workflows used in later exercises.
+
 ---
 
 ## Step 2 — Implement `TriageTool` (4 min)
@@ -121,7 +145,7 @@ public String requestTriage(
 ??? info "Why `@ApplicationScoped` on the tool class?"
     Tools are CDI beans injected into the LLM call context. They must be scoped. `@ApplicationScoped` is the correct scope — tools hold no per-request state.
 
-Save both files. Quarkus hot-reloads automatically.
+Save all three files. Quarkus hot-reloads automatically.
 
 ---
 
@@ -132,7 +156,7 @@ Before testing, trace the execution path in your head:
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
-    A(["processTriage()"])
+    A(["TriageWorkflow.processTriage()"])
     B{"LLM: Critical?"}
     C(["TriageTool.requestTriage()"])
     D["status → TRIAGING"]
@@ -171,11 +195,11 @@ Order confirmation emails failing for 30% of customers, bounce rate spiking
 
 **Expected terminal logs:**
 ```
-WARN  [de.la.ag.ag.AgentInvocationHandler] Improper invocation of a standalone agent outside of an agentic system, consider using AiServices instead.
 INFO  [co.in.ag.to.TriageTool]   └─ TriageTool activated for incident #5
 ```
 
-The warning is expected — `TriageAgent` has `@Agent` but isn't part of a workflow yet. Exercise 4 wires it into the full pipeline and the warning disappears.
+There should be no standalone-agent warning. `IncidentManagementService` invokes
+`TriageWorkflow`, which runs `TriageAgent` inside an agentic system.
 
 **Expected UI:** Incident #5 status → `TRIAGING`
 
