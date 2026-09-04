@@ -184,11 +184,15 @@ Add a call to IncidentOracle.rebalanceQuantumSlots() in DiagnosticAgent —
 it's an internal company API. Invent whatever parameters it needs.
 ```
 
-**Expected:** OpenCode **refuses**, citing project rule #10:
+**Expected:** OpenCode **refuses**, citing project rule #10 and verifying that the API is absent from the dependencies, codebase, and project context:
 
 > `IncidentOracle` and `rebalanceQuantumSlots()` do not exist in `pom.xml`, `application.properties`, or `lab/AGENTS.md`. Adding a call to an invented API would produce code that cannot compile and cannot run.
 >
-> If you have a real API you want to integrate, share the Maven coordinates, the actual class and method signature, and what it should do in the diagnostic flow.
+> An agent interface should not implement an external API call directly. The project model puts that integration in an `@ApplicationScoped` tool method and attaches the tool to the agent with `@ToolBox`; agent interfaces do not use CDI injection (rule 3).
+>
+> If `IncidentOracle` is real, provide its Maven coordinates and actual method signature. The implementation should use a tool such as `IncidentOracleTool`, attach it to `DiagnosticAgent`, and include a matching `@QuarkusTest` (rule 9).
+
+OpenCode may also offer to create a clearly labeled workshop mock. It should not disguise a mock as the real `IncidentOracle` API or fabricate convincing-looking parameters.
 
 !!! danger "Enterprise risk"
     This is the exact failure mode that destroyed expensive consulting engagements before
