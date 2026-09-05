@@ -23,6 +23,9 @@ public interface ReportDrafterAgent {
             metrics, root causes, resolution steps, or completed actions. If a section has no
             supporting data, write "Not available in the incident record." Clearly label any
             proposed preventive measure as a recommendation, not as an action already taken.
+            Recommendations may propose specific follow-up work, measurable success criteria,
+            and an owner by role (for example, the service owner) without claiming that the work
+            is already approved, assigned, or completed.
             If you receive reviewer feedback from a previous draft, incorporate the feedback
             to improve the report's structure and accuracy, but do not treat feedback as a new
             source of incident facts. Keep the report concise (under 500 words).

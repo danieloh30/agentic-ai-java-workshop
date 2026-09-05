@@ -21,6 +21,7 @@ class ReportAccuracyGuardrailTest {
                 .getAnnotation(SystemMessage.class).value());
         assertTrue(drafterRules.contains("Never invent timestamps"));
         assertTrue(drafterRules.contains("Not available in the incident record"));
+        assertTrue(drafterRules.contains("owner by role"));
 
         var criticMethod = ReportCriticAgent.class.getDeclaredMethod(
                 "critiqueReport", String.class, String.class, String.class,
@@ -29,6 +30,9 @@ class ReportAccuracyGuardrailTest {
         String criticInput = Arrays.toString(criticMethod.getAnnotation(UserMessage.class).value());
 
         assertTrue(criticRules.contains("score it no higher than 6"));
+        assertTrue(criticRules.contains("must not reduce the score"));
+        assertTrue(criticRules.contains("qualifies for 9-10"));
+        assertTrue(criticRules.contains("owner by role"));
         assertTrue(criticInput.contains("Description: {description}"));
         assertTrue(criticInput.contains("Status: {status}"));
         assertEquals(6, criticMethod.getParameterCount());
