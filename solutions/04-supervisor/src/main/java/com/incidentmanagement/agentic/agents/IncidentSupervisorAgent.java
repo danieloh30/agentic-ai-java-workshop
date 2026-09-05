@@ -16,11 +16,13 @@ public interface IncidentSupervisorAgent {
                     TriageAgent.class
             })
     String superviseIncidentProcessing(IncidentInfo incidentInfo, Integer incidentNumber,
-                                        IncidentAnalysisResults incidentAnalysisResults);
+                                        IncidentAnalysisResults incidentAnalysisResults,
+                                        String report);
 
     @SupervisorRequest
     static String request(IncidentInfo incidentInfo, Integer incidentNumber,
-                          IncidentAnalysisResults incidentAnalysisResults) {
+                          IncidentAnalysisResults incidentAnalysisResults,
+                          String report) {
 
         boolean escalationRequired = incidentAnalysisResults.resolutionAnalysis() != null &&
                 incidentAnalysisResults.resolutionAnalysis().toUpperCase().contains("ESCALATION_REQUIRED");
@@ -31,8 +33,9 @@ public interface IncidentSupervisorAgent {
                 INSTRUCTIONS:
                 - DO NOT invoke ImpactAgent
                 - DO NOT invoke EscalationAgent
-                - Only invoke DiagnosticAgent if root cause analysis needed
-                - Only invoke TriageAgent if re-triage needed
+                - Invoke TriageAgent when the incident still needs operational triage
+                - Only invoke DiagnosticAgent if root cause analysis is needed
+                - When invoking TriageAgent, pass the exact Incident Report below as triageReport
                 """;
 
         String escalationMessage = """
@@ -47,6 +50,7 @@ public interface IncidentSupervisorAgent {
                 IMPORTANT: When invoking EscalationAgent:
                 - Pass businessImpact as a STRING with the full assessment
                 - Use the EXACT format from ImpactAgent's response
+                - Do not pass or rewrite the incident report
 
                 Follow the decision logic in your system message carefully.
                 """;
@@ -64,6 +68,7 @@ public interface IncidentSupervisorAgent {
                 Incident: P""" + incidentInfo.priority + " " + incidentInfo.system + "/" + incidentInfo.service
                 + " (#" + incidentNumber + ")\n"
                 + "Current Description: " + incidentInfo.description + "\n\n"
+                + "Incident Report: " + report + "\n\n"
                 + "Severity Analysis: " + incidentAnalysisResults.severityAnalysis() + "\n"
                 + "Impact Analysis: " + incidentAnalysisResults.impactAnalysis() + "\n\n"
                 + "In particular, you have to follow these steps:\n\n"

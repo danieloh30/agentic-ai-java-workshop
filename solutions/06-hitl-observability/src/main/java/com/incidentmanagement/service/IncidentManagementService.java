@@ -43,7 +43,7 @@ public class IncidentManagementService {
                     report);
 
             Log.info("ResolutionAgent updating...");
-            Log.infof("  └─ Action: %s → %s", incidentOutcome.incidentAction(), incidentOutcome.resolution());
+            Log.infof("  └─ Incident #%d action: %s", incidentNumber, incidentOutcome.incidentAction());
 
             incidentInfo.description = incidentOutcome.resolution();
 

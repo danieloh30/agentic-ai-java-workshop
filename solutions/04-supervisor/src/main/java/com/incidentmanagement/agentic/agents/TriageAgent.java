@@ -28,7 +28,7 @@ public interface TriageAgent {
         Priority: P{incidentInfo.priority}
         Incident Number: {incidentNumber}
 
-        Report: {report}
+        Report: {triageReport}
         """)
     @Agent(description = "Triage specialist. Determines initial triage and team assignment.",
            outputKey = "analysisResult")
@@ -36,6 +36,6 @@ public interface TriageAgent {
     String processTriage(
             IncidentInfo incidentInfo,
             Integer incidentNumber,
-            String report);
+            String triageReport);
 }
 // --8<-- [end:triageAgent]

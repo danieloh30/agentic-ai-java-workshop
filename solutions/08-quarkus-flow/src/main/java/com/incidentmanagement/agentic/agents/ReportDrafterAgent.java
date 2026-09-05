@@ -19,8 +19,13 @@ public interface ReportDrafterAgent {
             5. Resolution Steps Taken
             6. Preventive Measures / Action Items
 
+            Use only facts present in the incident fields below. Never invent timestamps,
+            metrics, root causes, resolution steps, or completed actions. If a section has no
+            supporting data, write "Not available in the incident record." Clearly label any
+            proposed preventive measure as a recommendation, not as an action already taken.
             If you receive reviewer feedback from a previous draft, incorporate the feedback
-            to improve the report. Keep the report concise (under 500 words).
+            to improve the report's structure and accuracy, but do not treat feedback as a new
+            source of incident facts. Keep the report concise (under 500 words).
             Output ONLY the report text.
             """)
     @UserMessage("""

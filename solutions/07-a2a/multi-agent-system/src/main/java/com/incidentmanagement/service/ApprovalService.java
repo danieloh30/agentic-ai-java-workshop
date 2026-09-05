@@ -110,8 +110,8 @@ public class ApprovalService {
         proposal.persist();
         entityManager.flush();
 
-        Log.infof("Created approval proposal ID=%d for incident %d - %s / %s [%s] (Impact: %s, Proposed: %s)",
-                proposal.id, incidentNumber, incidentSystem, incidentService, incidentPriority, businessImpact, proposedEscalation);
+        Log.infof("Created approval proposal ID=%d for incident %d - %s / %s [%s]",
+                proposal.id, incidentNumber, incidentSystem, incidentService, incidentPriority);
         Log.info("WORKFLOW PAUSED - Waiting for human approval decision");
         Log.infof("Proposal persisted with ID: %d, status: %s", proposal.id, proposal.status);
     }

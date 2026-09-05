@@ -14,7 +14,8 @@ public interface ReportCriticAgent {
     // Replace the placeholder @UserMessage below with the @SystemMessage and @UserMessage
     // annotations from docs/08-quarkus-flow/START_HERE.md.
 
-    @UserMessage("Evaluate this post-incident report for {system}/{service} ({priority}): {report}")
+    @UserMessage("Evaluate this post-incident report for {system}/{service} ({priority}), described as {description} with status {status}: {report}")
     ReportCritique critiqueReport(String system, String service,
-                                  String priority, String report);
+                                  String priority, String description,
+                                  String status, String report);
 }

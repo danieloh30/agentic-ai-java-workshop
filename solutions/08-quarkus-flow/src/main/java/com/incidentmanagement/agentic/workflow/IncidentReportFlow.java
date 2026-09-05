@@ -43,7 +43,9 @@ public class IncidentReportFlow {
             int iteration = scope.readState("iteration", 1);
 
             ReportCritique critique = criticAgent.critiqueReport(
-                    incident.system, incident.service, incident.priority, report);
+                    incident.system, incident.service, incident.priority,
+                    incident.description != null ? incident.description : "",
+                    incident.status.toString(), report);
 
             scope.writeState("score", critique.score());
             scope.writeState("feedback", critique.feedback());

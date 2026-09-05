@@ -101,8 +101,13 @@ Open `src/.../agentic/agents/ReportDrafterAgent.java`. Replace the placeholder `
             5. Resolution Steps Taken
             6. Preventive Measures / Action Items
 
+            Use only facts present in the incident fields below. Never invent timestamps,
+            metrics, root causes, resolution steps, or completed actions. If a section has no
+            supporting data, write "Not available in the incident record." Clearly label any
+            proposed preventive measure as a recommendation, not as an action already taken.
             If you receive reviewer feedback from a previous draft, incorporate the feedback
-            to improve the report. Keep the report concise (under 500 words).
+            to improve the report's structure and accuracy, but do not treat feedback as a new
+            source of incident facts. Keep the report concise (under 500 words).
             Output ONLY the report text.
             """)
     @UserMessage("""
@@ -133,6 +138,12 @@ Open `src/.../agentic/agents/ReportCriticAgent.java`. Replace the placeholder `@
             - Actionability: Are the preventive measures specific and assignable?
             - Accuracy: Does the report match the incident details provided?
 
+            The incident fields in the user message are the only authoritative facts.
+            A missing-data statement is complete and accurate; the report must not fill gaps
+            by inventing timestamps, metrics, root causes, resolution steps, or completed actions.
+            If the report contains any unsupported factual detail, score it no higher than 6 and
+            identify each unsupported claim in the feedback.
+
             Scoring guide:
             - 1-3: Missing major sections or factual errors
             - 4-6: Incomplete sections or vague action items
@@ -140,12 +151,25 @@ Open `src/.../agentic/agents/ReportCriticAgent.java`. Replace the placeholder `@
             - 9-10: Exemplary, ready for stakeholder distribution
             """)
     @UserMessage("""
-            Evaluate this post-incident report for an incident on {system}/{service} ({priority}):
+            Evaluate this post-incident report against the authoritative incident fields:
+            - System: {system}
+            - Service: {service}
+            - Priority: {priority}
+            - Description: {description}
+            - Status: {status}
 
             --- REPORT START ---
             {report}
             --- REPORT END ---
             """)
+```
+
+Keep the method parameters aligned with those placeholders:
+
+```java
+ReportCritique critiqueReport(String system, String service,
+                              String priority, String description,
+                              String status, String report);
 ```
 
 Notice the return type is `ReportCritique` — a Java record with `score` and `feedback` fields. LangChain4j automatically instructs the LLM to respond in JSON and deserializes it.
@@ -187,7 +211,9 @@ Uncomment the code block under `// TODO Exercise 08 — Step 2b`:
             int iteration = scope.readState("iteration", 1);
 
             ReportCritique critique = criticAgent.critiqueReport(
-                    incident.system, incident.service, incident.priority, report);
+                    incident.system, incident.service, incident.priority,
+                    incident.description != null ? incident.description : "",
+                    incident.status.toString(), report);
 
             scope.writeState("score", critique.score());
             scope.writeState("feedback", critique.feedback());

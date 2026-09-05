@@ -34,7 +34,6 @@ public interface EscalationAgent {
         - Incident Number: {incidentNumber}
         - Description: {incidentDescription}
         - Business Impact Assessment: {businessImpact}
-        - Incident Report: {report}
 
         Provide your escalation recommendation (ESCALATE_P1/ASSIGN_TEAM/WORKAROUND/CLOSE) and explanation.
         """)
@@ -42,5 +41,5 @@ public interface EscalationAgent {
            description = "Incident escalation specialist. Determines escalation path based on impact and severity.")
     String processEscalation(String system, String service, Integer priority,
                               Integer incidentNumber, String incidentDescription,
-                              String businessImpact, String report);
+                              String businessImpact);
 }
