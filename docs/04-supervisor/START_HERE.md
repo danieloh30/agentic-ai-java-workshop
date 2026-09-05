@@ -378,7 +378,7 @@ Click **View** on Incident **#6** (search-engine/product-search) and process wit
 False alarm, relevance restored after cache refresh
 ```
 
-**How to confirm:** UI status stays `OPEN` or changes to `RESOLVED`. Terminal logs show `Action: MONITOR` or `RESOLVE`. (LLM responses are non-deterministic — the exact action may vary.)
+**How to confirm:** UI status stays `OPEN` or changes to `RESOLVED`. Terminal logs show `Incident #6 action: MONITOR` or `Incident #6 action: RESOLVE`. (LLM responses are non-deterministic — the exact action may vary.)
 
 Now press `s` to restart (reset the database), then **reload the browser**.
 
@@ -400,7 +400,7 @@ Click **View** on Incident **#1** (payment-gateway/checkout-api, P2) and process
 Complete checkout failure; all payment processing down; customers seeing 500 errors; revenue loss estimated at $50k/hr
 ```
 
-**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `Action: ESCALATE`, with `ImpactAgent` and `EscalationAgent` invoked by the supervisor.
+**How to confirm:** UI status changes to `ESCALATED`. Terminal logs show `Incident #1 action: ESCALATE`, with `ImpactAgent` and `EscalationAgent` invoked by the supervisor.
 
 ---
 

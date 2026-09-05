@@ -178,7 +178,7 @@ SMTP timeout for 30% of outbound emails, queue growing
 **Expected terminal logs:**
 ```
 ResolutionAgent updating...
-  └─ Action: INVESTIGATE → SMTP timeout affecting 30% of outbound emails...
+  └─ Incident #5 action: INVESTIGATE
 ```
 
 The action should be `INVESTIGATE` or `TRIAGE` — the parallel analysis flagged this as needing attention. Check the UI — incident status changes to `IN_PROGRESS` or `TRIAGING`. (LLM responses are non-deterministic — the exact action may vary.)
