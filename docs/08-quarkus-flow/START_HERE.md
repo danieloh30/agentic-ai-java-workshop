@@ -61,7 +61,18 @@ flowchart TD
     style DONE fill:#D8F0D8,stroke:#3D7A3D
 ```
 
-**This is impossible with declarative annotations.** There is no `@LoopAgent` — the loop exists only in the programmatic builder API.
+**This loop needs explicit control, so we use the programmatic `loopBuilder()` API.** A declarative `@LoopAgent` *does* exist in core `quarkus-langchain4j` (with an `@ExitCondition` method and `maxIterations`), so a score-based exit on its own is expressible with annotations. The reason this exercise drops to the builder is everything *around* the loop.
+
+!!! note "Why not just `@LoopAgent`?"
+    **The decisive constraint:** `@LoopAgent` only accepts declarative AI-service **classes** as its steps — `subAgents = { StyleScorer.class, StyleEditor.class }`. This exercise's loop steps are `AgenticServices.agentAction(scope -> { ... })` **lambdas**, and you cannot hand a lambda to `@LoopAgent`. That alone forces the programmatic builder.
+
+    Those steps *have* to be lambdas because each iteration does real non-LLM work that `@LoopAgent` gives you no seam for:
+
+    - **Runtime-injected domain input** — the `incident` is fetched from the DB per request and its fields are passed explicitly to the drafter. A declarative sub-agent only gets inputs from `AgenticScope` keys / matched parameter names; there's no place to feed in a per-request object resolved at invocation time.
+    - **Imperative glue per iteration** — seed default feedback on the first pass, increment/track an iteration counter, null-guard the description, log structured progress, and unpack the `ReportCritique` record into separate `score`/`feedback` scope keys. `@LoopAgent` only chains AI sub-agents, with no hook to run arbitrary Java between them.
+    - **Explicit exit + full-scope return** — the exit is a `(scope, iteration) -> score >= 7` lambda over arbitrary state, and the method returns the **entire** `scope.state()` map (report + score + iteration) for observability. Declarative `@LoopAgent` returns only its single `outputKey`.
+
+    **The strategic payoff:** `loopBuilder()` here comes from `quarkus-flow-langchain4j`, which runs the loop on the CNCF Serverless Workflow engine. That's what lets the same builder later compose loops with non-agent steps — HTTP calls, event triggers, human-in-the-loop pauses — with durable, resumable, observable execution. Annotations top out at "chain these AI agents"; the workflow runtime is the door this opens. (This exercise doesn't yet exercise durability or event steps — it demonstrates the imperative-glue, explicit-state, and full-scope-return capabilities.)
 
 ---
 
@@ -290,7 +301,7 @@ Try several incidents to see how the loop adapts — P1 incidents with more comp
 
 | | Declarative annotations | Programmatic builders |
 |--|---|---|
-| **Loops** | `@LoopAgent` (with [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/langchain4j.html){:target="_blank"} extension) | `loopBuilder().exitCondition(...)` |
+| **Loops** | `@LoopAgent` + `@ExitCondition` (core `quarkus-langchain4j`; sub-agents must be `@Agent` classes) | `loopBuilder().exitCondition(...)` (via [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/langchain4j.html){:target="_blank"}; accepts `agentAction` lambdas + imperative glue) |
 | **Conditionals** | `@ConditionalAgent` (single gate) | `conditionalBuilder()` (multi-branch) |
 | **Data flow** | Automatic via `AgenticScope` keys | Explicit `scope.readState/writeState` |
 | **Orchestration** | `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` | `sequenceBuilder()`, `parallelBuilder()`, `loopBuilder()` |
