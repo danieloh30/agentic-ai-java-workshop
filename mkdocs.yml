@@ -89,6 +89,8 @@ nav:
   - "Part 2 — From Patterns to Production":
       - "9. Plan & Execute": 09-plan-execute/START_HERE.md
       - "10. Memory Tiering": 10-memory-tiering/START_HERE.md
+      - "11. Consensus & Voting": 11-consensus-voting/START_HERE.md
+      - "12. Event-Driven Agents": 12-event-driven/START_HERE.md
 
 extra_css:
   - stylesheets/extra.css

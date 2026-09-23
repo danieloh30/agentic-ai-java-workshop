@@ -157,6 +157,8 @@ No agent behavior yet: that's Exercise 1.
 |----------|------|-------|
 | [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | An LLM planner emits a structured plan over specialist `@Agent`s + dynamic re-planning |
 | [10. Memory Tiering](10-memory-tiering/START_HERE.md) | 20 min | A conversational `@Agent` with two-tier memory: a windowed working memory over a durable PostgreSQL store |
+| [11. Consensus & Voting](11-consensus-voting/START_HERE.md) | 20 min | Three persona `@Agent`s vote in parallel via `@ParallelAgent`; a deterministic `@Output` tally picks the winner |
+| [12. Event-Driven Agents](12-event-driven/START_HERE.md) | 20 min | Capstone: a `@SequenceAgent` pipeline wired between Kafka topics (Redpanda Dev Services) — agents triggered by events |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 

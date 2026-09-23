@@ -20,6 +20,8 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 |----------|----------------|--------------|
 | Ex 9 | [`09-plan-execute/`](09-plan-execute/) | An LLM planner emits a structured `ExecutionPlan` over specialist `@Agent`s, executed on an `AgenticServices` loop with dynamic re-planning |
 | Ex 10 | [`10-memory-tiering/`](10-memory-tiering/) | A conversational `@Agent` with two-tier memory — a `MessageWindowChatMemory` (working memory) over a durable `ChatMemoryStore` backed by PostgreSQL, wired via `@ChatMemoryProviderSupplier` |
+| Ex 11 | [`11-consensus-voting/`](11-consensus-voting/) | Three persona voter `@Agent`s run in parallel via `@ParallelAgent`, each returning a structured `Vote`; an `@Output` method tallies the ballots into a `ConsensusResult` |
+| Ex 12 | [`12-event-driven/`](12-event-driven/) | Capstone — a `@SequenceAgent` triage→resolve pipeline wired between Kafka topics (`@Incoming`/`@Outgoing`, Redpanda via Dev Services); agents triggered by events, results consumed by a downstream sink |
 
 ### Additional reference projects
 
@@ -29,6 +31,8 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 | [`08-quarkus-flow/lab/`](08-quarkus-flow/lab/) | Bonus exercise starter project (TODO stubs) |
 | [`09-plan-execute/lab/`](09-plan-execute/lab/) | Exercise 9 starter project (TODO stubs) |
 | [`10-memory-tiering/lab/`](10-memory-tiering/lab/) | Exercise 10 starter project (TODO stubs) |
+| [`11-consensus-voting/lab/`](11-consensus-voting/lab/) | Exercise 11 starter project (TODO stubs) |
+| [`12-event-driven/lab/`](12-event-driven/lab/) | Exercise 12 starter project (TODO stubs) |
 
 ## Versions
 
