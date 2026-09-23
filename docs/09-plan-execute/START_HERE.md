@@ -1,4 +1,4 @@
-# Exercise 9 — Plan & Execute (`@PlannerAgent`)
+# Exercise 9 — Plan & Execute
 
 <span class="badge badge--code-along">Code-Along</span> <span class="badge" style="background:#1E5AA8;color:white;">Part 2 · Advanced</span>
 
@@ -7,9 +7,8 @@
 **You work in:** `solutions/09-plan-execute/lab/`  
 **Files to edit:**
 
-- `src/.../agentic/agents/DiagnosisAgent.java`
-- `src/.../agentic/agents/MitigationAgent.java`
-- `src/.../agentic/agents/IncidentPlannerAgent.java`
+- `src/.../agentic/agents/PlannerAgent.java`
+- `src/.../agentic/workflow/PlanExecuteFlow.java`
 
 !!! tip "Full solution"
     If stuck, the completed files are in [`solutions/09-plan-execute/`](https://github.com/danieloh30/agentic-ai-java-workshop/tree/main/solutions/09-plan-execute){:target="_blank"} — copy them over your TODO files and restart.
@@ -29,41 +28,42 @@ Look at what you built earlier:
 
 Neither one **lays out the whole job up front**. A P4 "slow assets in EU" and a P1 "auth completely down" are not the same amount of work — but a hardcoded pipeline treats them identically.
 
-**Plan & Execute** (Slide pattern #01) fixes this. A **planner** looks at the goal and its available specialists, decides **which to call and in what order** *before* execution, runs them through a shared scope, and **re-plans** if the goal isn't met yet.
+**Plan & Execute** (Slide pattern #01) fixes this. A **planner** looks at the goal and its available specialists, decides **which to call and in what order** *before* execution, runs them through a shared scope, and **re-plans** if a reviewer says the goal isn't met yet.
 
-### You've already met its sibling
+### Three moving parts
 
-In Exercise 4 you wrote `@SupervisorAgent`. Plan & Execute has a declarative twin: **`@PlannerAgent`**. You hand it a set of sub-agents; a built-in LLM planner does the DAG decomposition and dynamic re-planning for you. No hand-written loop, no JSON plan record to parse — the same "reasoning units are `@Agent`, orchestration is an annotation" style you've used all workshop.
+You'll assemble the pattern from pieces you've already met:
+
+| Part | Who does it | Built with |
+|------|-------------|------------|
+| **Plan** | `PlannerAgent` — an LLM that returns a structured `ExecutionPlan` (an ordered list of steps) | `@RegisterAiService` with a record return type (structured output, Exercise 8) |
+| **Execute** | Four specialist `@Agent`s: Diagnosis, Mitigation, Verification, Communication | plain `@Agent`s (Exercise 4) |
+| **Review → re-plan** | `ResolutionReviewAgent` decides *resolved?*; if not, its feedback drives a new plan | an `AgenticServices` loop (Exercise 8) |
 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
     START(["Incident from DB"])
-    PLAN(["IncidentPlannerAgent<br/>@PlannerAgent<br/>(LLM plans + re-plans)"])
-    DIAG([DiagnosisAgent])
-    MIT([MitigationAgent])
-    VER([VerificationAgent])
-    COM([CommunicationAgent])
-    DONE(["planResult"])
+    PLAN(["PlannerAgent<br/>returns ExecutionPlan<br/>(which steps, what order)"])
+    EXEC(["Execute planned steps<br/>Diagnosis · Mitigation<br/>Verification · Communication"])
+    REVIEW{"ResolutionReviewAgent<br/>resolved?"}
+    DONE(["Resolved ✔"])
 
     START --> PLAN
-    PLAN -->|plans & calls| DIAG
-    PLAN -->|plans & calls| MIT
-    PLAN -->|plans & calls| VER
-    PLAN -->|plans & calls| COM
-    PLAN --> DONE
+    PLAN --> EXEC
+    EXEC --> REVIEW
+    REVIEW -->|no — feedback| PLAN
+    REVIEW -->|yes| DONE
 
     style START fill:#E8DCC4,stroke:#6B5B45
     style PLAN fill:#FFE4CC,stroke:#B87333
-    style DIAG fill:#D8F0D8,stroke:#3D7A3D
-    style MIT fill:#D8F0D8,stroke:#3D7A3D
-    style VER fill:#D8F0D8,stroke:#3D7A3D
-    style COM fill:#FFF8DC,stroke:#C4A000
+    style EXEC fill:#D8F0D8,stroke:#3D7A3D
+    style REVIEW fill:#FFF8DC,stroke:#C4A000
     style DONE fill:#D8F0D8,stroke:#3D7A3D
 ```
 
-!!! note "The plan is not something you write"
-    With `@SupervisorAgent` and `@PlannerAgent`, the DAG lives **inside the framework**. Your job is to give the planner (a) capable specialists and (b) **descriptions good enough for it to plan over**. The `description` on each `@Agent` is the planner's menu — it's how the planner decides *whether* and *when* to call each one.
+!!! note "Why not the `@PlannerAgent` annotation?"
+    `quarkus-langchain4j-agentic` *does* ship a `@PlannerAgent` annotation — but unlike `@SupervisorAgent`, it is **not turnkey**. It requires you to supply your own `Planner` implementation through a `@PlannerSupplier` method; there is no built-in LLM DAG planner behind it (the built-in planners are bound to `@SequenceAgent`, `@ParallelAgent`, `@LoopAgent`, and friends). So the clearest way to *learn* Plan & Execute is to build it explicitly on the same `AgenticServices` loop you used in Exercise 8 — and as a bonus, the whole plan is visible from a single `curl`, no Dev UI required.
 
 ---
 
@@ -78,139 +78,206 @@ export OPENAI_API_KEY=sk-your-key-here
 Wait for PostgreSQL Dev Services to start. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — the incident dashboard from Part 1, with the same 8 seeded incidents.
 
 !!! warning "Expect a red screen first — that's the point"
-    A declarative planner must be **fully wired** to boot: until `IncidentPlannerAgent` carries `@PlannerAgent`, Quarkus can't produce the bean and dev mode shows an *unsatisfied dependency* error. You'll clear it by completing the three files below; each save hot-reloads. (`VerificationAgent` and `CommunicationAgent` are already written — read them as your template.)
+    The lab ships with two TODO files. Until `PlannerAgent` has its prompts, Quarkus can't build the AI service and dev mode shows a build error (*"each parameter must be annotated…"*). You'll clear it in Step 1; the app boots green there, and then works end-to-end after Step 2. The four specialists and `ResolutionReviewAgent` are already written — read them as your template.
 
 ---
 
-## Step 1 — Write the `DiagnosisAgent` specialist (5 min)
+## Step 1 — Give the planner its brain (7 min)
 
-Open `DiagnosisAgent.java`. It's a plain `@Agent` — exactly like the specialists you wrote in Exercise 4. Replace the `// TODO` with the real annotations:
+Open `PlannerAgent.java`. It's an ordinary `@RegisterAiService` — the difference from a chatbot is its **return type**: a structured `ExecutionPlan` record, not a `String`. That's how the "Plan" phase hands a machine-readable plan to the executor.
+
+Read the provided models first (`model/ExecutionPlan.java`, `model/ResolutionStep.java`) so you know what the planner must produce:
+
+```java
+public enum ResolutionStep { DIAGNOSE, MITIGATE, VERIFY, COMMUNICATE }
+
+public record ExecutionPlan(List<ResolutionStep> steps, String rationale) {}
+```
+
+Now replace the `// TODO` on `plan(...)` with the two annotations:
 
 ```java
     @SystemMessage("""
-            You are a diagnosis specialist for an IT incident-management system.
-            Identify the single most likely root cause of the incident and the evidence
-            for it. Use only the incident facts provided; do not invent metrics or logs.
-            Keep it to 2–4 sentences.
+            You are the planning agent for an IT incident-management system.
+            You do NOT resolve the incident yourself. You decide which specialist steps to
+            run, and in what order, then hand that plan off to an executor.
+
+            The available steps are:
+              - DIAGNOSE:    investigate and identify the most likely root cause
+              - MITIGATE:    take a concrete action to reduce or remove impact (needs a diagnosis first)
+              - VERIFY:      confirm whether the incident now appears resolved (needs mitigation first)
+              - COMMUNICATE: write a stakeholder status update
+
+            Rules:
+              - Order steps so each has what it needs: DIAGNOSE before MITIGATE before VERIFY.
+              - Include COMMUNICATE for high-priority incidents (P1/P2); it is optional for low ones.
+              - Do not repeat a step that the feedback shows is already done and adequate.
+              - If feedback is provided, plan ONLY the additional steps still needed to resolve it.
+              - Keep the rationale to a single sentence.
             """)
     @UserMessage("""
-            Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
-            Description: {incidentInfo.description}
+            Incident: {system}/{service} (priority {priority}, #{incidentNumber})
+            Description: {description}
             Operator report: {report}
+
+            Work done so far / reviewer feedback (empty on the first plan):
+            {feedback}
             """)
-    @Agent(description = "Investigates the incident and identifies the most likely root cause.",
-           outputKey = "diagnosis")
-    String diagnose(IncidentInfo incidentInfo, Integer incidentNumber, String report);
+    ExecutionPlan plan(String system, String service, String priority, String description,
+                       Integer incidentNumber, String report, String feedback);
 ```
 
 Add the imports the annotations need:
 
 ```java
-import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 ```
 
-!!! tip "The `description` is planner-facing copy"
-    "Investigates the incident and identifies the most likely root cause." isn't a comment — it's the text the planner reads to decide this step belongs early. Write descriptions for the planner, not for humans.
+Save. The build error clears and dev mode boots **green**.
+
+!!! tip "The `{feedback}` placeholder is what makes re-planning possible"
+    On the first pass `feedback` is empty and the planner builds a plan from scratch. On a re-plan it carries the reviewer's verdict plus what's been done — so the planner appends only the steps still needed instead of starting over. One prompt, two behaviours.
 
 ---
 
-## Step 2 — Write the `MitigationAgent` specialist (4 min)
+## Step 2 — Wire the Plan → Execute → Review loop (8 min)
 
-Open `MitigationAgent.java`. Same shape, but notice how the `description` **hints ordering** — that's how the planner learns to run mitigation *after* diagnosis without you wiring an edge:
+Open `PlanExecuteFlow.java`. The six agents are already injected for you; your job is the `resolve(...)` method. It's the **same `AgenticServices.loopBuilder()`** from Exercise 8, but with three actions sharing one `AgenticScope`. Replace the `throw new UnsupportedOperationException(...)` with:
 
 ```java
-    @SystemMessage("""
-            You are a mitigation specialist for an IT incident-management system.
-            Given the incident and its diagnosis, state the single concrete mitigating
-            action to take and its expected effect. Do not claim work is already done that
-            you were not asked to do. Keep it to 2–4 sentences.
-            """)
-    @UserMessage("""
-            Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
-            Description: {incidentInfo.description}
+        var planAction = AgenticServices.agentAction(scope -> {
+            String feedback = scope.readState("feedback", "");
+            int iteration = scope.readState("iteration", 0) + 1;
+            scope.writeState("iteration", iteration);
 
-            Diagnosis (if available): {diagnosis}
-            """)
-    @Agent(description = "Takes a concrete action to reduce or remove the incident's impact. Best run after a diagnosis exists.",
-           outputKey = "mitigation")
-    String mitigate(IncidentInfo incidentInfo, Integer incidentNumber, String diagnosis);
+            ExecutionPlan plan = plannerAgent.plan(
+                    incident.system, incident.service, incident.priority,
+                    incident.description != null ? incident.description : "",
+                    incidentNumber, report != null ? report : "", feedback);
+            scope.writeState("plan", plan);
+            Log.infof("Plan (iteration %d): %s — %s", iteration, plan.steps(), plan.rationale());
+        });
+
+        var executeAction = AgenticServices.agentAction(scope -> {
+            ExecutionPlan plan = scope.readState("plan", null);
+            if (plan == null || plan.steps() == null) {
+                return;
+            }
+            for (ResolutionStep step : new LinkedHashSet<>(plan.steps())) {
+                Log.infof("Execute: %s", step);
+                switch (step) {
+                    case DIAGNOSE -> scope.writeState("diagnosis",
+                            diagnosisAgent.diagnose(incident, incidentNumber, report != null ? report : ""));
+                    case MITIGATE -> scope.writeState("mitigation",
+                            mitigationAgent.mitigate(incident, incidentNumber, scope.readState("diagnosis", "")));
+                    case VERIFY -> scope.writeState("verification",
+                            verificationAgent.verify(incident, incidentNumber,
+                                    scope.readState("diagnosis", ""), scope.readState("mitigation", "")));
+                    case COMMUNICATE -> scope.writeState("communication",
+                            communicationAgent.communicate(incident, incidentNumber,
+                                    scope.readState("diagnosis", ""), scope.readState("mitigation", ""),
+                                    scope.readState("verification", "")));
+                }
+            }
+        });
+
+        var reviewAction = AgenticServices.agentAction(scope -> {
+            ResolutionReview review = reviewAgent.review(
+                    incident.system, incident.service, incident.priority, incidentNumber,
+                    scope.readState("diagnosis", ""), scope.readState("mitigation", ""),
+                    scope.readState("verification", ""), scope.readState("communication", ""));
+            scope.writeState("resolved", review.resolved());
+            scope.writeState("feedback", "Reviewer: " + review.feedback());
+            Log.infof("Review: resolved=%b — %s", review.resolved(), review.feedback());
+        });
+
+        UntypedAgent workflow = AgenticServices.loopBuilder()
+                .name("incident-plan-execute-loop")
+                .maxIterations(3)
+                .exitCondition((scope, iteration) -> scope.readState("resolved", false))
+                .subAgents(planAction, executeAction, reviewAction)
+                .build();
+
+        return workflow.invokeWithAgenticScope(Map.of()).agenticScope().state();
 ```
 
-Add the same three imports.
-
-!!! note "How does `{diagnosis}` get filled?"
-    `DiagnosisAgent` writes `outputKey = "diagnosis"` into the shared `AgenticScope`; `MitigationAgent`'s `@UserMessage` reads `{diagnosis}` back out. Same scope-threading you saw with the supervisor in Exercise 4 — no Java glue passing values between agents.
-
-`VerificationAgent` and `CommunicationAgent` are already written for you the same way (verify-last, communicate-for-high-priority). Skim them so you know what's on the planner's menu.
-
----
-
-## Step 3 — Declare the `@PlannerAgent` (6 min)
-
-Open `IncidentPlannerAgent.java` — the star of the exercise. Replace the `// TODO` by annotating the method. You're not writing planning logic; you're **naming the specialists** and letting the framework's planner reason over them:
+Add the imports:
 
 ```java
-    @PlannerAgent(
-            outputKey = "planResult",
-            subAgents = {
-                    DiagnosisAgent.class,
-                    MitigationAgent.class,
-                    VerificationAgent.class,
-                    CommunicationAgent.class
-            })
-    String resolveIncident(IncidentInfo incidentInfo, Integer incidentNumber, String report);
+import java.util.LinkedHashSet;
+import dev.langchain4j.agentic.AgenticServices;
+import dev.langchain4j.agentic.UntypedAgent;
+import com.incidentmanagement.model.ExecutionPlan;
+import com.incidentmanagement.model.ResolutionReview;
+import com.incidentmanagement.model.ResolutionStep;
+import io.quarkus.logging.Log;
 ```
 
-The import is already present. Save — the red screen clears and Quarkus boots green.
+Save. Dev mode hot-reloads.
 
-!!! info "`@PlannerAgent` vs `@SupervisorAgent`"
-    Both take `subAgents` and let an LLM choose what to call. The difference is *when* the decision is made: a supervisor decides the **next** step reactively each turn; a planner decides the **whole plan** up front, then executes and re-plans if needed. For incident resolution — where the shape of the work varies per incident but the specialists are fixed — the planner is the cleaner fit.
-
-!!! tip "Agentic Dev UI"
-    Open the [topology view](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}: `IncidentPlannerAgent` sits at the root with all four specialists beneath it. The [Agents tab](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} shows each agent's `outputKey` and description — a quick check that your descriptions read the way the planner will see them.
+!!! note "Execute what the *current* plan says"
+    Notice `executeAction` runs whatever is in the latest plan — it doesn't skip a step just because an earlier iteration ran it. That's deliberate: when the reviewer sends VERIFY back for another round, you *want* it to actually run again. Trusting the planner to schedule only what's needed (via the `{feedback}` rule) is what keeps the loop from redoing finished work.
 
 ---
 
-## Step 4 — Run it and read the executed plan (3 min)
+## Step 3 — Run it and read the plan (3 min)
 
-The plan is now framework-internal, so you observe it through the **executed calls**, not a JSON DAG. Kick it off:
-
-```bash
-curl -s -X POST "http://localhost:8080/incident-plan/2" | jq
-```
-
-Incident #2 is the P1 `auth-service / user-login` "Complete authentication failure". You get back the consolidated `planResult`. The dev-mode log shows the run starting:
-
-```
-Starting Plan & Execute for incident #2 (auth-service/user-login P1)
-```
-
-To see **which specialists ran, in what order** — the executed plan — open the [Agentic Dev UI traces](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}. Each specialist that the planner invoked lights up under `IncidentPlannerAgent`, in the order it decided. That sequence *is* the plan — chosen from your descriptions, not hardcoded.
-
-Now contrast with a low-severity incident:
+Everything is in the response — no Dev UI needed. Start with the P1:
 
 ```bash
-curl -s -X POST "http://localhost:8080/incident-plan/4" | jq
+curl -s -X POST "http://localhost:8080/incident-plan/2" \
+  --data-urlencode "report=Total login failure since 14:00; auth pods OOMKilled" | jq
 ```
 
-Incident #4 is the P4 `cdn-edge` issue. Watch the traces: the planner typically runs **fewer** specialists (it may skip `CommunicationAgent` for a P4). Same code, **different plan per incident** — that's the whole point.
+Incident #2 is the P1 `auth-service / user-login` failure. You'll see the planner choose the **full** plan and the loop converge:
 
-The **dashboard** works too: open an incident and click **Process Incident** — it runs the same planner and flips the incident to RESOLVED.
+```json
+{
+  "incidentId": 2,
+  "plan": ["DIAGNOSE", "MITIGATE", "VERIFY", "COMMUNICATE"],
+  "planRationale": "High-priority incident with no prior steps — diagnose, mitigate, verify, and communicate.",
+  "iterations": 1,
+  "resolved": true,
+  "diagnosis": "...", "mitigation": "...", "verification": "RESOLVED ...", "communication": "..."
+}
+```
+
+Now a low-severity incident:
+
+```bash
+curl -s -X POST "http://localhost:8080/incident-plan/4" \
+  --data-urlencode "report=EU users see ~2s asset load; US unaffected" | jq
+```
+
+Incident #4 is the P4 `cdn-edge` issue. Watch the **dev-mode log** — this is where re-planning shows itself:
+
+```
+Plan (iteration 1): [DIAGNOSE] — P4 incident with no prior steps; start by diagnosing.
+Execute: DIAGNOSE
+Review: resolved=false — Mitigation and verification steps are needed.
+Plan (iteration 2): [MITIGATE, VERIFY] — diagnosis points to network latency; mitigate then verify.
+Execute: MITIGATE
+Execute: VERIFY
+Review: resolved=true — diagnosis, mitigation, and a RESOLVED verification are all present.
+```
+
+Same code, **a different plan per incident** — and when the first round falls short, the reviewer's feedback drives a **second plan** that finishes the job. That is Plan & Execute.
+
+The **dashboard** works too: open an incident and click **Process Incident** — it runs the same flow and flips the incident to RESOLVED.
 
 ---
 
 ## What you learned
 
-- **Plan & Execute** separates *deciding the work* from *doing the work* — so the plan adapts per incident instead of running a fixed shape.
-- **`@PlannerAgent`** is the declarative twin of `@SupervisorAgent`: you supply specialists, the framework plans, executes, and re-plans.
-- The **`description` on each `@Agent`** is the planner's menu — good descriptions (including ordering hints) are how you steer the plan without writing a loop.
-- Specialists share data through `AgenticScope` (`outputKey` → `{placeholder}`), exactly as in Exercise 4.
+- **Plan & Execute** separates *deciding the work* (`PlannerAgent` → `ExecutionPlan`) from *doing the work* (the specialist `@Agent`s) — so the plan adapts per incident instead of running a fixed shape.
+- **Structured output** (a record return type) turns an LLM into a planner your code can act on programmatically.
+- **Dynamic re-planning** falls out of a loop: a reviewer writes `feedback`, the planner reads it and schedules only what's still needed, and an `exitCondition` ends the loop as soon as the incident is resolved.
+- Specialists share data through `AgenticScope` (`outputKey` → `{placeholder}`), exactly as in Exercise 4 — and the same `loopBuilder` from Exercise 8 drives the whole thing.
 
 ??? tip "Stretch goals"
-    - Tighten `MitigationAgent`'s description to remove the ordering hint — does the planner still run diagnosis first?
-    - Add a fifth specialist (e.g. a `RootCauseDocAgent`) and watch the planner fold it in with no other code change.
-    - Compare the log for a P1 vs a P4 and note how many specialists each plan uses.
+    - Raise `maxIterations` and feed a vague report — how many rounds until the reviewer is satisfied, or does it give up?
+    - Add a fifth `ResolutionStep` (e.g. `POSTMORTEM`) plus a specialist, and mention it in the planner's system prompt — watch it fold into plans with no loop change.
+    - Tighten the planner's rules so a P4 never runs COMMUNICATE, and confirm it in the log.
 
 Next: **Exercise 10 — Memory Tiering**, where agents stop being amnesiac. *(coming next in Part 2)*

@@ -155,7 +155,7 @@ No agent behavior yet: that's Exercise 1.
 
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | `@PlannerAgent` plans over specialist `@Agent`s + dynamic re-planning |
+| [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | An LLM planner emits a structured plan over specialist `@Agent`s + dynamic re-planning |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 

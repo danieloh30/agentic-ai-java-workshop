@@ -28,9 +28,8 @@ EX08_FILES=(
 )
 
 EX09_FILES=(
-    "$EX09_BASE/agents/IncidentPlannerAgent.java"
-    "$EX09_BASE/agents/DiagnosisAgent.java"
-    "$EX09_BASE/agents/MitigationAgent.java"
+    "$EX09_BASE/agents/PlannerAgent.java"
+    "$EX09_BASE/workflow/PlanExecuteFlow.java"
 )
 
 reset_files() {

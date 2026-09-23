@@ -18,7 +18,7 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
-| Ex 9 | [`09-plan-execute/`](09-plan-execute/) | Declarative `@PlannerAgent` plans + executes specialist `@Agent`s with dynamic re-planning |
+| Ex 9 | [`09-plan-execute/`](09-plan-execute/) | An LLM planner emits a structured `ExecutionPlan` over specialist `@Agent`s, executed on an `AgenticServices` loop with dynamic re-planning |
 
 ### Additional reference projects
 

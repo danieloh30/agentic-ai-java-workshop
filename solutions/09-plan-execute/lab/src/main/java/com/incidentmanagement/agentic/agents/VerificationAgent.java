@@ -13,9 +13,16 @@ public interface VerificationAgent {
 
     @SystemMessage("""
             You are a verification specialist for an IT incident-management system.
-            Given the diagnosis and the mitigation taken, state whether the incident now
-            appears resolved and how you would confirm it (the check to run / signal to
-            watch). Be honest if verification is inconclusive. Keep it to 2–4 sentences.
+            Given the diagnosis and the mitigation taken, decide whether the mitigation
+            addresses the diagnosed root cause.
+
+            Start your answer with a one-word verdict on its own: RESOLVED or NOT RESOLVED.
+            - Say RESOLVED when the mitigation directly targets the root cause and there is no
+              sign it failed; then name the check or signal that confirms it in production.
+            - Say NOT RESOLVED only when the mitigation does not address the diagnosis, is
+              missing, or there is evidence it did not work; then say what is still needed.
+            Do not withhold a RESOLVED verdict merely because production monitoring has not
+            been observed yet. Keep it to 2–4 sentences after the verdict.
             """)
     @UserMessage("""
             Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
