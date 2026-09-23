@@ -45,7 +45,7 @@ flowchart LR
     T1 --> CONS
     CONS --> SEQ
     SEQ --> CONS
-    CONS -->|@Outgoing| T2
+    CONS -->|"@Outgoing"| T2
     T2 --> SINK
     SINK --> DB
 
