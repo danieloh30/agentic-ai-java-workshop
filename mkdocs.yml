@@ -88,6 +88,7 @@ nav:
       - "8. Quality loop (bonus)": 08-quarkus-flow/START_HERE.md
   - "Part 2 — From Patterns to Production":
       - "9. Plan & Execute": 09-plan-execute/START_HERE.md
+      - "10. Memory Tiering": 10-memory-tiering/START_HERE.md
 
 extra_css:
   - stylesheets/extra.css

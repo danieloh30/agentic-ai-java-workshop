@@ -7,6 +7,7 @@ cd "$REPO_ROOT"
 LAB_BASE="lab/src/main/java/com/incidentmanagement/agentic"
 EX08_BASE="solutions/08-quarkus-flow/lab/src/main/java/com/incidentmanagement/agentic"
 EX09_BASE="solutions/09-plan-execute/lab/src/main/java/com/incidentmanagement/agentic"
+EX10_BASE="solutions/10-memory-tiering/lab/src/main/java/com/incidentmanagement"
 
 LAB_FILES=(
     "$LAB_BASE/agents/TriageAgent.java"
@@ -30,6 +31,11 @@ EX08_FILES=(
 EX09_FILES=(
     "$EX09_BASE/agents/PlannerAgent.java"
     "$EX09_BASE/workflow/PlanExecuteFlow.java"
+)
+
+EX10_FILES=(
+    "$EX10_BASE/agentic/agents/IncidentAssistant.java"
+    "$EX10_BASE/memory/PersistentChatMemoryStore.java"
 )
 
 reset_files() {
@@ -57,12 +63,13 @@ cleanup_artifacts() {
 }
 
 usage() {
-    echo "Usage: $0 [all|lab|ex08|ex09]"
+    echo "Usage: $0 [all|lab|ex08|ex09|ex10]"
     echo ""
-    echo "  all   Reset root lab (Ex 1-4), Exercise 08 lab, and Exercise 09 lab (default)"
+    echo "  all   Reset root lab (Ex 1-4) and Exercise 08, 09, 10 labs (default)"
     echo "  lab   Reset root lab only (Exercises 1-4)"
     echo "  ex08  Reset Exercise 08 lab only"
     echo "  ex09  Reset Exercise 09 lab only"
+    echo "  ex10  Reset Exercise 10 lab only"
     exit 1
 }
 
@@ -76,6 +83,7 @@ case "$TARGET" in
         reset_files "lab/ (Exercises 1-4)" "${LAB_FILES[@]}"
         reset_files "solutions/08-quarkus-flow/lab/ (Exercise 8)" "${EX08_FILES[@]}"
         reset_files "solutions/09-plan-execute/lab/ (Exercise 9)" "${EX09_FILES[@]}"
+        reset_files "solutions/10-memory-tiering/lab/ (Exercise 10)" "${EX10_FILES[@]}"
         ;;
     lab)
         reset_files "lab/ (Exercises 1-4)" "${LAB_FILES[@]}"
@@ -85,6 +93,9 @@ case "$TARGET" in
         ;;
     ex09)
         reset_files "solutions/09-plan-execute/lab/ (Exercise 9)" "${EX09_FILES[@]}"
+        ;;
+    ex10)
+        reset_files "solutions/10-memory-tiering/lab/ (Exercise 10)" "${EX10_FILES[@]}"
         ;;
     *)
         usage

@@ -1,0 +1,24 @@
+package com.incidentmanagement.model;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+
+/**
+ * Model class representing an incident in the IT incident management system.
+ */
+@Entity()
+@Table(name="incident_info")
+public class IncidentInfo extends PanacheEntity {
+    @Column(name = "system_name")
+    public String system;
+    public String service;
+    public String priority;
+    public String description;
+
+    @Enumerated(EnumType.STRING)
+    public IncidentStatus status;
+}

@@ -227,7 +227,8 @@ Everything is in the response — no Dev UI needed. Start with the P1:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-plan/2" \
-  --data-urlencode "report=Total login failure since 14:00; auth pods OOMKilled" | jq
+  -H "Content-Type: text/plain" \
+  --data "Total login failure since 14:00; auth pods OOMKilled" | jq
 ```
 
 Incident #2 is the P1 `auth-service / user-login` failure. You'll see the planner choose the **full** plan and the loop converge:
@@ -247,7 +248,8 @@ Now a low-severity incident:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-plan/4" \
-  --data-urlencode "report=EU users see ~2s asset load; US unaffected" | jq
+  -H "Content-Type: text/plain" \
+  --data "EU users see ~2s asset load; US unaffected" | jq
 ```
 
 Incident #4 is the P4 `cdn-edge` issue. Watch the **dev-mode log** — this is where re-planning shows itself:

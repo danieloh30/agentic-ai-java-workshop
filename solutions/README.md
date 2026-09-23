@@ -19,6 +19,7 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
 | Ex 9 | [`09-plan-execute/`](09-plan-execute/) | An LLM planner emits a structured `ExecutionPlan` over specialist `@Agent`s, executed on an `AgenticServices` loop with dynamic re-planning |
+| Ex 10 | [`10-memory-tiering/`](10-memory-tiering/) | A conversational `@Agent` with two-tier memory — a `MessageWindowChatMemory` (working memory) over a durable `ChatMemoryStore` backed by PostgreSQL, wired via `@ChatMemoryProviderSupplier` |
 
 ### Additional reference projects
 
@@ -27,6 +28,7 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 | [`06-hitl-observability/observability-reference`](06-hitl-observability/observability-reference) | Prompt injection guard + observability |
 | [`08-quarkus-flow/lab/`](08-quarkus-flow/lab/) | Bonus exercise starter project (TODO stubs) |
 | [`09-plan-execute/lab/`](09-plan-execute/lab/) | Exercise 9 starter project (TODO stubs) |
+| [`10-memory-tiering/lab/`](10-memory-tiering/lab/) | Exercise 10 starter project (TODO stubs) |
 
 ## Versions
 

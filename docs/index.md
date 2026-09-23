@@ -156,6 +156,7 @@ No agent behavior yet: that's Exercise 1.
 | Exercise | Time | Focus |
 |----------|------|-------|
 | [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | An LLM planner emits a structured plan over specialist `@Agent`s + dynamic re-planning |
+| [10. Memory Tiering](10-memory-tiering/START_HERE.md) | 20 min | A conversational `@Agent` with two-tier memory: a windowed working memory over a durable PostgreSQL store |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 

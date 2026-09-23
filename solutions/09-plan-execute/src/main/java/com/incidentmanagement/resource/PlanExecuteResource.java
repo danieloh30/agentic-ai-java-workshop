@@ -5,7 +5,7 @@ import java.util.Map;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -13,7 +13,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import org.jboss.resteasy.reactive.RestQuery;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
@@ -27,6 +26,9 @@ import io.quarkus.logging.Log;
  * Runs Plan &amp; Execute for one incident and returns the plan the LLM chose alongside
  * every specialist's output — so you can see the whole thing from a single curl call,
  * no Dev UI required.
+ *
+ * <p>The optional operator report is the request body (text/plain), e.g.
+ * {@code curl -X POST .../incident-plan/2 -H 'Content-Type: text/plain' --data 'pods OOMKilled'}.
  */
 @Path("/incident-plan")
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,8 +39,9 @@ public class PlanExecuteResource {
 
     @POST
     @Path("/{incidentId}")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Transactional
-    public Map<String, Object> plan(Integer incidentId, @RestQuery @DefaultValue("") String report) {
+    public Map<String, Object> plan(Integer incidentId, String report) {
         IncidentInfo incident = IncidentInfo.findById(incidentId);
         if (incident == null) {
             throw new NotFoundException("Incident not found: " + incidentId);
