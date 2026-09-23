@@ -33,7 +33,7 @@ The capstone rewires the pipeline around **messaging**. An incident lands as an 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart LR
-    API(["POST /publish/{id}"])
+    API(["POST /publish/#123;id#125;"])
     T1[["incidents topic"]]
     CONS{{"@Incoming / @Outgoing<br/>consumer"}}
     SEQ(["@SequenceAgent<br/>Triage → Resolution"])
