@@ -14,12 +14,19 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 | Ex 7 | [`07-a2a/`](07-a2a/) (`multi-agent-system` + `remote-a2a-agent`) | `@A2AClientAgent` |
 | Ex 8 (bonus) | [`08-quarkus-flow/`](08-quarkus-flow/) | Programmatic loop with `AgenticServices.loopBuilder()` + Quarkus Flow |
 
+### Part 2 — From Patterns to Production
+
+| Exercise | Solution folder | What it shows |
+|----------|----------------|--------------|
+| Ex 9 | [`09-plan-execute/`](09-plan-execute/) | Declarative `@PlannerAgent` plans + executes specialist `@Agent`s with dynamic re-planning |
+
 ### Additional reference projects
 
 | Folder | What it shows |
 |--------|--------------|
 | [`06-hitl-observability/observability-reference`](06-hitl-observability/observability-reference) | Prompt injection guard + observability |
 | [`08-quarkus-flow/lab/`](08-quarkus-flow/lab/) | Bonus exercise starter project (TODO stubs) |
+| [`09-plan-execute/lab/`](09-plan-execute/lab/) | Exercise 9 starter project (TODO stubs) |
 
 ## Versions
 

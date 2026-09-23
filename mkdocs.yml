@@ -77,7 +77,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Lab Overview: 00-intro/SPEAKER_NOTES.md
-  - Exercises:
+  - "Part 1 — Fundamental Patterns":
       - "1. Agent + tool": 01-first-agent/START_HERE.md
       - "2. Policy as prompt": 02-maintenance-agent/START_HERE.md
       - "3. Parallel agents": 03-parallel-workflow/START_HERE.md
@@ -86,6 +86,8 @@ nav:
       - "6. Human gate + tracing": 06-hitl-observability/START_HERE.md
       - "7. Remote agents (A2A)": 07-a2a/START_HERE.md
       - "8. Quality loop (bonus)": 08-quarkus-flow/START_HERE.md
+  - "Part 2 — From Patterns to Production":
+      - "9. Plan & Execute": 09-plan-execute/START_HERE.md
 
 extra_css:
   - stylesheets/extra.css

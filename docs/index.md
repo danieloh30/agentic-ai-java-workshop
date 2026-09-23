@@ -138,6 +138,8 @@ No agent behavior yet: that's Exercise 1.
 
 ## Exercises
 
+### Part 1 — Fundamental Patterns
+
 | Exercise | Time | Focus |
 |----------|------|-------|
 | [1. Agent + tool](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
@@ -148,6 +150,12 @@ No agent behavior yet: that's Exercise 1.
 | [6. Human gate + tracing](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
 | [7. Remote agents (A2A)](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
 | [8. Quality loop (bonus)](08-quarkus-flow/START_HERE.md) | 15 min | Programmatic loop with `AgenticServices.loopBuilder()` |
+
+### Part 2 — From Patterns to Production (Advanced & Enterprise)
+
+| Exercise | Time | Focus |
+|----------|------|-------|
+| [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | `@PlannerAgent` plans over specialist `@Agent`s + dynamic re-planning |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 
