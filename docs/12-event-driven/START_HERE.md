@@ -234,6 +234,17 @@ Publishing again reruns the pipeline for the same incident. If a resolution alre
 
 ---
 
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
+
+- [ ] Submitted incident #2 through the web UI; you can explain why the success notification confirms publication before processing finishes
+- [ ] Terminal logs show the Kafka consumer processing the incident and the sink recording its resolution
+- [ ] After the sink completes, the refreshed dashboard shows `RESOLVED` and the resolution page contains both `triage` and `resolution`
+- [ ] You can explain from memory: how `@Incoming` and `@Outgoing` connect the pipeline, how channels map to Kafka topics, and why LLM calls use `@Blocking`
+
+</div>
+
 ## What you learned — and the whole workshop
 
 - **Agents as stream processors.** An `@Incoming`/`@Outgoing` method turns your agentic pipeline into a Kafka consumer that reads events and publishes results — decoupled from whoever produced the event.

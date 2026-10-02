@@ -297,6 +297,17 @@ curl -s -X POST "http://localhost:8080/incident-plan/4" \
 
 ---
 
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
+
+- [ ] Processed incidents #2 and #4 in the web UI; terminal logs show the plan, specialist steps, and reviewer verdict
+- [ ] Saved summaries remain readable after refreshing the dashboard; each incident's status matches its reviewer verdict
+- [ ] You can explain from memory: how reviewer feedback drives re-planning and how the three-iteration limit bounds the loop
+- [ ] You can explain from memory: how the planner selects work and how specialists share results through `AgenticScope`
+
+</div>
+
 ## What you learned
 
 - **Plan & Execute** separates *deciding the work* (`PlannerAgent` → `ExecutionPlan`) from *doing the work* (the specialist `@Agent`s) — so the plan adapts per incident instead of running a fixed shape.

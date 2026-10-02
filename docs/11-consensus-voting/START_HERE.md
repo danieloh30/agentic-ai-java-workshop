@@ -272,6 +272,17 @@ In this example, two voters want a RESTART and one wants to MONITOR — the majo
 
 ---
 
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
+
+- [ ] The web UI shows the winning action and all three ballots, including each voter's confidence and rationale
+- [ ] Tested the clear and ambiguous reports; the winning action and reported agreement match the ballots
+- [ ] The dashboard marks processed incidents `IN_PROGRESS`; you can explain why a recommendation does not execute a resolution
+- [ ] You can explain from memory: how `@ParallelAgent` runs the voters and how the deterministic `@Output` method tallies their votes
+
+</div>
+
 ## What you learned
 
 - **Consensus & Voting** turns one model's opinion into a decision backed by several — and surfaces disagreement instead of hiding it behind a single confident answer.

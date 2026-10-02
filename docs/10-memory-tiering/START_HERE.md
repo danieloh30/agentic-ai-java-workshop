@@ -263,6 +263,17 @@ Incident #4 has an empty history only before its first conversation turn; after 
 
 ---
 
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
+
+- [ ] The web UI follow-up recalls incident #2's OOMKilled pods or five-minute restart pattern without repeating the symptom
+- [ ] Incident #2's history shows both conversation turns; `chatmemoryentity` contains the stored messages in PostgreSQL
+- [ ] Incident #4's conversation does not recall incident #2's operator report
+- [ ] You can explain from memory: what the message window and database store each do, how `@MemoryId` isolates conversations, and why persistence across restarts needs a persistent database
+
+</div>
+
 ## What you learned
 
 - **Agents are amnesiac by default** — memory is an explicit component you attach, not a freebie.
