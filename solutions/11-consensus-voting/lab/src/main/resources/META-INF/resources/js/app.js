@@ -6,6 +6,8 @@ let currentFilterField = 'all';
 let currentStatusFilter = null;
 let lastUpdatedIncidentId = null;
 let selectedIncidentId = null;
+const incidentResults = new Map();
+const pendingIncidents = new Set();
 
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
@@ -44,7 +46,7 @@ function getPriorityPresentation(priority) {
 }
 
 function loadAllIncidents() {
-    fetch('/incidents')
+    return fetch('/incidents')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
@@ -251,11 +253,26 @@ function openDetailPanel(incidentId) {
             <div class="detail-label">Description</div>
             <div class="detail-value">${incident.description || 'N/A'}</div>
         </div>
+        <div class="detail-field" id="detail-result-field" hidden>
+            <div class="detail-label">Consensus Result</div>
+            <pre id="detail-result" class="detail-result" aria-live="polite"></pre>
+        </div>
         ${formHtml}
     `;
 
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
+    if (incidentResults.has(incidentId)) {
+        document.getElementById('detail-result-field').hidden = false;
+        document.getElementById('detail-result').textContent = incidentResults.get(incidentId);
+    }
+    const processButton = document.getElementById('detail-process-btn');
+    if (processButton && pendingIncidents.has(incidentId)) {
+        document.getElementById('detail-report').disabled = true;
+        processButton.disabled = true;
+        processButton.classList.add('loading');
+        processButton.textContent = 'Processing...';
+    }
 }
 
 function closeDetailPanel() {
@@ -266,32 +283,38 @@ function closeDetailPanel() {
 }
 
 function processFromPanel(incidentId, status) {
+    if (pendingIncidents.has(incidentId)) return;
     const report = document.getElementById('detail-report').value;
+    pendingIncidents.add(incidentId);
+    document.getElementById('detail-report').disabled = true;
+    let requestFailed = false;
     const button = document.getElementById('detail-process-btn');
-
     button.disabled = true;
     button.classList.add('loading');
     button.textContent = 'Processing...';
-
-    const statusLabels = { 'OPEN': 'open incident', 'TRIAGING': 'triage', 'IN_PROGRESS': 'investigation' };
 
     fetch(`/incident-management/process/${incidentId}?report=${encodeURIComponent(report)}`, { method: 'POST' })
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
             return response.text();
         })
-        .then(() => {
+        .then(result => {
+            incidentResults.set(incidentId, result);
             lastUpdatedIncidentId = incidentId;
-            showToast(`Incident successfully processed from ${statusLabels[status]}`);
-            closeDetailPanel();
-            loadAllIncidents();
+            showToast('Consensus vote completed.');
+            return loadAllIncidents();
         })
         .catch(error => {
-            console.error(`Error processing incident from ${statusLabels[status]}:`, error);
-            showToast(`Failed to process ${statusLabels[status]}. Please try again.`, 'error');
-            button.disabled = false;
-            button.classList.remove('loading');
-            button.textContent = 'Process Incident';
+            requestFailed = true;
+            console.error(`Error processing incident #${incidentId}`, error);
+            showToast('Consensus vote failed. Please try again.', 'error');
+        })
+        .finally(() => {
+            pendingIncidents.delete(incidentId);
+            if (selectedIncidentId === incidentId) {
+                openDetailPanel(incidentId);
+                if (requestFailed) document.getElementById('detail-report').value = report;
+            }
         });
 }
 

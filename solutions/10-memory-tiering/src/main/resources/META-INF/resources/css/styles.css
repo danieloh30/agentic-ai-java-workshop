@@ -504,6 +504,19 @@ tbody tr.active-row { background: var(--accent-dim); }
     line-height: 1.5;
 }
 
+.detail-result {
+    margin: 0;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font: inherit;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 .detail-divider {
     height: 1px;
     background: var(--border);

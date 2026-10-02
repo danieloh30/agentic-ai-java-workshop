@@ -6,6 +6,8 @@ let currentFilterField = 'all';
 let currentStatusFilter = null;
 let lastUpdatedIncidentId = null;
 let selectedIncidentId = null;
+const incidentResults = new Map();
+const pendingIncidents = new Set();
 
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
@@ -44,7 +46,7 @@ function getPriorityPresentation(priority) {
 }
 
 function loadAllIncidents() {
-    fetch('/incidents')
+    return fetch('/incidents')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
@@ -219,9 +221,9 @@ function openDetailPanel(incidentId) {
     if (canProcess) {
         formHtml = `
             <div class="detail-divider"></div>
-            <div class="detail-form-title">Process Incident</div>
-            <textarea id="detail-report" class="detail-textarea" placeholder="Enter incident report details..."></textarea>
-            <button class="btn-process" id="detail-process-btn" onclick="processFromPanel(${incident.id}, '${incident.status}')">Process Incident</button>
+            <div class="detail-form-title">${incidentResults.has(incidentId) ? 'Continue Conversation' : 'Process Incident'}</div>
+            <textarea id="detail-report" class="detail-textarea" aria-label="Message to incident assistant" placeholder="${incidentResults.has(incidentId) ? 'Ask a follow-up question...' : 'Enter incident report details...'}"></textarea>
+            <button class="btn-process" id="detail-process-btn" onclick="processFromPanel(${incident.id}, '${incident.status}')">${incidentResults.has(incidentId) ? 'Send Message' : 'Process Incident'}</button>
         `;
     } else {
         formHtml = `
@@ -251,11 +253,26 @@ function openDetailPanel(incidentId) {
             <div class="detail-label">Description</div>
             <div class="detail-value">${incident.description || 'N/A'}</div>
         </div>
+        <div class="detail-field" id="detail-result-field" hidden>
+            <div class="detail-label">Assistant Reply</div>
+            <pre id="detail-result" class="detail-result" aria-live="polite"></pre>
+        </div>
         ${formHtml}
     `;
 
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
+    if (incidentResults.has(incidentId)) {
+        document.getElementById('detail-result-field').hidden = false;
+        document.getElementById('detail-result').textContent = incidentResults.get(incidentId);
+    }
+    const processButton = document.getElementById('detail-process-btn');
+    if (processButton && pendingIncidents.has(incidentId)) {
+        document.getElementById('detail-report').disabled = true;
+        processButton.disabled = true;
+        processButton.classList.add('loading');
+        processButton.textContent = 'Processing...';
+    }
 }
 
 function closeDetailPanel() {
@@ -266,32 +283,48 @@ function closeDetailPanel() {
 }
 
 function processFromPanel(incidentId, status) {
-    const report = document.getElementById('detail-report').value;
+    if (pendingIncidents.has(incidentId)) return;
+    const report = document.getElementById('detail-report').value.trim();
+    if (!report) {
+        showToast('Enter a message for the assistant.', 'error');
+        return;
+    }
+    const followUp = incidentResults.has(incidentId);
+    pendingIncidents.add(incidentId);
+    document.getElementById('detail-report').disabled = true;
+    let requestFailed = false;
     const button = document.getElementById('detail-process-btn');
-
     button.disabled = true;
     button.classList.add('loading');
     button.textContent = 'Processing...';
 
-    const statusLabels = { 'OPEN': 'open incident', 'TRIAGING': 'triage', 'IN_PROGRESS': 'investigation' };
-
-    fetch(`/incident-management/process/${incidentId}?report=${encodeURIComponent(report)}`, { method: 'POST' })
+    const url = followUp ? `/incident-assistant/${incidentId}`
+            : `/incident-management/process/${incidentId}?report=${encodeURIComponent(report)}`;
+    const options = followUp
+            ? { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: report }
+            : { method: 'POST' };
+    fetch(url, options)
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
-            return response.text();
+            return followUp ? response.json().then(result => result.reply) : response.text();
         })
-        .then(() => {
+        .then(result => {
+            incidentResults.set(incidentId, result);
             lastUpdatedIncidentId = incidentId;
-            showToast(`Incident successfully processed from ${statusLabels[status]}`);
-            closeDetailPanel();
-            loadAllIncidents();
+            showToast(followUp ? 'Assistant replied.' : 'Conversation opened.');
+            return loadAllIncidents();
         })
         .catch(error => {
-            console.error(`Error processing incident from ${statusLabels[status]}:`, error);
-            showToast(`Failed to process ${statusLabels[status]}. Please try again.`, 'error');
-            button.disabled = false;
-            button.classList.remove('loading');
-            button.textContent = 'Process Incident';
+            requestFailed = true;
+            console.error(`Error processing incident #${incidentId}`, error);
+            showToast('Assistant request failed. Please try again.', 'error');
+        })
+        .finally(() => {
+            pendingIncidents.delete(incidentId);
+            if (selectedIncidentId === incidentId) {
+                openDetailPanel(incidentId);
+                if (requestFailed) document.getElementById('detail-report').value = report;
+            }
         });
 }
 

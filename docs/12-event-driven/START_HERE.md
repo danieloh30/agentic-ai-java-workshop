@@ -161,11 +161,38 @@ Save. The red screen clears and dev mode boots **green**.
 
 ---
 
-## Step 3 — Publish an event and watch it resolve (3 min)
+## Step 3 — Test the event pipeline in the web UI (3 min)
 
-The flow is asynchronous, so you **publish**, then **poll** for the resolution — you don't get it back in the POST response.
+Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and publish an incident from the dashboard:
 
-Fire an incident onto the bus:
+1. Click **incident #2** — the P1 `auth-service / user-login` failure.
+2. Enter this report:
+
+    ```text
+    Total login failure since 14:00; auth pods OOMKilled after last deploy
+    ```
+
+3. Click **Process Incident**. The panel closes and a success notification appears after the event is submitted. That confirms publication; the agents continue working asynchronously, so the incident may still show **In Progress**.
+
+Watch the **terminal logs** for the stages:
+
+```text
+Published incident #2 to incidents-in (from dashboard)
+Processing incident 2 from Kafka
+Pipeline resolved incident #2 → publishing to resolutions-out
+Recorded resolution for incident #2 and marked it RESOLVED
+```
+
+Once the sink records the resolution, **refresh the dashboard** and confirm that #2 is **Resolved**. The dashboard refreshes once after submission; it does not automatically poll for completion. Processing time depends on the model and broker, so use the completion log rather than a fixed six-second delay.
+
+Open [incident #2's resolution](http://localhost:8080/incident-events/resolutions/2){:target="_blank"} in another browser tab to read the `triage` and `resolution` fields. The incident's Description remains its original report; the result is available at this link. You can also open [all resolutions from this session](http://localhost:8080/incident-events/resolutions){:target="_blank"}.
+
+!!! tip "If the resolution page returns 404"
+    The sink has not recorded the result yet. Wait for the completion log, then refresh the resolution page. A submission can succeed before the resolution exists — that is the asynchronous behavior this exercise demonstrates.
+
+### Optional — Publish and inspect with curl
+
+The API offers the same publish-then-read flow:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-events/publish/2" \
@@ -174,7 +201,7 @@ curl -s -X POST "http://localhost:8080/incident-events/publish/2" \
 ```
 
 ```json
-{ "incidentId": 2, "status": "published to pipeline" }
+{ "published": true, "incidentId": 2, "topic": "incidents-in", "next": "GET /incident-events/resolutions/2 (once the pipeline finishes)" }
 ```
 
 In the dev-mode log you'll see the consumer pick it up and the `@SequenceAgent` run. After a few seconds, poll for the resolution:
@@ -191,7 +218,7 @@ curl -s "http://localhost:8080/incident-events/resolutions/2" | jq
 }
 ```
 
-The whole round trip — publish → Redpanda → consumer → triage → resolution → resolutions topic → sink — takes about **6 seconds**. The sink also flips the incident to **RESOLVED** in PostgreSQL: refresh the dashboard, or
+After the round trip — publish → Redpanda → consumer → triage → resolution → resolutions topic → sink — the sink also sets the incident to **RESOLVED** in PostgreSQL. Check it with:
 
 ```bash
 curl -s "http://localhost:8080/incidents" | jq '.[] | select(.id==2) | {id, status}'
@@ -203,8 +230,7 @@ curl -s "http://localhost:8080/incidents" | jq '.[] | select(.id==2) | {id, stat
 
 Try `GET /incident-events/resolutions` (no id) to see every resolution the pipeline has produced this session.
 
-!!! tip "If the first poll 404s"
-    That just means the pipeline hasn't finished yet — it's asynchronous. Wait a second and poll again. That 404-then-200 *is* the event-driven behavior: the producer never blocked on the agent.
+Publishing again reruns the pipeline for the same incident. If a resolution already exists, the lookup can return that previous result while the new event is processing; watch the logs to identify completion of the new run.
 
 ---
 

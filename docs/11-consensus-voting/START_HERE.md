@@ -191,9 +191,36 @@ Save. The red screen clears and dev mode boots **green**.
 
 ---
 
-## Step 3 — Run it and read the vote (3 min)
+## Step 3 — Test voting in the web UI (3 min)
 
-Everything comes back in one response. Start with the P1 — a clear regression:
+Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start with a clear post-deploy regression:
+
+1. Click **incident #2** — the P1 `auth-service / user-login` failure.
+2. Enter this report:
+
+    ```text
+    Total login failure since 14:00; auth pods OOMKilled repeatedly after last deploy
+    ```
+
+3. Click **Process Incident**. The panel stays open and shows the **Consensus Result**: the winning action, whether the vote was unanimous (or how many voters agreed), and every ballot's action, confidence, and rationale.
+
+For this report, expect **ROLLBACK** to be a strong candidate. A unanimous result means all three voters chose the same action. The incident stays **In Progress** — voting recommends an action; it does not execute that action or mark the incident resolved.
+
+Now compare an ambiguous report:
+
+1. Open **incident #5** and enter:
+
+    ```text
+    Heap slowly climbing over 6h on one of three pods; that pod self-restarted once. No recent deploy, root cause unknown. Users mostly unaffected, rare timeouts.
+    ```
+
+2. Click **Process Incident** and compare the three ballots. If they split, check that the winning action matches the tally and that the result shows the agreement count rather than `unanimous`.
+
+The exact votes and confidence scores can vary. An ambiguous report may still produce a unanimous vote; try changing the impact or uncertainty in the report to explore how the personas respond. Watch the terminal log for the winning action and agreement count. Reopening an incident shows its latest result while the page is open; refreshing the browser clears that display.
+
+### Optional — Inspect the structured ballots with curl
+
+The JSON endpoint exposes the same voting workflow, including `agreement`, `totalVoters`, and `unanimous`:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-consensus/2" \
@@ -201,7 +228,7 @@ curl -s -X POST "http://localhost:8080/incident-consensus/2" \
   --data "Total login failure since 14:00; auth pods OOMKilled repeatedly after last deploy" | jq
 ```
 
-All three voters see a post-deploy failure and converge — a **unanimous ROLLBACK**:
+An example of a unanimous **ROLLBACK**:
 
 ```json
 {
@@ -217,7 +244,7 @@ All three voters see a post-deploy failure and converge — a **unanimous ROLLBA
 }
 ```
 
-Now a genuinely ambiguous one — a slow memory creep, no deploy, users barely affected:
+Now the ambiguous report — a slow memory creep, no deploy, users barely affected:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-consensus/5" \
@@ -226,7 +253,7 @@ curl -s -X POST "http://localhost:8080/incident-consensus/5" \
   | jq '{decision, unanimous, agreement} + {ballots: [.votes[] | {action, confidence}]}'
 ```
 
-This time the voters **split** — and the tally earns its keep:
+An example where the voters **split**:
 
 ```json
 {
@@ -241,9 +268,7 @@ This time the voters **split** — and the tally earns its keep:
 }
 ```
 
-Two voters want a RESTART, the cost-conscious one wants to wait — majority carries it, and `unanimous: false` tells you honestly that it was a judgment call. That's the whole point: the disagreement is visible, not averaged away.
-
-The **dashboard** works too: open an incident and click **Process Incident** — it runs the same vote and shows the decision plus every ballot.
+In this example, two voters want a RESTART and one wants to MONITOR — the majority carries it, while `unanimous: false` makes the disagreement visible. The JSON endpoint returns the recommendation without changing the incident status; the dashboard processing path also marks the incident **In Progress**.
 
 ---
 

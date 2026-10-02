@@ -180,9 +180,47 @@ Save. The red screen clears and Quarkus boots green.
 
 ---
 
-## Step 3 — Prove it remembers (3 min)
+## Step 3 — Test memory in the web UI (3 min)
 
-Turn 1 — tell the assistant a symptom (the message is the request body):
+Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start a conversation:
+
+1. Click **incident #2** — the `auth-service / user-login` failure.
+2. Enter this report:
+
+    ```text
+    The auth-service pods are OOMKilled every ~5 minutes. Where do I start?
+    ```
+
+3. Click **Process Incident**. The panel stays open and shows the **Assistant Reply**. The incident remains **In Progress** — this exercise provides advice rather than resolving it.
+
+Now test recall in the same panel:
+
+1. In **Continue Conversation**, enter:
+
+    ```text
+    Remind me: what symptom did I report a moment ago?
+    ```
+
+2. Click **Send Message**. The reply should mention the **OOMKilled pods** or their five-minute restart pattern, even though you did not repeat that symptom in the follow-up.
+
+That is Tier 1 doing its job: the window replayed the earlier turn into the model's context. Closing and reopening incident #2 keeps its latest reply visible while the page is open. Refreshing the browser clears that display, but the conversation is still stored on the server.
+
+Inspect **Tier 2** by opening [incident #2's history](http://localhost:8080/incident-assistant/2/history){:target="_blank"} in another browser tab. After these two turns, a fresh conversation typically contains five messages: `SYSTEM`, `USER`, `AI`, `USER`, `AI`. Open the [Dev UI database view](http://localhost:8080/q/dev-ui/io.quarkus.quarkus-agroal/datasources){:target="_blank"} and inspect `chatmemoryentity` to see the serialized messages in PostgreSQL.
+
+Finally, confirm memory isolation:
+
+1. Open [incident #4's history](http://localhost:8080/incident-assistant/4/history){:target="_blank"} before chatting with it. On a fresh lab, `messageCount` is `0`.
+2. Return to the dashboard, open **incident #4**, and submit:
+
+    ```text
+    What symptom did I report earlier in this conversation?
+    ```
+
+3. The assistant should have no earlier operator symptom to recall for #4. It can refer to #4's seeded CDN description, but should not recall #2's OOMKilled pods. Each incident ID has its own `@MemoryId`.
+
+### Optional — Repeat the conversation with curl
+
+The chat endpoint accepts the message as a `text/plain` request body. These requests add turns to the same conversation used by the dashboard:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-assistant/2" \
@@ -198,7 +236,7 @@ curl -s -X POST "http://localhost:8080/incident-assistant/2" \
   --data "Remind me: what symptom did I report a moment ago?" | jq
 ```
 
-The reply names the **OOMKilled pods** — it never appeared in turn 2's message. That's Tier 1 doing its job: the window replayed turn 1 into the model's context.
+The second reply should recall the symptom from the first message.
 
 Now peek at **Tier 2** directly:
 
@@ -210,15 +248,15 @@ curl -s "http://localhost:8080/incident-assistant/2/history" | jq
 { "incidentId": 2, "messageCount": 5, "messages": ["SYSTEM", "USER", "AI", "USER", "AI"] }
 ```
 
-Those messages are rows in PostgreSQL, serialized by your store — not heap state. Open the [Dev UI database view](http://localhost:8080/q/dev-ui/io.quarkus.quarkus-agroal/datasources){:target="_blank"} and query `chatmemoryentity` to see the JSON transcript itself.
+This example is for a fresh two-turn conversation; the count is higher if you already completed the UI steps, up to the configured message-window limit.
 
 Finally, confirm conversations are **isolated** by `@MemoryId` — a different incident is a different memory:
 
 ```bash
-curl -s "http://localhost:8080/incident-assistant/4/history" | jq  # messageCount: 0
+curl -s "http://localhost:8080/incident-assistant/4/history" | jq
 ```
 
-The **dashboard** ties it together: click **Process Incident** on an incident to open the conversation (turn 1 seeds the memory with the incident facts), then keep chatting via the endpoint above.
+Incident #4 has an empty history only before its first conversation turn; after the UI isolation test, it has its own messages.
 
 !!! info "Durability, honestly"
     Because memory lives in PostgreSQL, it's **externalized** — survives across requests, shareable across replicas, and it outlives restarts *when pointed at a persistent database*. In this lab, Dev Services hands you a fresh throwaway Postgres each launch, so a dev-mode restart starts clean. Point `quarkus.datasource.*` at a managed Postgres and the same code keeps the transcript across restarts — no code change, that's the payoff of putting Tier 2 in a real store.
