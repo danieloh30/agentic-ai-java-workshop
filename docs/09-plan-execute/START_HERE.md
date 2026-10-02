@@ -221,9 +221,49 @@ Save. Dev mode hot-reloads.
 
 ---
 
-## Step 3 — Run it and read the plan (3 min)
+## Step 3 — Test it in the web UI (3 min)
 
-Everything is in the response — no Dev UI needed. Start with the P1:
+Hot reload should have picked up your changes. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start with the P1 incident:
+
+1. Click **incident #2** — the `auth-service / user-login` failure.
+2. Enter this report in the **Process Incident** panel:
+
+    ```text
+    Total login failure since 14:00; auth pods OOMKilled
+    ```
+
+3. Click **Process Incident** and watch the terminal logs for the plan, specialist steps, and reviewer verdict.
+
+For this P1, expect a plan containing **DIAGNOSE → MITIGATE → VERIFY → COMMUNICATE**. When processing finishes, the dashboard refreshes. If the reviewer reports `resolved=true`, incident #2 changes to **Resolved**. Reopen the incident to read the saved plan and specialist summaries in **Description**. If the loop reaches its limit with `resolved=false`, the status remains **In Progress**; inspect the reviewer's feedback in the logs.
+
+Now compare a low-severity incident:
+
+1. Click **incident #4** — the P4 `cdn-edge / static-assets` issue.
+2. Enter this report:
+
+    ```text
+    EU users see ~2s asset load; US unaffected
+    ```
+
+3. Click **Process Incident** and compare its plan with the P1's. **COMMUNICATE** is optional for P4 incidents.
+
+Watch the **terminal logs** for re-planning. A run that needs a second round might look like this:
+
+```text
+Plan (iteration 1): [DIAGNOSE] — P4 incident with no prior steps; start by diagnosing.
+Execute: DIAGNOSE
+Review: resolved=false — Mitigation and verification steps are needed.
+Plan (iteration 2): [MITIGATE, VERIFY] — diagnosis points to network latency; mitigate then verify.
+Execute: MITIGATE
+Execute: VERIFY
+Review: resolved=true — diagnosis, mitigation, and a RESOLVED verification are all present.
+```
+
+The exact plan and iteration count can vary. The reviewer may accept the first round; when it doesn't, its feedback drives another plan, up to the three-iteration limit.
+
+### Optional — Inspect the shared state with curl
+
+For a JSON view of the plan, iteration count, and specialist outputs, use the diagnostic endpoint:
 
 ```bash
 curl -s -X POST "http://localhost:8080/incident-plan/2" \
@@ -231,7 +271,7 @@ curl -s -X POST "http://localhost:8080/incident-plan/2" \
   --data "Total login failure since 14:00; auth pods OOMKilled" | jq
 ```
 
-Incident #2 is the P1 `auth-service / user-login` failure. You'll see the planner choose the **full** plan and the loop converge:
+An example response:
 
 ```json
 {
@@ -252,21 +292,8 @@ curl -s -X POST "http://localhost:8080/incident-plan/4" \
   --data "EU users see ~2s asset load; US unaffected" | jq
 ```
 
-Incident #4 is the P4 `cdn-edge` issue. Watch the **dev-mode log** — this is where re-planning shows itself:
-
-```
-Plan (iteration 1): [DIAGNOSE] — P4 incident with no prior steps; start by diagnosing.
-Execute: DIAGNOSE
-Review: resolved=false — Mitigation and verification steps are needed.
-Plan (iteration 2): [MITIGATE, VERIFY] — diagnosis points to network latency; mitigate then verify.
-Execute: MITIGATE
-Execute: VERIFY
-Review: resolved=true — diagnosis, mitigation, and a RESOLVED verification are all present.
-```
-
-Same code, **a different plan per incident** — and when the first round falls short, the reviewer's feedback drives a **second plan** that finishes the job. That is Plan & Execute.
-
-The **dashboard** works too: open an incident and click **Process Incident** — it runs the same flow and flips the incident to RESOLVED.
+!!! note "JSON inspection and saving the result"
+    `/incident-plan/{id}` runs the workflow and returns its state without saving the summary or changing the incident's status. The web UI uses `/incident-management/process/{id}`, which runs the workflow and saves both. If you run these curl commands after the UI tests, the planner sees the summaries already saved in the incidents' descriptions, so the plans may differ from a fresh run.
 
 ---
 

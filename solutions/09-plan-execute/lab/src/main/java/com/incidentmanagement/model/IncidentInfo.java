@@ -17,6 +17,7 @@ public class IncidentInfo extends PanacheEntity {
     public String system;
     public String service;
     public String priority;
+    @Column(columnDefinition = "text")
     public String description;
 
     @Enumerated(EnumType.STRING)
