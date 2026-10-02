@@ -28,7 +28,7 @@ Look at what you built earlier:
 
 Neither one **lays out the whole job up front**. A P4 "slow assets in EU" and a P1 "auth completely down" are not the same amount of work — but a hardcoded pipeline treats them identically.
 
-**Plan & Execute** (Slide pattern #01) fixes this. A **planner** looks at the goal and its available specialists, decides **which to call and in what order** *before* execution, runs them through a shared scope, and **re-plans** if a reviewer says the goal isn't met yet.
+**Plan & Execute** fixes this. A **planner** looks at the goal and its available specialists, decides **which to call and in what order** *before* execution, runs them through a shared scope, and **re-plans** if a reviewer says the goal isn't met yet.
 
 ### Three moving parts
 
