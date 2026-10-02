@@ -218,48 +218,50 @@ Finally, confirm memory isolation:
 
 3. The assistant should have no earlier operator symptom to recall for #4. It can refer to #4's seeded CDN description, but should not recall #2's OOMKilled pods. Each incident ID has its own `@MemoryId`.
 
-### Optional — Repeat the conversation with curl
-
-The chat endpoint accepts the message as a `text/plain` request body. These requests add turns to the same conversation used by the dashboard:
-
-```bash
-curl -s -X POST "http://localhost:8080/incident-assistant/2" \
-  -H "Content-Type: text/plain" \
-  --data "The auth-service pods are OOMKilled every ~5 minutes. Where do I start?" | jq
-```
-
-Turn 2 — same incident id (`2` = same `@MemoryId` = same conversation) — ask it to recall:
-
-```bash
-curl -s -X POST "http://localhost:8080/incident-assistant/2" \
-  -H "Content-Type: text/plain" \
-  --data "Remind me: what symptom did I report a moment ago?" | jq
-```
-
-The second reply should recall the symptom from the first message.
-
-Now peek at **Tier 2** directly:
-
-```bash
-curl -s "http://localhost:8080/incident-assistant/2/history" | jq
-```
-
-```json
-{ "incidentId": 2, "messageCount": 5, "messages": ["SYSTEM", "USER", "AI", "USER", "AI"] }
-```
-
-This example is for a fresh two-turn conversation; the count is higher if you already completed the UI steps, up to the configured message-window limit.
-
-Finally, confirm conversations are **isolated** by `@MemoryId` — a different incident is a different memory:
-
-```bash
-curl -s "http://localhost:8080/incident-assistant/4/history" | jq
-```
-
-Incident #4 has an empty history only before its first conversation turn; after the UI isolation test, it has its own messages.
-
 !!! info "Durability, honestly"
     Because memory lives in PostgreSQL, it's **externalized** — survives across requests, shareable across replicas, and it outlives restarts *when pointed at a persistent database*. In this lab, Dev Services hands you a fresh throwaway Postgres each launch, so a dev-mode restart starts clean. Point `quarkus.datasource.*` at a managed Postgres and the same code keeps the transcript across restarts — no code change, that's the payoff of putting Tier 2 in a real store.
+
+??? info "Advanced — Run again and inspect JSON"
+
+    The web UI tests above are sufficient to complete this exercise. **Keep Quarkus running; no restart is required.** The POST requests below add turns to the existing incident conversation, including any turns from the UI tests. The history GET requests only read the stored messages; use them on their own if you just want to inspect the current conversation.
+
+    The chat endpoint accepts the message as a `text/plain` request body. These requests add turns to the same conversation used by the dashboard:
+
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-assistant/2" \
+      -H "Content-Type: text/plain" \
+      --data "The auth-service pods are OOMKilled every ~5 minutes. Where do I start?" | jq
+    ```
+
+    Turn 2 — same incident id (`2` = same `@MemoryId` = same conversation) — ask it to recall:
+
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-assistant/2" \
+      -H "Content-Type: text/plain" \
+      --data "Remind me: what symptom did I report a moment ago?" | jq
+    ```
+
+    The second reply should recall the symptom from the first message.
+
+    Now peek at **Tier 2** directly:
+
+    ```bash
+    curl -s "http://localhost:8080/incident-assistant/2/history" | jq
+    ```
+
+    ```json
+    { "incidentId": 2, "messageCount": 5, "messages": ["SYSTEM", "USER", "AI", "USER", "AI"] }
+    ```
+
+    This example is for a fresh two-turn conversation; the count is higher if you already completed the UI steps, up to the configured message-window limit.
+
+    Finally, confirm conversations are **isolated** by `@MemoryId` — a different incident is a different memory:
+
+    ```bash
+    curl -s "http://localhost:8080/incident-assistant/4/history" | jq
+    ```
+
+    Incident #4 has an empty history only before its first conversation turn; after the UI isolation test, it has its own messages.
 
 ---
 

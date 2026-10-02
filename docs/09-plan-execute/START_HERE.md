@@ -261,39 +261,41 @@ Review: resolved=true — diagnosis, mitigation, and a RESOLVED verification are
 
 The exact plan and iteration count can vary. The reviewer may accept the first round; when it doesn't, its feedback drives another plan, up to the three-iteration limit.
 
-### Optional — Inspect the shared state with curl
+??? info "Advanced — Run again and inspect JSON"
 
-For a JSON view of the plan, iteration count, and specialist outputs, use the diagnostic endpoint:
+    The web UI tests above are sufficient to complete this exercise. **Keep Quarkus running; no restart is required.** These POST requests start new workflow runs and return their JSON results; they do not retrieve the earlier UI runs. Because the UI saved summaries into the incidents' descriptions, the new plans may differ from the examples.
 
-```bash
-curl -s -X POST "http://localhost:8080/incident-plan/2" \
-  -H "Content-Type: text/plain" \
-  --data "Total login failure since 14:00; auth pods OOMKilled" | jq
-```
+    For a JSON view of the plan, iteration count, and specialist outputs, use the diagnostic endpoint:
 
-An example response:
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-plan/2" \
+      -H "Content-Type: text/plain" \
+      --data "Total login failure since 14:00; auth pods OOMKilled" | jq
+    ```
 
-```json
-{
-  "incidentId": 2,
-  "plan": ["DIAGNOSE", "MITIGATE", "VERIFY", "COMMUNICATE"],
-  "planRationale": "High-priority incident with no prior steps — diagnose, mitigate, verify, and communicate.",
-  "iterations": 1,
-  "resolved": true,
-  "diagnosis": "...", "mitigation": "...", "verification": "RESOLVED ...", "communication": "..."
-}
-```
+    An example response:
 
-Now a low-severity incident:
+    ```json
+    {
+      "incidentId": 2,
+      "plan": ["DIAGNOSE", "MITIGATE", "VERIFY", "COMMUNICATE"],
+      "planRationale": "High-priority incident with no prior steps — diagnose, mitigate, verify, and communicate.",
+      "iterations": 1,
+      "resolved": true,
+      "diagnosis": "...", "mitigation": "...", "verification": "RESOLVED ...", "communication": "..."
+    }
+    ```
 
-```bash
-curl -s -X POST "http://localhost:8080/incident-plan/4" \
-  -H "Content-Type: text/plain" \
-  --data "EU users see ~2s asset load; US unaffected" | jq
-```
+    Now a low-severity incident:
 
-!!! note "JSON inspection and saving the result"
-    `/incident-plan/{id}` runs the workflow and returns its state without saving the summary or changing the incident's status. The web UI uses `/incident-management/process/{id}`, which runs the workflow and saves both. If you run these curl commands after the UI tests, the planner sees the summaries already saved in the incidents' descriptions, so the plans may differ from a fresh run.
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-plan/4" \
+      -H "Content-Type: text/plain" \
+      --data "EU users see ~2s asset load; US unaffected" | jq
+    ```
+
+    !!! note "JSON inspection and saving the result"
+        `/incident-plan/{id}` runs the workflow and returns its state without saving the summary or changing the incident's status. The web UI uses `/incident-management/process/{id}`, which runs the workflow and saves both. If you run these curl commands after the UI tests, the planner sees the summaries already saved in the incidents' descriptions, so the plans may differ from a fresh run.
 
 ---
 

@@ -190,47 +190,49 @@ Open [incident #2's resolution](http://localhost:8080/incident-events/resolution
 !!! tip "If the resolution page returns 404"
     The sink has not recorded the result yet. Wait for the completion log, then refresh the resolution page. A submission can succeed before the resolution exists — that is the asynchronous behavior this exercise demonstrates.
 
-### Optional — Publish and inspect with curl
+??? info "Advanced — Run again and inspect JSON"
 
-The API offers the same publish-then-read flow:
+    The web UI tests above are sufficient to complete this exercise. **Keep Quarkus running; no restart is required.** The POST request below publishes a new event and reruns the pipeline. To inspect the result from your UI test without publishing again, skip the POST and use the resolution and incident-status GET requests below.
 
-```bash
-curl -s -X POST "http://localhost:8080/incident-events/publish/2" \
-  -H "Content-Type: text/plain" \
-  --data "Total login failure since 14:00; auth pods OOMKilled after last deploy" | jq
-```
+    The API offers the same publish-then-read flow:
 
-```json
-{ "published": true, "incidentId": 2, "topic": "incidents-in", "next": "GET /incident-events/resolutions/2 (once the pipeline finishes)" }
-```
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-events/publish/2" \
+      -H "Content-Type: text/plain" \
+      --data "Total login failure since 14:00; auth pods OOMKilled after last deploy" | jq
+    ```
 
-In the dev-mode log you'll see the consumer pick it up and the `@SequenceAgent` run. After a few seconds, poll for the resolution:
+    ```json
+    { "published": true, "incidentId": 2, "topic": "incidents-in", "next": "GET /incident-events/resolutions/2 (once the pipeline finishes)" }
+    ```
 
-```bash
-curl -s "http://localhost:8080/incident-events/resolutions/2" | jq
-```
+    If you publish again, watch the terminal logs for the consumer and sink. Once the sink records the resolution, read it with:
 
-```json
-{
-  "incidentId": 2,
-  "triage": "Category: Configuration / Severity: Critical / Next signal: recent deploy diff",
-  "resolution": "ROLLBACK the last deployment immediately; the OOMKills began right after it ..."
-}
-```
+    ```bash
+    curl -s "http://localhost:8080/incident-events/resolutions/2" | jq
+    ```
 
-After the round trip — publish → Redpanda → consumer → triage → resolution → resolutions topic → sink — the sink also sets the incident to **RESOLVED** in PostgreSQL. Check it with:
+    ```json
+    {
+      "incidentId": 2,
+      "triage": "Category: Configuration / Severity: Critical / Next signal: recent deploy diff",
+      "resolution": "ROLLBACK the last deployment immediately; the OOMKills began right after it ..."
+    }
+    ```
 
-```bash
-curl -s "http://localhost:8080/incidents" | jq '.[] | select(.id==2) | {id, status}'
-```
+    After the round trip — publish → Redpanda → consumer → triage → resolution → resolutions topic → sink — the sink also sets the incident to **RESOLVED** in PostgreSQL. Check it with:
 
-```json
-{ "id": 2, "status": "RESOLVED" }
-```
+    ```bash
+    curl -s "http://localhost:8080/incidents" | jq '.[] | select(.id==2) | {id, status}'
+    ```
 
-Try `GET /incident-events/resolutions` (no id) to see every resolution the pipeline has produced this session.
+    ```json
+    { "id": 2, "status": "RESOLVED" }
+    ```
 
-Publishing again reruns the pipeline for the same incident. If a resolution already exists, the lookup can return that previous result while the new event is processing; watch the logs to identify completion of the new run.
+    Try `GET /incident-events/resolutions` (no id) to see every resolution the pipeline has produced this session.
+
+    Publishing again reruns the pipeline for the same incident. If a resolution already exists, the lookup can return that previous result while the new event is processing; watch the logs to identify completion of the new run.
 
 ---
 

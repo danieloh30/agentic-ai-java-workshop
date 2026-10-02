@@ -218,57 +218,59 @@ Now compare an ambiguous report:
 
 The exact votes and confidence scores can vary. An ambiguous report may still produce a unanimous vote; try changing the impact or uncertainty in the report to explore how the personas respond. Watch the terminal log for the winning action and agreement count. Reopening an incident shows its latest result while the page is open; refreshing the browser clears that display.
 
-### Optional — Inspect the structured ballots with curl
+??? info "Advanced — Run again and inspect JSON"
 
-The JSON endpoint exposes the same voting workflow, including `agreement`, `totalVoters`, and `unanimous`:
+    The web UI tests above are sufficient to complete this exercise. **Keep Quarkus running; no restart is required.** These POST requests run a new vote and return its JSON result; they do not retrieve the earlier UI ballots. Actions, confidence scores, and agreement may differ on the new run. This endpoint does not change the incident's status.
 
-```bash
-curl -s -X POST "http://localhost:8080/incident-consensus/2" \
-  -H "Content-Type: text/plain" \
-  --data "Total login failure since 14:00; auth pods OOMKilled repeatedly after last deploy" | jq
-```
+    The JSON endpoint exposes the same voting workflow, including `agreement`, `totalVoters`, and `unanimous`:
 
-An example of a unanimous **ROLLBACK**:
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-consensus/2" \
+      -H "Content-Type: text/plain" \
+      --data "Total login failure since 14:00; auth pods OOMKilled repeatedly after last deploy" | jq
+    ```
 
-```json
-{
-  "decision": "ROLLBACK",
-  "unanimous": true,
-  "agreement": 3,
-  "totalVoters": 3,
-  "votes": [
-    { "action": "ROLLBACK", "confidence": 95, "rationale": "...regression after the last deploy..." },
-    { "action": "ROLLBACK", "confidence": 95, "rationale": "...began immediately after the deployment..." },
-    { "action": "ROLLBACK", "confidence": 90, "rationale": "...rollback is the most prudent action..." }
-  ]
-}
-```
+    An example of a unanimous **ROLLBACK**:
 
-Now the ambiguous report — a slow memory creep, no deploy, users barely affected:
+    ```json
+    {
+      "decision": "ROLLBACK",
+      "unanimous": true,
+      "agreement": 3,
+      "totalVoters": 3,
+      "votes": [
+        { "action": "ROLLBACK", "confidence": 95, "rationale": "...regression after the last deploy..." },
+        { "action": "ROLLBACK", "confidence": 95, "rationale": "...began immediately after the deployment..." },
+        { "action": "ROLLBACK", "confidence": 90, "rationale": "...rollback is the most prudent action..." }
+      ]
+    }
+    ```
 
-```bash
-curl -s -X POST "http://localhost:8080/incident-consensus/5" \
-  -H "Content-Type: text/plain" \
-  --data "Heap slowly climbing over 6h on one of three pods; that pod self-restarted once. No recent deploy, root cause unknown. Users mostly unaffected, rare timeouts." \
-  | jq '{decision, unanimous, agreement} + {ballots: [.votes[] | {action, confidence}]}'
-```
+    Now the ambiguous report — a slow memory creep, no deploy, users barely affected:
 
-An example where the voters **split**:
+    ```bash
+    curl -s -X POST "http://localhost:8080/incident-consensus/5" \
+      -H "Content-Type: text/plain" \
+      --data "Heap slowly climbing over 6h on one of three pods; that pod self-restarted once. No recent deploy, root cause unknown. Users mostly unaffected, rare timeouts." \
+      | jq '{decision, unanimous, agreement} + {ballots: [.votes[] | {action, confidence}]}'
+    ```
 
-```json
-{
-  "decision": "RESTART",
-  "unanimous": false,
-  "agreement": 2,
-  "ballots": [
-    { "action": "RESTART", "confidence": 85 },
-    { "action": "RESTART", "confidence": 85 },
-    { "action": "MONITOR", "confidence": 85 }
-  ]
-}
-```
+    An example where the voters **split**:
 
-In this example, two voters want a RESTART and one wants to MONITOR — the majority carries it, while `unanimous: false` makes the disagreement visible. The JSON endpoint returns the recommendation without changing the incident status; the dashboard processing path also marks the incident **In Progress**.
+    ```json
+    {
+      "decision": "RESTART",
+      "unanimous": false,
+      "agreement": 2,
+      "ballots": [
+        { "action": "RESTART", "confidence": 85 },
+        { "action": "RESTART", "confidence": 85 },
+        { "action": "MONITOR", "confidence": 85 }
+      ]
+    }
+    ```
+
+    In this example, two voters want a RESTART and one wants to MONITOR — the majority carries it, while `unanimous: false` makes the disagreement visible. The JSON endpoint returns the recommendation without changing the incident status; the dashboard processing path also marks the incident **In Progress**.
 
 ---
 
