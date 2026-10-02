@@ -21,7 +21,7 @@
     --purple: #a56eff;
     --green: #42be65;
     --gray: #697077;
-    --detail-w: 420px;
+    --detail-w: 640px;
     --radius: 8px;
     --radius-lg: 12px;
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
@@ -299,7 +299,30 @@ main {
 
 .table-wrap { overflow-x: auto; }
 
-table { width: 100%; border-collapse: collapse; }
+table { width: 100%; min-width: 1040px; border-collapse: collapse; table-layout: fixed; }
+
+th:nth-child(1) { width: 104px; }
+th:nth-child(2), th:nth-child(3) { width: 145px; }
+th:nth-child(4) { width: 104px; }
+th:nth-child(6) { width: 132px; }
+th:nth-child(7) { width: 100px; }
+
+.description-preview {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}
+
+.description-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: var(--accent);
+}
 
 th {
     padding: 12px 16px;
@@ -503,6 +526,32 @@ tbody tr.active-row { background: var(--accent-dim); }
     color: var(--text-primary);
     line-height: 1.5;
 }
+
+.detail-description {
+    display: grid;
+    gap: 12px;
+    overflow-wrap: anywhere;
+}
+
+.detail-description p {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.description-section {
+    padding: 16px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.description-section h4 {
+    margin: 0 0 8px;
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
+.description-section p + p { margin-top: 12px; }
 
 .detail-divider {
     height: 1px;

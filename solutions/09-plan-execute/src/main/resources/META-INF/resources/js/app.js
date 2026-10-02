@@ -191,13 +191,47 @@ function populateIncidentTable() {
             <td>${incident.system}</td>
             <td>${incident.service}</td>
             <td><span class="priority-badge ${priority.cssClass}">${priority.label}</span></td>
-            <td>${incident.description || 'N/A'}</td>
+            <td class="description-cell"><div class="description-preview"></div></td>
             <td><span class="status-indicator ${statusClass}"><span class="status-dot"></span><span class="status-text">${getStatusDisplay(incident.status)}</span></span></td>
             <td><button class="btn-view" onclick="openDetailPanel(${incident.id}); event.stopPropagation();">View</button></td>
         `;
+        const description = typeof incident.description === 'string' && incident.description.trim()
+                ? incident.description : 'N/A';
+        row.querySelector('.description-preview').textContent = description.replace(/\s+/g, ' ').trim();
+        if (description.length > 180) {
+            const hint = document.createElement('span');
+            hint.className = 'description-hint';
+            hint.textContent = 'Open to read full description';
+            row.querySelector('.description-cell').appendChild(hint);
+        }
+        row.querySelector('.btn-view').setAttribute('aria-label', `View incident #${incident.id} and full description`);
         row.addEventListener('click', () => openDetailPanel(incident.id));
         tbody.appendChild(row);
     });
+}
+
+function renderDescription(container, description) {
+    const text = typeof description === 'string' && description.trim() ? description : 'N/A';
+    const blocks = text.startsWith('Plan:') ? text.split(/\r?\n[ \t]*\r?\n/) : [text];
+    let section = null;
+
+    for (const block of blocks) {
+        if (!block.trim()) continue;
+        const match = text.startsWith('Plan:')
+                ? block.match(/^(Plan|Diagnosis|Mitigation|Verification|Communication|Resolved):[ \t]*([\s\S]*)$/)
+                : null;
+        if (match) {
+            section = document.createElement('section');
+            section.className = 'description-section';
+            const heading = document.createElement('h4');
+            heading.textContent = match[1];
+            section.appendChild(heading);
+            container.appendChild(section);
+        }
+        const paragraph = document.createElement('p');
+        paragraph.textContent = match ? match[2] : block;
+        (section || container).appendChild(paragraph);
+    }
 }
 
 function openDetailPanel(incidentId) {
@@ -249,11 +283,12 @@ function openDetailPanel(incidentId) {
         </div>
         <div class="detail-field">
             <div class="detail-label">Description</div>
-            <div class="detail-value">${incident.description || 'N/A'}</div>
+            <div id="detail-description" class="detail-value detail-description"></div>
         </div>
         ${formHtml}
     `;
 
+    renderDescription(document.getElementById('detail-description'), incident.description);
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
 }
