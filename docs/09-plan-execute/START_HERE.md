@@ -3,7 +3,7 @@
 <span class="badge badge--code-along">Code-Along</span> <span class="badge" style="background:#1E5AA8;color:white;">Part 2 · Advanced</span>
 
 **Timebox:** 20 minutes  
-**Persona:** Jordan — Java platform engineer  
+**Persona:** Riley — SRE lead<br>
 **You work in:** `solutions/09-plan-execute/lab/`  
 **Files to edit:**
 
@@ -21,9 +21,9 @@ In Part 1 you built the fundamental patterns: a single agent, policy-as-prompt, 
 
 ## Enterprise context
 
-**Jordan, Apex Systems' Java platform engineer, needs an incident workflow that adapts its work to the situation.** A P1 authentication outage may need diagnosis, mitigation, verification, and stakeholder communication. A P4 delay affecting static assets in one region may need fewer steps. A fixed pipeline spends effort on unnecessary work, while an unchecked sequence of model decisions makes it harder to see what the system intends to accomplish.
+**Riley, Apex Systems' SRE lead, coordinates the technical response when an incident reaches the on-call team.** A P1 authentication outage may need diagnosis, mitigation, verification, and stakeholder communication. A P4 delay affecting static assets in one region may need fewer steps. Riley needs to see what work is planned, which specialists are involved, and whether the proposed response addresses the reported failure. Running the same steps for every incident wastes attention; stopping after a suggested mitigation leaves verification unfinished.
 
-Jordan needs an explicit plan that names the specialist steps before they run, plus a review that can identify unfinished work. This lab exposes the plan, specialist results, and reviewer verdict, then uses feedback to re-plan within a three-iteration limit. Comparing the P1 and P4 cases shows how the selected work changes. The dashboard saves the generated summary and review-based status; the specialists simulate response reasoning rather than changing a real Kubernetes deployment.
+Riley needs an explicit plan that names the specialist steps before they run, plus a review that can identify unfinished work and request another round. This lab exposes the plan, specialist results, and reviewer verdict, then uses feedback to re-plan within a three-iteration limit. Comparing the P1 and P4 cases lets Riley check whether the chosen work fits the incident and whether the final summary explains the outcome. The dashboard saves that summary and a review-based status; the specialists simulate response reasoning rather than changing a real Kubernetes deployment.
 
 ## The goal
 

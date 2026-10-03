@@ -3,7 +3,7 @@
 <span class="badge badge--code-along">Code-Along</span> <span class="badge" style="background:#1E5AA8;color:white;">Part 2 · Advanced</span>
 
 **Timebox:** 20 minutes  
-**Persona:** Jordan — Java platform engineer  
+**Persona:** Sam — NOC analyst<br>
 **You work in:** `solutions/10-memory-tiering/lab/`  
 **Files to edit:**
 
@@ -17,9 +17,9 @@
 
 ## Enterprise context
 
-**Jordan, Apex Systems' Java platform engineer, is building an assistant for operators who investigate an incident over several conversation turns.** An engineer might first report OOMKilled pods, then ask for the next diagnostic step or a reminder of the symptom. Requiring the engineer to repeat that context on every turn interrupts the investigation. Sending an ever-growing transcript also increases model input and eventually exceeds the available context window.
+**Sam, Apex Systems' NOC analyst, investigates several incidents during a shift and needs an assistant that can follow each conversation.** Sam might first report OOMKilled pods, then ask for the next diagnostic step or a reminder of the symptom. Repeating the same observations on every turn interrupts the investigation and makes it easier to omit a detail. Switching from an authentication outage to a CDN incident introduces another requirement: the assistant must keep those conversations separate rather than reuse the wrong incident's symptoms.
 
-Jordan needs bounded working memory backed by a store outside the application heap, with each incident's conversation kept separate. This lab combines a message window with PostgreSQL storage and uses the incident ID to select the conversation. Follow-up questions test recall; switching incidents tests isolation. The store holds the configured window rather than an unlimited archive, and keeping it across application restarts requires a persistent database instead of the lab's throwaway Dev Services database.
+Sam needs the engineering team to provide conversation continuity while controlling how much history the model receives. This lab combines a bounded message window with PostgreSQL storage and uses the incident ID to select the conversation. Follow-up questions let Sam test recall; switching incidents tests isolation, and the history endpoint shows which messages were stored. The store holds the configured window rather than an unlimited archive, and keeping it across application restarts requires a persistent database instead of the lab's throwaway Dev Services database.
 
 ## The goal
 

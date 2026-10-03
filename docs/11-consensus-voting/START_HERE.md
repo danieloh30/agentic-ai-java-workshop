@@ -3,7 +3,7 @@
 <span class="badge badge--code-along">Code-Along</span> <span class="badge" style="background:#1E5AA8;color:white;">Part 2 · Advanced</span>
 
 **Timebox:** 20 minutes  
-**Persona:** Jordan — Java platform engineer  
+**Persona:** Priya — IT service manager<br>
 **You work in:** `solutions/11-consensus-voting/lab/`  
 **Files to edit:**
 
@@ -17,9 +17,9 @@
 
 ## Enterprise context
 
-**Jordan, Apex Systems' Java platform engineer, needs incident recommendations that expose the trade-offs an operations team would discuss.** After a deployment-related login failure, one responder may favor rollback to restore reliability, another may prioritize immediate customer impact, and a third may weigh the cost and risk of disruption. A single fluent recommendation can conceal those competing priorities, especially when the evidence is incomplete.
+**Priya, Apex Systems' IT service manager, needs to understand the trade-offs behind an incident response recommendation.** After a deployment-related login failure, the reliability team may favor rollback, the customer-facing team may prioritize immediate restoration of access, and the platform team may weigh the cost and risk of disruption. Priya is accountable for coordinating those priorities and communicating the decision. A single fluent recommendation makes that harder when it hides disagreement or leaves the alternatives unexplained.
 
-Jordan needs to present the competing judgments as inspectable ballots and combine them with a rule the team can review. This lab runs reliability, customer-impact, and cost/risk voters concurrently, then tallies their structured actions, confidence scores, and rationales in Java. Clear and ambiguous reports let Jordan compare agreement and disagreement. The voters use different prompts with the same model, so agreement is a decision signal rather than independent proof of correctness; the workflow recommends an action without executing it.
+Priya needs competing judgments presented as inspectable ballots, with a clear rule for combining them. This lab runs reliability, customer-impact, and cost/risk voters concurrently, then tallies their structured actions, confidence scores, and rationales in Java. Clear and ambiguous reports let Priya compare agreement and disagreement and see why an action won. The voters use different prompts with the same model, so agreement is a decision signal rather than independent proof of correctness; the workflow recommends an action without executing it or replacing the team's approval process.
 
 ## The goal
 

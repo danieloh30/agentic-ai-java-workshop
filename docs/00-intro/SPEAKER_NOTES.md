@@ -80,24 +80,36 @@ flowchart TD
 
 ## Your learning path
 
-Each exercise adds a new capability, guided by a persona facing a real IT operations problem:
+Each exercise adds a capability that a specific Apex Systems role needs. The persona explains the enterprise problem; in the code-along labs, you implement the Java solution that supports that role.
+
+### Part 1 — Foundations and enterprise control
 
 | Exercise | Persona | Problem | Pattern you learn |
 |----------|---------|---------|-------------------|
-| **1 — Agent + tool** | **Sam** — NOC analyst | Free-text reports pile up; triage is manual | `@Agent` + `@ToolBox` |
-| **2 — Policy as prompt** | **Chris** — Ops lead | Diagnostic decisions need policy, not code | `@SystemMessage` as policy declaration |
-| **3 — Parallel agents** | **Chris** — Ops lead | Three analyses must run concurrently | `@ParallelMapperAgent` + `@Output` |
-| **4 — Supervisor orchestration** | **Priya** — IT service mgr | Critical incidents need adaptive escalation | `@SupervisorAgent` orchestration |
-| **5 — AI governance** | **Jordan** — Platform engineer | Must ship governed code; copilots hallucinate | `AGENTS.md` + OpenCode CLI |
-| **6 — Human gate + tracing** | **Alex** — Compliance officer | P1 incidents need approval + audit trail | HITL + OpenTelemetry |
-| **7 — Remote agents (A2A)** | **Riley** — SRE lead | Impact assessment is a separate team | A2A remote impact agent |
-| **8 — Quality loop (bonus)** | **Jordan** — Platform engineer | Post-incident reports need iterative refinement | `AgenticServices.loopBuilder()` + Quarkus Flow |
+| [**1 — Agent + tool**](../01-first-agent/START_HERE.md) | **Sam** — NOC analyst | Distinguish actionable reports from false alarms and record triage | `@Agent` + `@ToolBox` |
+| [**2 — Policy as prompt**](../02-maintenance-agent/START_HERE.md) | **Chris** — Ops lead | Keep diagnostic guidance consistent as operating policy changes | `@SystemMessage` as policy declaration |
+| [**3 — Parallel agents**](../03-parallel-workflow/START_HERE.md) | **Chris** — Ops lead | Gather severity, impact, and resolution analysis without waiting for each in turn | `@ParallelMapperAgent` + `@Output` |
+| [**4 — Supervisor orchestration**](../04-supervisor/START_HERE.md) | **Priya** — IT service manager; **Riley** — SRE lead; **Sam** — NOC analyst | Coordinate business priorities, technical response, and incident handoffs | `@SupervisorAgent` within a composed workflow |
+| [**5 — AI governance**](../05-ai-governance/START_HERE.md) | **Jordan** — Java platform engineer | Keep AI-assisted contributions grounded in project conventions and source | `AGENTS.md` + OpenCode CLI |
+| [**6 — Human gate + tracing**](../06-hitl-observability/START_HERE.md) | **Alex** — Compliance officer | Enforce human approval for sensitive P1/P2 escalations and inspect the decision trace | `@HumanInTheLoop` + OpenTelemetry |
+| [**7 — Remote agents (A2A)**](../07-a2a/START_HERE.md) | **Riley** — SRE lead | Share impact assessment through an independently operated service | A2A discovery + `@A2AClientAgent` |
+| [**8 — Quality loop (bonus)**](../08-quarkus-flow/START_HERE.md) | **Jordan** — Java platform engineer | Refine post-incident reports against quality criteria within an execution limit | `AgenticServices.loopBuilder()` + Quarkus Flow |
+
+### Part 2 — From Patterns to Production
+
+| Exercise | Persona | Problem | Pattern you learn |
+|----------|---------|---------|-------------------|
+| [**9 — Plan & Execute**](../09-plan-execute/START_HERE.md) | **Riley** — SRE lead | Plan incident-specific specialist work and re-plan when review identifies gaps | Structured `ExecutionPlan` + Plan → Execute → Review loop |
+| [**10 — Memory Tiering**](../10-memory-tiering/START_HERE.md) | **Sam** — NOC analyst | Continue investigations without repeating observations or mixing incident conversations | `@MemoryId` + bounded message window + PostgreSQL `ChatMemoryStore` |
+| [**11 — Consensus & Voting**](../11-consensus-voting/START_HERE.md) | **Priya** — IT service manager | Compare reliability, customer-impact, and cost/risk judgments before choosing a response | `@ParallelAgent` + structured ballots + deterministic `@Output` tally |
+| [**12 — Event-Driven Agents (capstone)**](../12-event-driven/START_HERE.md) | **Jordan** — Java platform engineer | Accept alerts while agent processing continues and record results asynchronously | Kafka + `@Incoming`/`@Outgoing` + `@Blocking` |
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses OpenCode CLI to govern and validate the system you built.  
-**Exercise 6** codes `EscalationProposalAgent` in `lab/`, then tests the full HITL flow and OTel tracing from the solution.  
+**Exercise 6** runs and reads the completed HITL solution, tests approval decisions, and inspects OpenTelemetry traces.<br>
 **Exercise 7** runs a pre-built A2A solution to explore remote agent patterns.  
-**Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a programmatic quality loop with Quarkus Flow.
+**Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a programmatic quality loop with Quarkus Flow.<br>
+**Exercises 9–12** are advanced code-along labs, each in its own `solutions/<exercise>/lab/` project. Start with the web UI tests; the collapsed Advanced sections offer additional API exploration.
 
 ---
 
@@ -122,7 +134,11 @@ After this lab you will be able to:
 - Author an `AGENTS.md` to make OpenCode CLI cost-efficient on agentic projects
 - Distribute agents across services with **A2A** (`@A2AClientAgent`)
 - Add **human-in-the-loop** gates and read **OpenTelemetry** spans for compliance and FinOps
-- Use **programmatic orchestration** (`AgenticServices.loopBuilder()`) for control flow that annotations can't express
+- Use **programmatic orchestration** (`AgenticServices.loopBuilder()`) to combine agent calls with explicit state, feedback, and bounded iteration
+- Build **Plan & Execute** workflows that select specialist steps and re-plan from reviewer feedback
+- Give an incident assistant **bounded, database-backed conversation memory** isolated by `@MemoryId`
+- Run **parallel voters** and inspect a deterministic tally of their actions, confidence scores, and rationales
+- Connect agents to **Kafka events**, distinguishing publication from asynchronous processing and result recording
 
 ---
 
@@ -160,4 +176,8 @@ Goal: AI governance              → AGENTS.md + OpenCode CLI             (Ex 5)
 Goal: human approval             → @HumanInTheLoop                 (Ex 6)
 Goal: delegate to remote agent   → A2A + @A2AClientAgent           (Ex 7)
 Goal: programmatic quality loop  → AgenticServices.loopBuilder()   (Ex 8)
+Goal: plan, execute, review      → ExecutionPlan + reviewed loop   (Ex 9)
+Goal: incident conversation      → @MemoryId + ChatMemoryStore     (Ex 10)
+Goal: compare votes and tally    → @ParallelAgent + @Output        (Ex 11)
+Goal: process incident events    → @Incoming/@Outgoing + Kafka     (Ex 12)
 ```
