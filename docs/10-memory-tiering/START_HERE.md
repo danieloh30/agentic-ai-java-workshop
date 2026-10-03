@@ -227,7 +227,10 @@ Now test recall in the same panel:
   <figcaption>Memory recall · Click to enlarge</figcaption>
 </figure>
 
-That is Tier 1 doing its job: the window replayed the earlier turn into the model's context. Closing and reopening incident #2 keeps its latest reply visible while the page is open. The dashboard holds that displayed reply in a JavaScript map. Refreshing clears the map, and reopening #2 shows **Process Incident** with no previous reply because the dashboard does not reload stored messages.
+That is Tier 1 doing its job: the window replayed the earlier turn into the model's context.
+
+!!! tip "Keep the page open while testing recall"
+    Keep the browser page open while testing recall. Closing and reopening incident #2 preserves the displayed reply, but refreshing clears it from the dashboard. The conversation remains stored in PostgreSQL; the verification steps below show how to check it.
 
 Verify that **Tier 2** still holds the conversation:
 
