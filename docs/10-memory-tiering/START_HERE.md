@@ -203,6 +203,8 @@ Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start 
 
 3. Click **Process Incident**. The panel stays open and shows the **Assistant Reply**. The incident remains **In Progress** — this exercise provides advice rather than resolving it.
 
+<img src="../../images/test-momory-1.png" alt="Incident #2's initial assistant reply with troubleshooting advice and the Continue Conversation form" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;">
+
 Now test recall in the same panel:
 
 1. In **Continue Conversation**, enter:
@@ -213,9 +215,23 @@ Now test recall in the same panel:
 
 2. Click **Send Message**. The reply should mention the **OOMKilled pods** or their five-minute restart pattern, even though you did not repeat that symptom in the follow-up.
 
-That is Tier 1 doing its job: the window replayed the earlier turn into the model's context. Closing and reopening incident #2 keeps its latest reply visible while the page is open. Refreshing the browser clears that display, but the conversation is still stored on the server.
+<img src="../../images/test-momory-2.png" alt="Incident #2's assistant recalling that the auth-service pods were OOMKilled approximately every five minutes" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;">
 
-Inspect **Tier 2** by opening [incident #2's history](http://localhost:8080/incident-assistant/2/history){:target="_blank"} in another browser tab. After these two turns, a fresh conversation typically contains five messages: `SYSTEM`, `USER`, `AI`, `USER`, `AI`. Open the [Dev UI database view](http://localhost:8080/q/dev-ui/io.quarkus.quarkus-agroal/datasources){:target="_blank"} and inspect `chatmemoryentity` to see the serialized messages in PostgreSQL.
+That is Tier 1 doing its job: the window replayed the earlier turn into the model's context. Closing and reopening incident #2 keeps its latest reply visible while the page is open. The dashboard holds that displayed reply in a JavaScript map. Refreshing clears the map, and reopening #2 shows **Process Incident** with no previous reply because the dashboard does not reload stored messages.
+
+Verify that **Tier 2** still holds the conversation:
+
+1. Open [incident #2's history](http://localhost:8080/incident-assistant/2/history){:target="_blank"} in another browser tab. After these two turns, a fresh conversation typically contains five messages:
+
+    ```json
+    { "incidentId": 2, "messageCount": 5, "messages": ["SYSTEM", "USER", "AI", "USER", "AI"] }
+    ```
+
+2. Refresh the dashboard and reopen **incident #2**. The previous reply is no longer displayed.
+3. Reload the **history tab**. The message count and types should remain the same while Quarkus keeps running. This endpoint reads `PersistentChatMemoryStore`, which loads the messages from PostgreSQL. It returns message types only; it does not display the conversation text.
+4. Open the [Dev UI database view](http://localhost:8080/q/dev-ui/quarkus-agroal/database-view){:target="_blank"}, select `chatmemoryentity`, and find the row with `id` = `2`. Inspect `messagesJson` to see the saved operator messages and assistant replies, including the OOMKilled symptom. You can also reach this view from [Dev UI](http://localhost:8080/q/dev-ui/){:target="_blank"} by clicking **Database view** in the **Agroal - DB connection pool** card.
+
+The empty dashboard panel after a refresh reflects the display behavior; the history endpoint and database row let you verify the server's stored conversation.
 
 Finally, confirm memory isolation:
 
