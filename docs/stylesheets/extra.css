@@ -100,3 +100,30 @@
 .mermaid .label {
   font-size: 0.95rem;
 }
+
+/* Compact screenshots for the memory exercise */
+.md-typeset .memory-screenshot {
+  width: 100%;
+  max-width: 320px;
+  margin: 1.5rem auto;
+}
+
+.md-typeset .memory-screenshot a {
+  display: block;
+  border-radius: 14px;
+}
+
+.md-typeset .memory-screenshot img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.md-typeset .memory-screenshot figcaption {
+  margin-top: 0.6rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.65rem;
+  text-align: center;
+}

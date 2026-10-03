@@ -203,7 +203,12 @@ Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start 
 
 3. Click **Process Incident**. The panel stays open and shows the **Assistant Reply**. The incident remains **In Progress** — this exercise provides advice rather than resolving it.
 
-<img src="../../images/test-momory-1.png" alt="Incident #2's initial assistant reply with troubleshooting advice and the Continue Conversation form" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;">
+<figure class="memory-screenshot">
+  <a href="../../images/test-momory-1.png" target="_blank" rel="noopener" title="Open the initial assessment screenshot at full size">
+    <img src="../../images/test-momory-1.png" alt="Incident #2's initial assistant reply with troubleshooting advice and the Continue Conversation form" loading="lazy">
+  </a>
+  <figcaption>Initial assessment · Click to enlarge</figcaption>
+</figure>
 
 Now test recall in the same panel:
 
@@ -215,7 +220,12 @@ Now test recall in the same panel:
 
 2. Click **Send Message**. The reply should mention the **OOMKilled pods** or their five-minute restart pattern, even though you did not repeat that symptom in the follow-up.
 
-<img src="../../images/test-momory-2.png" alt="Incident #2's assistant recalling that the auth-service pods were OOMKilled approximately every five minutes" style="width:100%;max-width:480px;display:block;margin:1rem auto;border-radius:8px;">
+<figure class="memory-screenshot">
+  <a href="../../images/test-momory-2.png" target="_blank" rel="noopener" title="Open the memory recall screenshot at full size">
+    <img src="../../images/test-momory-2.png" alt="Incident #2's assistant recalling that the auth-service pods were OOMKilled approximately every five minutes" loading="lazy">
+  </a>
+  <figcaption>Memory recall · Click to enlarge</figcaption>
+</figure>
 
 That is Tier 1 doing its job: the window replayed the earlier turn into the model's context. Closing and reopening incident #2 keeps its latest reply visible while the page is open. The dashboard holds that displayed reply in a JavaScript map. Refreshing clears the map, and reopening #2 shows **Process Incident** with no previous reply because the dashboard does not reload stored messages.
 
