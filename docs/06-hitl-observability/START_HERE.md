@@ -11,6 +11,12 @@
 
 ---
 
+## Enterprise context
+
+**Alex, Apex Systems' compliance officer, needs evidence that automation respects the company's escalation policy.** A P1 or P2 incident on a revenue-critical service can trigger a management escalation with operational and business consequences. Alex needs the system to distinguish a proposed escalation from an approved action, and to make the human decision visible when someone later reviews how the incident was handled.
+
+This lab places a human approval gate between the agent's proposal and the recorded outcome. Alex can approve or reject the proposal in the UI, then inspect traces to follow the agent calls and approval path. Running both decisions shows whether the workflow follows the reviewer rather than treating an LLM recommendation as authorization. The combination of a gate and tracing gives Alex a concrete way to inspect the policy boundary instead of relying on a prompt that merely asks the model to be careful.
+
 ## The goal
 
 The compliance rule: **no autonomous escalation of P1/P2 incidents on revenue-critical systems**.  

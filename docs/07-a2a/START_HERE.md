@@ -11,6 +11,16 @@
 
 ---
 
+## Enterprise context
+
+**Riley, Apex Systems' SRE team lead, owns an impact-assessment capability that other teams also need.** The incident supervisor uses it to inform escalation, but other applications could need the same service and SLA reasoning. Keeping the capability inside one application's JVM ties its deployment and scaling to that application, and makes reuse depend on copying or embedding the implementation.
+
+Riley needs a service boundary that lets the SRE team operate the impact agent independently while callers discover and delegate work to it through a defined protocol. This lab runs the caller and impact agent in separate Quarkus processes, so Riley can inspect discovery, delegation, and the network boundary directly. It also makes the dependency visible: the remote agent must be available for the caller to discover it. The two local projects demonstrate that separation without requiring a production deployment platform.
+
+## The goal
+
+Run the two A2A applications, inspect the remote agent's AgentCard, and process an incident through the local workflow. Follow how the client discovers and invokes the remote impact agent, then explain what changes when an agent call crosses a service boundary.
+
 ## The problem
 
 In Exercise 4, every agent ran inside a single process — same JVM, same release cycle, same crash domain. But Riley's SRE team needs `ImpactAgent` as a **remote agent**: independent repo, independent release cadence, independently scalable, and reusable by other systems beyond Apex Systems.

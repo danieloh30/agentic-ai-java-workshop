@@ -15,6 +15,16 @@
 
 ---
 
+## Enterprise context
+
+**Jordan, Apex Systems' Java platform engineer, needs incident recommendations that expose the trade-offs an operations team would discuss.** After a deployment-related login failure, one responder may favor rollback to restore reliability, another may prioritize immediate customer impact, and a third may weigh the cost and risk of disruption. A single fluent recommendation can conceal those competing priorities, especially when the evidence is incomplete.
+
+Jordan needs to present the competing judgments as inspectable ballots and combine them with a rule the team can review. This lab runs reliability, customer-impact, and cost/risk voters concurrently, then tallies their structured actions, confidence scores, and rationales in Java. Clear and ambiguous reports let Jordan compare agreement and disagreement. The voters use different prompts with the same model, so agreement is a decision signal rather than independent proof of correctness; the workflow recommends an action without executing it.
+
+## The goal
+
+Complete the third voter and the parallel voting workflow, then compare the UI results for clear and ambiguous incident reports. Verify that the winning action and agreement count match the ballots, and explain how the tally handles a tie.
+
 ## Why Consensus & Voting?
 
 A single agent gives you a single opinion — confident, fluent, and sometimes wrong in a way you can't see. For a high-stakes call like "what do we *do* about this incident right now?", one model's answer is a single point of failure.

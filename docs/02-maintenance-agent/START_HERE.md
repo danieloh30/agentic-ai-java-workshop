@@ -12,6 +12,12 @@
 
 ---
 
+## Enterprise context
+
+**Chris, Apex Systems' Ops lead, is responsible for consistent diagnostic guidance across the operations team.** The same symptom can require different handling depending on its priority and service context: a login outage needs immediate investigation, while a minor asset-loading delay may justify monitoring first. As runbooks change, Chris needs to update the guidance without letting each operator invent a different response.
+
+This lab gives Chris a way to express diagnostic policy in the agent's instructions and observe how that policy affects the same incident. The agent produces a diagnostic plan rather than executing maintenance, so Chris can compare the suggestions before introducing tools that change systems. The hot-reload experiment makes the effect of a prompt edit visible; in an enterprise workflow, that edit would also need review and validation before release.
+
 ## The goal
 
 Discover that `@SystemMessage` **is** the policy — not code logic, not conditional branches. You'll add `DiagnosticAgent` (a text-only agent with no tool), then run a live tuning experiment: edit a single string in `@SystemMessage`, hot-reload, and watch the same incident produce completely different agent behavior.

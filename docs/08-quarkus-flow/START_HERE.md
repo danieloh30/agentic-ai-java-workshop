@@ -16,6 +16,16 @@
 
 ---
 
+## Enterprise context
+
+**Jordan, Apex Systems' Java platform engineer, needs incident reports that are useful after the incident bridge closes.** Service managers and engineers rely on those reports to understand what happened and what follow-up is needed. A first AI-generated draft can sound polished while leaving out important incident details. Having an operator repeatedly request rewrites makes report preparation slower and gives each report a different review process.
+
+Jordan needs a workflow that drafts a report, evaluates it against explicit criteria, and feeds the critique into another draft when needed. This lab makes the score, feedback, and iteration count visible and caps the work at three iterations. Jordan can inspect both a report that passes review and a run that exhausts its budget. The automated critique supports report preparation; the score is a quality signal to inspect, rather than proof that every statement in the report is correct.
+
+## The goal
+
+Build a draft–critique loop that passes reviewer feedback into each revision and stops when the report scores at least 7 or reaches three iterations. Inspect the final report, score, feedback, and iteration count to understand both the quality target and the execution limit.
+
 ## Why programmatic orchestration?
 
 In Exercises 1–4 you used **declarative annotations** — `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` — to wire agents. These are powerful but have a hard limitation:

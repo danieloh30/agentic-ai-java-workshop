@@ -18,6 +18,12 @@
 
 ---
 
+## Enterprise context
+
+**Priya, Riley, and Sam share responsibility for incident response at Apex Systems, but each needs different evidence.** Priya, the IT service manager, needs the business impact and escalation decision. Riley, the SRE lead, needs a technical diagnosis and an appropriate response. Sam, the NOC analyst, needs a clear next action and an updated incident record to support the handoff. During a payment-gateway outage, those needs must be coordinated rather than answered by unrelated assistants.
+
+This lab assembles their work into one processing pipeline: parallel analysis supplies context, a supervisor selects specialist agents, and the final outcome is recorded by the application. Priya can inspect the impact and escalation reasoning, Riley can follow the diagnostic path, and Sam can verify the resulting status in the dashboard. Comparing incidents with different priorities shows why the supervisor needs to select work from the available specialists instead of calling every specialist for every report.
+
 ## The goal
 
 Complete the full multi-agent pipeline. After this exercise, a single `POST /incident-management/process/{id}` triggers:

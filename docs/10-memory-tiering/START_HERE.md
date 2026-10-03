@@ -15,6 +15,16 @@
 
 ---
 
+## Enterprise context
+
+**Jordan, Apex Systems' Java platform engineer, is building an assistant for operators who investigate an incident over several conversation turns.** An engineer might first report OOMKilled pods, then ask for the next diagnostic step or a reminder of the symptom. Requiring the engineer to repeat that context on every turn interrupts the investigation. Sending an ever-growing transcript also increases model input and eventually exceeds the available context window.
+
+Jordan needs bounded working memory backed by a store outside the application heap, with each incident's conversation kept separate. This lab combines a message window with PostgreSQL storage and uses the incident ID to select the conversation. Follow-up questions test recall; switching incidents tests isolation. The store holds the configured window rather than an unlimited archive, and keeping it across application restarts requires a persistent database instead of the lab's throwaway Dev Services database.
+
+## The goal
+
+Implement the PostgreSQL chat-memory store and attach a bounded message window to the incident assistant. Use the web UI to verify follow-up recall and conversation isolation, then inspect the stored history to connect the model's working memory to the database.
+
 ## Why memory tiering?
 
 Every agent you've built so far is **amnesiac**. Each call starts from nothing; the only "memory" is whatever you stuff into the prompt that turn. That's fine for a one-shot draft or a plan — but an on-call engineer working an incident has a *conversation*: "the pods are OOMKilled" … "what did I just tell you?" … "given that, what next?". The agent has to remember.

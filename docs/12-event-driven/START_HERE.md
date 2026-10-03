@@ -15,6 +15,16 @@
 
 ---
 
+## Enterprise context
+
+**Jordan, Apex Systems' Java platform engineer, needs the incident platform to accept alerts while agent processing is still underway.** Monitoring integrations can report several failures close together, and an LLM-backed response takes longer than accepting an alert. Making each producer wait for triage and resolution couples alert ingestion to model latency and makes a dashboard's submission response carry two different meanings: accepted and completed.
+
+Jordan needs an asynchronous path with a visible handoff between publication, agent processing, and result recording. This lab publishes incident events to Kafka, consumes them through the triage–resolution workflow, and sends results to a sink that updates the incident record. The UI acknowledges submission first; logs, the resolution lookup, and a refreshed dashboard show completion later. This separation demonstrates the event flow and its operational visibility, while the agents generate response recommendations rather than applying changes to external systems.
+
+## The goal
+
+Wire the sequential agent workflow into the Kafka consumer and publish an incident from the web UI. Follow the event through the consumer and resolution sink, then verify the saved result and `RESOLVED` status while distinguishing publication from completion.
+
 ## Why event-driven agents?
 
 Every exercise so far triggered an agent with an **HTTP call** — you `POST`ed and waited for the answer. That's fine for a demo, but production incidents don't arrive as polite synchronous requests. They arrive as a *stream*: alerts fired by monitoring, events pushed onto a bus, faster than any human can click. And you don't want the alert source blocked while an LLM thinks for six seconds.

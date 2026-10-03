@@ -9,6 +9,12 @@
 
 ---
 
+## Enterprise context
+
+**Jordan, Apex Systems' Java platform engineer, maintains the conventions that let several teams extend the incident platform safely.** After Exercises 1–4, a contribution can affect agent declarations, workflow state, database tools, and prompts. An AI coding assistant that guesses the architecture might omit an `outputKey`, add an unsupported API, or generate code that breaks the team's agent model. Those mistakes create review work even when the generated code looks plausible.
+
+Jordan needs a concise, versioned source of project rules that contributors and their AI assistants can consult before making changes. This lab uses OpenCode CLI to examine and validate `AGENTS.md` against the actual source, then test whether its answers follow the documented constraints. The enterprise value is a shared development contract that makes assumptions and review expectations explicit; checking the assistant's output against the code remains part of the work.
+
 ## The goal
 
 You've just built a 7-agent system across Exercises 1–4. You know `@Agent`, `outputKey`,

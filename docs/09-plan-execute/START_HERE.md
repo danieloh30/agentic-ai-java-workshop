@@ -19,6 +19,16 @@
 
 In Part 1 you built the fundamental patterns: a single agent, policy-as-prompt, parallel agents, a supervisor, governance, a human gate, remote agents, and a quality loop. Part 2 makes those systems **production-grade**: they plan their own work, remember across runs, cross-check each other, and react to events. This is Exercise 1 of the advanced track.
 
+## Enterprise context
+
+**Jordan, Apex Systems' Java platform engineer, needs an incident workflow that adapts its work to the situation.** A P1 authentication outage may need diagnosis, mitigation, verification, and stakeholder communication. A P4 delay affecting static assets in one region may need fewer steps. A fixed pipeline spends effort on unnecessary work, while an unchecked sequence of model decisions makes it harder to see what the system intends to accomplish.
+
+Jordan needs an explicit plan that names the specialist steps before they run, plus a review that can identify unfinished work. This lab exposes the plan, specialist results, and reviewer verdict, then uses feedback to re-plan within a three-iteration limit. Comparing the P1 and P4 cases shows how the selected work changes. The dashboard saves the generated summary and review-based status; the specialists simulate response reasoning rather than changing a real Kubernetes deployment.
+
+## The goal
+
+Build the Plan → Execute → Review loop, process P1 and P4 incidents in the web UI, and inspect their selected steps and saved summaries. Explain how reviewer feedback changes the next plan and how the iteration limit prevents an unbounded run.
+
 ## Why Plan & Execute?
 
 Look at what you built earlier:

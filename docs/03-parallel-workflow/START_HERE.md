@@ -15,6 +15,12 @@
 
 ---
 
+## Enterprise context
+
+**Chris, Apex Systems' Ops lead, needs a complete initial assessment while an incident is still unfolding.** On an incident bridge, three questions arrive together: how severe is the failure, who is affected, and what response is likely to help? Waiting for each analysis to finish before starting the next delays the information that downstream responders need to choose a course of action.
+
+The three analyses can read the same incident independently, so Chris needs them to run concurrently and return one coherent result. This lab demonstrates that arrangement with separate severity, impact, and resolution tasks. The resulting typed record gives the next workflow stage all three perspectives together, while the timing and logs let Chris check that the analyses overlap rather than merely appearing as separate entries in a sequential pipeline.
+
 ## The goal
 
 Run three **parallel agents** — severity, impact, and resolution analysis — concurrently instead of sequentially. Wall-clock time ≈ slowest single call (not the sum). One interface declaration, three concurrent LLM calls, each with a different `@SystemMessage` injected at runtime.

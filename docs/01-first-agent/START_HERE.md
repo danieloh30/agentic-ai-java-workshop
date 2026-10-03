@@ -16,6 +16,12 @@
 
 ---
 
+## Enterprise context
+
+**Sam, Apex Systems' NOC analyst, owns the first response to incoming incident reports.** During a shift, Sam sees both urgent service failures and reports that turn out to be false alarms. A payment-gateway error needs attention; a transient issue that cleared after a cache refresh may need no further triage. Reading every report and updating each incident manually slows the queue and makes handling depend on who is on duty.
+
+Sam needs an assistant that interprets an operator's report and takes a specific, visible action when triage is warranted. This lab establishes that boundary: the agent decides whether to request triage, while a transactional tool updates the incident record. By checking both the dashboard status and tool-call logs, Sam can distinguish an action the system actually recorded from advice the model merely generated.
+
 ## The goal
 
 Declare your first **agent + tool** pair: the agent reasons over natural-language incident reports, and the tool acts on the real world (mutating database state). By the end, processing a critical report flips status to `TRIAGING` with a tool call in the logs; a minor report produces `TRIAGE_NOT_REQUIRED` with no tool call.
