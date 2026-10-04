@@ -249,13 +249,20 @@ The empty dashboard panel after a refresh reflects the display behavior; the his
 Finally, confirm memory isolation:
 
 1. Open [incident #4's history](http://localhost:8080/incident-assistant/4/history){:target="_blank"} before chatting with it. On a fresh lab, `messageCount` is `0`.
-2. Return to the dashboard, open **incident #4**, and submit:
+2. Return to the dashboard, open **incident #4**, enter the following message, and click **Process Incident**:
 
     ```text
     What symptom did I report earlier in this conversation?
     ```
 
-3. The assistant should have no earlier operator symptom to recall for #4. It can refer to #4's seeded CDN description, but should not recall #2's OOMKilled pods. Each incident ID has its own `@MemoryId`.
+3. The assistant should have no earlier operator symptom to recall for #4. Its opening request includes #4's seeded description, **Slow asset loading in EU region**, so a reply mentioning slow asset loading for `cdn-edge / static-assets` is expected. It should not recall #2's OOMKilled pods or their five-minute restart pattern. Each incident ID has its own `@MemoryId`.
+
+<figure class="memory-screenshot">
+  <a href="../../images/test-incidient-4.png" target="_blank" rel="noopener" title="Open the incident #4 memory isolation screenshot at full size">
+    <img src="../../images/test-incidient-4.png" alt="Incident #4's assistant mentioning slow CDN asset loading in the EU region without recalling incident #2's OOMKilled pods" loading="lazy">
+  </a>
+  <figcaption>Separate incident, separate memory · Click to enlarge</figcaption>
+</figure>
 
 !!! info "Durability, honestly"
     Because memory lives in PostgreSQL, it's **externalized** — survives across requests, shareable across replicas, and it outlives restarts *when pointed at a persistent database*. In this lab, Dev Services hands you a fresh throwaway Postgres each launch, so a dev-mode restart starts clean. Point `quarkus.datasource.*` at a managed Postgres and the same code keeps the transcript across restarts — no code change, that's the payoff of putting Tier 2 in a real store.
