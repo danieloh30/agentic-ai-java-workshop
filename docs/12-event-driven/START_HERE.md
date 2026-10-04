@@ -162,7 +162,10 @@ That's the whole event loop:
 
 - **`@Incoming("incidents-in")`** — Quarkus subscribes this method to the incidents topic and calls it for every event. It auto-generates a Jackson deserializer for the `IncidentEvent` record.
 - **`@Outgoing("resolutions-out")`** — whatever you `return` is serialized and published to the resolutions topic.
-- **`@Blocking`** — the LLM call takes seconds, so this runs on a worker thread instead of blocking the reactive event loop.
+- **`@Blocking`** — this workflow waits synchronously for LLM responses, which can take seconds. The annotation explicitly runs the consumer on a worker thread, keeping the reactive event loop free to handle other work.
+
+!!! note "Why make worker-thread execution explicit?"
+    Quarkus already dispatches this synchronous method to worker threads by default. Here, `@Blocking` makes that requirement explicit; removing it would not automatically put this method on the event loop. See the [Quarkus messaging execution model](https://quarkus.io/guides/messaging/#execution-model){:target="_blank"} for how method signatures and annotations determine the execution thread.
 
 Save. The red screen clears and dev mode boots **green**.
 
