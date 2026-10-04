@@ -78,6 +78,7 @@
   text-align: center;
   margin: 1.5rem auto;
   font-size: 1rem;
+  overflow-x: auto;
 }
 
 .md-typeset pre:has(.mermaid) {

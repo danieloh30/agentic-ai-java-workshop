@@ -98,8 +98,8 @@ Expected:
 ## The A2A architecture (2 min)
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
-flowchart LR
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035','fontSize':'18px'},'flowchart': {'nodeSpacing':40,'rankSpacing':50,'useMaxWidth':false}}}%%
+flowchart TB
     IPW(["Processing<br/>Workflow"])
     ISA(["Supervisor<br/>Agent"])
     IA(["ImpactAgent<br/>A2AClient"])
