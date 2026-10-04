@@ -504,6 +504,11 @@ tbody tr.active-row { background: var(--accent-dim); }
     line-height: 1.5;
 }
 
+.detail-pipeline-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 .detail-divider {
     height: 1px;
     background: var(--border);

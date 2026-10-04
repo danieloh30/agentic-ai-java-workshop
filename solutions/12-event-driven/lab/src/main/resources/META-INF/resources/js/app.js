@@ -215,6 +215,21 @@ function openDetailPanel(incidentId) {
     const priority = getPriorityPresentation(incident.priority);
     const canProcess = ['OPEN', 'TRIAGING', 'IN_PROGRESS'].includes(incident.status);
 
+    const resolutionHtml = incident.status === 'RESOLVED' ? `
+        <div class="detail-divider"></div>
+        <div class="detail-value" id="detail-resolution-status" role="status">Loading pipeline result...</div>
+        <div id="detail-resolution-fields" hidden>
+            <div class="detail-field">
+                <div class="detail-label">Triage</div>
+                <div class="detail-value detail-pipeline-text" id="detail-triage"></div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-label">Resolution</div>
+                <div class="detail-value detail-pipeline-text" id="detail-resolution"></div>
+            </div>
+        </div>
+    ` : '';
+
     let formHtml = '';
     if (canProcess) {
         formHtml = `
@@ -251,11 +266,43 @@ function openDetailPanel(incidentId) {
             <div class="detail-label">Description</div>
             <div class="detail-value">${incident.description || 'N/A'}</div>
         </div>
+        ${resolutionHtml}
         ${formHtml}
     `;
 
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
+    if (incident.status === 'RESOLVED') loadResolution(incidentId);
+}
+
+function loadResolution(incidentId) {
+    const status = document.getElementById('detail-resolution-status');
+    const fields = document.getElementById('detail-resolution-fields');
+    const triage = document.getElementById('detail-triage');
+    const resolution = document.getElementById('detail-resolution');
+    const isCurrentPanel = () => status.isConnected && selectedIncidentId === incidentId;
+
+    fetch(`/incident-events/resolutions/${incidentId}`)
+        .then(response => {
+            if (response.status === 404) return null;
+            if (!response.ok) throw new Error('Failed to load pipeline result');
+            return response.json();
+        })
+        .then(result => {
+            if (!isCurrentPanel()) return;
+            if (!result) {
+                status.textContent = 'No pipeline result is available for this incident in the current server session.';
+                return;
+            }
+            triage.textContent = result.triage || 'No triage provided.';
+            resolution.textContent = result.resolution || 'No resolution provided.';
+            status.hidden = true;
+            fields.hidden = false;
+        })
+        .catch(() => {
+            if (!isCurrentPanel()) return;
+            status.textContent = 'Unable to load the pipeline result. Close and reopen this incident to try again.';
+        });
 }
 
 function closeDetailPanel() {

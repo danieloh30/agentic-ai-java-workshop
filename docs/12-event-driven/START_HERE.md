@@ -167,6 +167,9 @@ That's the whole event loop:
 !!! note "Why make worker-thread execution explicit?"
     Quarkus already dispatches this synchronous method to worker threads by default. Here, `@Blocking` makes that requirement explicit; removing it would not automatically put this method on the event loop. See the [Quarkus messaging execution model](https://quarkus.io/guides/messaging/#execution-model){:target="_blank"} for how method signatures and annotations determine the execution thread.
 
+!!! note "Asynchronous handoff, blocking processing"
+    The dashboard publishes an event and returns without waiting for the agents or the sink. Kafka carries the incident to the consumer and the result to the sink asynchronously. Inside the consumer, the workflow waits synchronously for LLM responses on a worker thread. `@Blocking` controls where that processing runs; it does not make the publisher wait for the pipeline. This is the asynchronous path described in Jordan's enterprise context.
+
 Save. The red screen clears and dev mode boots **green**.
 
 !!! note "Channels vs. topics"
@@ -190,18 +193,27 @@ Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and publis
 Watch the **terminal logs** for the stages:
 
 ```text
-Published incident #2 to incidents-in (from dashboard)
-Processing incident 2 from Kafka
-Pipeline resolved incident #2 → publishing to resolutions-out
-Recorded resolution for incident #2 and marked it RESOLVED
+INFO  [co.in.se.IncidentManagementService] (executor-thread-2) Published incident #2 to incidents-in (from dashboard)
+INFO  [io.sm.re.me.kafka] (vert.x-eventloop-thread-4) SRMSG18256: Initialize record store for topic-partition 'incidents-in-0' at position -1.
+INFO  [co.in.me.IncidentEventConsumer] (vert.x-worker-thread-1) Consuming incident event #2 (auth-service/user-login PP1)
+INFO  [co.in.me.IncidentEventConsumer] (vert.x-worker-thread-1) Pipeline resolved incident #2 → publishing to resolutions-out
+INFO  [io.sm.re.me.kafka] (vert.x-eventloop-thread-3) SRMSG18256: Initialize record store for topic-partition 'resolutions-out-0' at position -1.
+INFO  [co.in.me.ResolutionSink] (vert.x-worker-thread-1) Recorded resolution for incident #2 and marked it RESOLVED
 ```
+
+This example shows publication on an `executor-thread`, Kafka record-store initialization on `vert.x-eventloop-thread-*`, and the consumer and sink on `vert.x-worker-thread-*`. The worker threads handle the synchronous agent workflow and database update. Thread numbers can vary; the final **Recorded resolution ... and marked it RESOLVED** line confirms that the sink has completed.
 
 Once the sink records the resolution, **refresh the dashboard** and confirm that #2 is **Resolved**. The dashboard refreshes once after submission; it does not automatically poll for completion. Processing time depends on the model and broker, so use the completion log rather than a fixed six-second delay.
 
-Open [incident #2's resolution](http://localhost:8080/incident-events/resolutions/2){:target="_blank"} in another browser tab to read the `triage` and `resolution` fields. The incident's Description remains its original report; the result is available at this link. You can also open [all resolutions from this session](http://localhost:8080/incident-events/resolutions){:target="_blank"}.
+Click **incident #2** again. Its detail panel now shows **Triage** and **Resolution**, loaded from the server when you open the resolved incident. The **Description** remains the original report, so you can compare the problem with the pipeline's result. Refreshing the browser does not clear the server's result; reopening the incident loads it again.
+
+You can also open [incident #2's resolution as JSON](http://localhost:8080/incident-events/resolutions/2){:target="_blank"} or [all resolutions from this session](http://localhost:8080/incident-events/resolutions){:target="_blank"} in another browser tab.
+
+!!! note "Resolution text belongs to the current server session"
+    This exercise stores triage and resolution text in an in-memory `ResolutionStore`. Restarting the server clears those results. If an incident is marked Resolved but its result is unavailable, the dashboard explains that no pipeline result exists in the current server session.
 
 !!! tip "If the resolution page returns 404"
-    The sink has not recorded the result yet. Wait for the completion log, then refresh the resolution page. A submission can succeed before the resolution exists — that is the asynchronous behavior this exercise demonstrates.
+    The sink may not have recorded the result yet. Wait for the completion log, then refresh the resolution page. A submission can succeed before the resolution exists — that is the asynchronous behavior this exercise demonstrates. A server restart also clears the in-memory results, as explained above.
 
 ??? info "Advanced — Run again and inspect JSON"
 
@@ -255,7 +267,7 @@ Open [incident #2's resolution](http://localhost:8080/incident-events/resolution
 
 - [ ] Submitted incident #2 through the web UI; you can explain why the success notification confirms publication before processing finishes
 - [ ] Terminal logs show the Kafka consumer processing the incident and the sink recording its resolution
-- [ ] After the sink completes, the refreshed dashboard shows `RESOLVED` and the resolution page contains both `triage` and `resolution`
+- [ ] After the sink completes, the refreshed dashboard shows `RESOLVED`; reopening incident #2 displays both **Triage** and **Resolution**
 - [ ] You can explain from memory: how `@Incoming` and `@Outgoing` connect the pipeline, how channels map to Kafka topics, and why LLM calls use `@Blocking`
 
 </div>
