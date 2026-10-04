@@ -207,6 +207,13 @@ Once the sink records the resolution, **refresh the dashboard** and confirm that
 
 Click **incident #2** again. Its detail panel now shows **Triage** and **Resolution**, loaded from the server when you open the resolved incident. The **Description** remains the original report, so you can compare the problem with the pipeline's result. Refreshing the browser does not clear the server's result; reopening the incident loads it again.
 
+<figure class="pipeline-screenshot">
+  <a href="../../images/triage-resolution.png" target="_blank" rel="noopener" title="Open the incident #2 triage and resolution screenshot at full size">
+    <img src="../../images/triage-resolution.png" alt="Resolved incident #2 showing configuration triage with critical severity and a rollback resolution in the dashboard" loading="lazy">
+  </a>
+  <figcaption>Incident #2: triage and resolution recorded · Click to enlarge</figcaption>
+</figure>
+
 You can also open [incident #2's resolution as JSON](http://localhost:8080/incident-events/resolutions/2){:target="_blank"} or [all resolutions from this session](http://localhost:8080/incident-events/resolutions){:target="_blank"} in another browser tab.
 
 !!! note "Resolution text belongs to the current server session"
