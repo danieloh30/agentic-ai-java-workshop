@@ -18,13 +18,24 @@ Build an agentic incident management platform for **Apex Systems**, a fictional 
 
 Exercises 1–7 take you from a single agent and tool to parallel workflows, a supervisor, AI governance, human-in-the-loop approval, OpenTelemetry tracing, and remote agents over A2A. Exercise 8 is an optional bonus: generate and refine a post-incident report in a quality loop.
 
-Start with the [Part 1 guides](docs/index.md#part-1--fundamental-patterns) and work through the exercises in order. Exercises 1–4 share the root [`lab/`](lab/) project; the later guides identify their working directories.
+| Exercise and guide | What you will build and verify | Working project | Reference solution |
+|--------------------|--------------------------------|-----------------|--------------------|
+| [1. Agent + tool](docs/01-first-agent/START_HERE.md) | A declarative triage agent that calls a tool to update an incident's status | [Shared lab](lab/) | [Solution](solutions/01-first-agent/) |
+| [2. Policy as prompt](docs/02-maintenance-agent/START_HERE.md) | A diagnostic agent whose behavior changes through its system message | [Shared lab](lab/) | [Solution](solutions/02-maintenance-agent/) |
+| [3. Parallel agents](docs/03-parallel-workflow/START_HERE.md) | Concurrent incident analyses combined into a structured result | [Shared lab](lab/) | [Solution](solutions/03-parallel-workflow/) |
+| [4. Supervisor orchestration](docs/04-supervisor/START_HERE.md) | A supervisor coordinating specialist agents within an incident-processing workflow | [Shared lab](lab/) | [Solution](solutions/04-supervisor/) |
+| [5. AI governance](docs/05-ai-governance/START_HERE.md) | Project rules in `AGENTS.md` that guide an AI coding assistant and support code and prompt audits | [Shared lab](lab/) | Documentation only |
+| [6. Human gate + tracing](docs/06-hitl-observability/START_HERE.md) | Human approval for escalation and OpenTelemetry traces of agent execution | [Run + read](solutions/06-hitl-observability/) | [Solution](solutions/06-hitl-observability/) |
+| [7. Remote agents (A2A)](docs/07-a2a/START_HERE.md) | Impact assessment delegated to a remote agent over A2A | [Main app](solutions/07-a2a/multi-agent-system/) + [remote agent](solutions/07-a2a/remote-a2a-agent/) | [Solution](solutions/07-a2a/) |
+| [8. Quality loop (bonus)](docs/08-quarkus-flow/START_HERE.md) | A post-incident report drafted, critiqued, and refined until it meets a quality threshold | [Start lab](solutions/08-quarkus-flow/lab/) | [Solution](solutions/08-quarkus-flow/) |
+
+Work through the guides in order. Exercises 1–4 share the root `lab/` project; Exercises 2 and 3 use their reference solutions for end-to-end checks. Exercise 5 audits the current lab, Exercises 6 and 7 use runnable solutions, and Exercise 8 has a separate starter.
 
 ### Part 2 — From Patterns to Production
 
 Each exercise has its own starter project, reference solution, enterprise scenario, and dashboard verification steps. Each exercise has a 20-minute timebox.
 
-| Exercise and guide | What you will build and verify | Starter project | Reference solution |
+| Exercise and guide | What you will build and verify | Working project | Reference solution |
 |--------------------|--------------------------------|-----------------|--------------------|
 | [9. Plan & Execute](docs/09-plan-execute/START_HERE.md) | A structured execution plan over specialist agents, with review and dynamic re-planning | [Start lab](solutions/09-plan-execute/lab/) | [Solution](solutions/09-plan-execute/) |
 | [10. Memory Tiering](docs/10-memory-tiering/START_HERE.md) | A bounded conversation window backed by PostgreSQL; test follow-up recall and isolation between incidents | [Start lab](solutions/10-memory-tiering/lab/) | [Solution](solutions/10-memory-tiering/) |
