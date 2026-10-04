@@ -6,7 +6,7 @@
 
 **Hands-On Workshop**  
 **Part 1:** 90 minutes (10 min intro · 80 min hands-on), plus an optional 15-minute bonus<br>
-**Part 2:** approximately 80 minutes (four 20-minute exercises)<br>
+**Part 2:** 80 minutes (four 20-minute exercises)<br>
 **Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/ (short URL: [bit.ly/agents-labs](https://bit.ly/agents-labs))  
 **Intro deck:** [intro-deck.pdf](docs/images/intro-deck.pdf)
 
@@ -22,7 +22,7 @@ Start with the [Part 1 guides](docs/index.md#part-1--fundamental-patterns) and w
 
 ### Part 2 — From Patterns to Production
 
-Each exercise has its own starter project, reference solution, enterprise scenario, and dashboard verification steps. Plan for about 20 minutes per exercise.
+Each exercise has its own starter project, reference solution, enterprise scenario, and dashboard verification steps. Each exercise has a 20-minute timebox.
 
 | Exercise and guide | What you will build and verify | Starter project | Reference solution |
 |--------------------|--------------------------------|-----------------|--------------------|
