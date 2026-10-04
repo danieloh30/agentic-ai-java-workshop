@@ -214,7 +214,17 @@ Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start 
 
 3. Click **Process Incident**. The panel stays open and shows the **Consensus Result**: the winning action, whether the vote was unanimous (or how many voters agreed), and every ballot's action, confidence, and rationale.
 
-For this report, expect **ROLLBACK** to be a strong candidate. A unanimous result means all three voters chose the same action. The incident stays **In Progress** — voting recommends an action; it does not execute that action or mark the incident resolved.
+!!! important "Voting produces a recommendation"
+    **The incident stays In Progress.** Voting recommends an action; it does not execute that action or mark the incident resolved.
+
+For this report, expect **ROLLBACK** to be a strong candidate. A unanimous result means all three voters chose the same action.
+
+<figure class="consensus-screenshot">
+  <a href="../../images/consensus-incident-2.png" target="_blank" rel="noopener" title="Open the incident #2 consensus screenshot at full size">
+    <img src="../../images/consensus-incident-2.png" alt="Incident #2 staying In Progress after all three voters recommend ROLLBACK, with confidence scores and rationale for each ballot" loading="lazy">
+  </a>
+  <figcaption>Incident #2: unanimous rollback recommendation · Click to enlarge</figcaption>
+</figure>
 
 Now compare an ambiguous report:
 
@@ -225,6 +235,15 @@ Now compare an ambiguous report:
     ```
 
 2. Click **Process Incident** and compare the three ballots. If they split, check that the winning action matches the tally and that the result shows the agreement count rather than `unanimous`.
+
+In the example below, two voters recommend **MONITOR** and one recommends **RESTART**, so the result is **MONITOR (2 of 3 voters)**. The incident remains **In Progress** after the vote.
+
+<figure class="consensus-screenshot">
+  <a href="../../images/consensus-incident-5.png" target="_blank" rel="noopener" title="Open the incident #5 consensus screenshot at full size">
+    <img src="../../images/consensus-incident-5.png" alt="Incident #5 staying In Progress with a MONITOR recommendation from two voters and a RESTART recommendation from the third" loading="lazy">
+  </a>
+  <figcaption>Incident #5: monitor wins two votes to one · Click to enlarge</figcaption>
+</figure>
 
 The exact votes and confidence scores can vary. An ambiguous report may still produce a unanimous vote; try changing the impact or uncertainty in the report to explore how the personas respond. Watch the terminal log for the winning action and agreement count. Reopening an incident shows its latest result while the page is open; refreshing the browser clears that display.
 
