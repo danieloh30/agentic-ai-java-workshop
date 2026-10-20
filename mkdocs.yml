@@ -95,6 +95,9 @@ nav:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/mermaid-solid-fills.js
+
 extra:
   social:
     - icon: fontawesome/brands/github

@@ -160,7 +160,7 @@ Save all three files. Quarkus hot-reloads automatically.
 Before testing, trace the execution path in your head:
 
 ```mermaid
-%%{init: {'look':'classic','theme':'Forest','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
 flowchart TD
     A(["TriageWorkflow.processTriage()"])
     B{"LLM: Critical?"}
