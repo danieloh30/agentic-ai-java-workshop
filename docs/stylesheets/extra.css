@@ -102,6 +102,14 @@
   font-size: 0.95rem;
 }
 
+/* Material renders Mermaid SVGs in a shadow root. These inherited variables
+   keep text dark on our fixed pastel fills, and connectors light on slate. */
+[data-md-color-scheme="slate"] .mermaid {
+  --md-mermaid-label-fg-color: #1f2937;
+  --md-mermaid-edge-color: #cbd5e1;
+  --md-mermaid-label-bg-color: var(--md-default-bg-color);
+}
+
 /* Compact screenshots for the memory, voting, and event pipeline exercises */
 .md-typeset .memory-screenshot,
 .md-typeset .consensus-screenshot,
