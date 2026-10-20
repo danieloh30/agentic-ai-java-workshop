@@ -1,5 +1,5 @@
-/* Material places Mermaid SVGs in closed shadow roots. Adjust each SVG before
-   insertion so solid fills retain the renderer's original hand-drawn outlines. */
+/* Adjust each SVG before insertion so solid fills retain the renderer's
+   original hand-drawn outlines, including in the expanded diagram view. */
 (() => {
   function install() {
     const mermaid = window.mermaid;
@@ -16,19 +16,19 @@
       if (!svg) return result;
 
       // Rough.js emits a hatch path followed by its boundary path. Its hatch
-      // stroke color is the requested fill color, and its stroke is thicker.
+      // stroke color is the requested fill color. Mermaid 12 can make that
+      // stroke thinner than the outline, so compare colors rather than widths.
       svg.querySelectorAll(".rough-node g, .cluster[data-look='handDrawn'] > g")
         .forEach((group) => {
           const paths = Array.from(group.children).filter(
             (child) => child.localName === "path"
           );
-          if (paths.length < 2) return;
+          if (paths.length !== 2) return;
           const [hatch, outline] = paths;
           const fill = hatch.getAttribute("stroke");
           if (hatch.getAttribute("fill") !== "none" || !fill || fill === "none" ||
               outline.getAttribute("fill") !== "none" ||
-              Number(hatch.getAttribute("stroke-width")) <=
-                Number(outline.getAttribute("stroke-width"))) return;
+              outline.getAttribute("stroke") === fill) return;
 
           // Each outline segment is drawn twice. Join the first trace of each
           // segment into a closed fill, keeping the original outline untouched.

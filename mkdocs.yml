@@ -59,7 +59,7 @@ markdown_extensions:
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
-          class: mermaid
+          class: workshop-mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight:
       anchor_linenums: true
@@ -96,7 +96,9 @@ extra_css:
   - stylesheets/extra.css
 
 extra_javascript:
+  - assets/vendor/mermaid-12.1.0.min.js
   - javascripts/mermaid-solid-fills.js
+  - javascripts/diagrams.js
 
 extra:
   social:
