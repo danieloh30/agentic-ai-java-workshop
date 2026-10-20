@@ -40,7 +40,7 @@ A single agent gives you a single opinion — confident, fluent, and sometimes w
 | **Tally** | Count the ballots, pick the majority, break ties by confidence | an `@Output` method — plain, deterministic Java |
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     START(["Incident + operator report"])
     PAR{{"@ParallelAgent — fan out"}}
@@ -55,13 +55,13 @@ flowchart TD
     V1 & V2 & V3 --> TALLY
     TALLY --> DONE
 
-    style START fill:#E8DCC4,stroke:#6B5B45
-    style PAR fill:#FFE4CC,stroke:#B87333
-    style V1 fill:#D8F0D8,stroke:#3D7A3D
-    style V2 fill:#D8F0D8,stroke:#3D7A3D
-    style V3 fill:#D8F0D8,stroke:#3D7A3D
-    style TALLY fill:#FFF8DC,stroke:#C4A000
-    style DONE fill:#D8F0D8,stroke:#3D7A3D
+    style START fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style PAR fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style V1 fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style V2 fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style V3 fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style TALLY fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style DONE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
 ```
 
 !!! note "Why a structured `Vote`, not free text?"

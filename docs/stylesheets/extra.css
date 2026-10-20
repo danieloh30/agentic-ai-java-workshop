@@ -73,11 +73,23 @@
   padding: 0.5em 0.75em;
 }
 
-/* Mermaid diagrams */
+/* A paper surface keeps pastel hand-drawn diagrams readable in both palettes.
+   Material renders SVGs in a shadow root, so its theme variables must inherit
+   from this container rather than target SVG descendants. */
 .md-typeset .mermaid {
+  --md-mermaid-label-fg-color: #1f1f1f;
+  --md-mermaid-label-bg-color: #fffcf5;
+  --md-mermaid-edge-color: #4a4035;
+  --md-mermaid-node-bg-color: #d4e6f1;
+  --md-mermaid-node-fg-color: #2e6b8a;
+  color-scheme: light;
+  color: #1f1f1f;
+  background: #fffcf5;
+  border: 1px solid #8b8070;
+  border-radius: 0.75rem;
+  padding: 1rem;
   text-align: center;
   margin: 1.5rem auto;
-  font-size: 1rem;
   overflow-x: auto;
 }
 
@@ -87,27 +99,10 @@
   box-shadow: none;
 }
 
-.mermaid .node rect,
-.mermaid .node polygon,
-.mermaid .node circle {
-  rx: 12px;
-  ry: 12px;
-}
-
-.mermaid .edgeLabel {
-  font-size: 0.85rem;
-}
-
-.mermaid .label {
-  font-size: 0.95rem;
-}
-
-/* Material renders Mermaid SVGs in a shadow root. These inherited variables
-   keep text dark on our fixed pastel fills, and connectors light on slate. */
-[data-md-color-scheme="slate"] .mermaid {
-  --md-mermaid-label-fg-color: #1f2937;
-  --md-mermaid-edge-color: #cbd5e1;
-  --md-mermaid-label-bg-color: var(--md-default-bg-color);
+@media (max-width: 600px) {
+  .md-typeset .mermaid {
+    padding: 0.5rem;
+  }
 }
 
 /* Compact screenshots for the memory, voting, and event pipeline exercises */

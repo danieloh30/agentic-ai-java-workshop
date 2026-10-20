@@ -50,7 +50,7 @@ AgenticServices.loopBuilder()
 After an incident is resolved, someone needs to write the **post-incident report (PIR)**. You'll build a workflow that **generates, critiques, and iteratively refines** the report until quality passes a threshold:
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     START(["Incident from DB"])
     DRAFT(["ReportDrafterAgent"])
@@ -64,11 +64,11 @@ flowchart TD
     CHECK -->|No, iterate| DRAFT
     CHECK -->|Yes| DONE
 
-    style START fill:#E8DCC4,stroke:#6B5B45
-    style DRAFT fill:#D4E6F1,stroke:#2E6B8A
-    style CRITIQUE fill:#FFE4CC,stroke:#B87333
-    style CHECK fill:#FFF8DC,stroke:#C4A000
-    style DONE fill:#D8F0D8,stroke:#3D7A3D
+    style START fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style DRAFT fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style CRITIQUE fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style CHECK fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style DONE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
 ```
 
 **This loop needs explicit control, so we use the programmatic `loopBuilder()` API.** A declarative `@LoopAgent` *does* exist in core `quarkus-langchain4j` (with an `@ExitCondition` method and `maxIterations`), so a score-based exit on its own is expressible with annotations. The reason this exercise drops to the builder is everything *around* the loop.

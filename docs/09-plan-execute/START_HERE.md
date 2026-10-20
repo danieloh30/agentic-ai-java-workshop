@@ -51,7 +51,7 @@ You'll assemble the pattern from pieces you've already met:
 | **Review → re-plan** | `ResolutionReviewAgent` decides *resolved?*; if not, its feedback drives a new plan | an `AgenticServices` loop (Exercise 8) |
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     START(["Incident from DB"])
     PLAN(["PlannerAgent<br/>returns ExecutionPlan<br/>(which steps, what order)"])
@@ -65,11 +65,11 @@ flowchart TD
     REVIEW -->|no — feedback| PLAN
     REVIEW -->|yes| DONE
 
-    style START fill:#E8DCC4,stroke:#6B5B45
-    style PLAN fill:#FFE4CC,stroke:#B87333
-    style EXEC fill:#D8F0D8,stroke:#3D7A3D
-    style REVIEW fill:#FFF8DC,stroke:#C4A000
-    style DONE fill:#D8F0D8,stroke:#3D7A3D
+    style START fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style PLAN fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style EXEC fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style REVIEW fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style DONE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
 ```
 
 !!! note "Why not the `@PlannerAgent` annotation?"

@@ -42,7 +42,7 @@ Two forces pull in opposite directions:
 | **Tier 2 — durable store** | Where those messages are read from and written to — a real database | a custom `ChatMemoryStore` over PostgreSQL |
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035','fontSize':'18px'},'flowchart': {'nodeSpacing':40,'rankSpacing':50,'useMaxWidth':false}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'18px'},'flowchart': {'nodeSpacing':40,'rankSpacing':55,'useMaxWidth':false,'padding':18}}}%%
 flowchart TB
     USER(["Engineer turn"])
     AGENT(["IncidentAssistant<br/>@Agent"])
@@ -55,11 +55,11 @@ flowchart TB
     WIN <-->|load / save| STORE
     STORE <-->|SQL| DB
 
-    style USER fill:#E8DCC4,stroke:#6B5B45
-    style AGENT fill:#FFE4CC,stroke:#B87333
-    style WIN fill:#D8F0D8,stroke:#3D7A3D
-    style STORE fill:#D8F0D8,stroke:#3D7A3D
-    style DB fill:#DCE6F5,stroke:#3A6EA5
+    style USER fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style AGENT fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style WIN fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style STORE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style DB fill:#DCE6F5,stroke:#3A6EA5,color:#1F1F1F,stroke-width:2px
 ```
 
 !!! note "The agentic-native wiring: `@ChatMemoryProviderSupplier`"

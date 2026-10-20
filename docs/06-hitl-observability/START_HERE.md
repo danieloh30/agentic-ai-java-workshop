@@ -29,7 +29,7 @@ This exercise introduces two concepts: **`EscalationProposalAgent`** (an LLM age
     Quarkus validates all `@Agent` parameters at **build time** against the workflow's `AgenticScope` output keys. HITL agents depend on outputs from each other (`escalationProposal` → `approvalDecision`), so adding a stub to `lab/` without wiring the full chain causes `IllegalConfigurationException`. Plus, `HumanApprovalAgent` is infrastructure code (`CompletableFuture`, `ApprovalService`, timeout handling) — not a 3-minute paste. So you run the working solution and focus on **understanding the pattern** rather than fighting build errors.
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     ISA(["IncidentSupervisorAgent<br/>escalation required"])
     EPA(["EscalationProposalAgent<br/>proposed action ESCALATE_P1"])
@@ -41,11 +41,11 @@ flowchart TD
     HITL -->|Escalate to Management| ESC
     HITL -->|Resolve Incident| RES
 
-    style ISA fill:#FFE4CC,stroke:#B87333
-    style EPA fill:#D8F0D8,stroke:#3D7A3D
-    style HITL fill:#FFF8DC,stroke:#C4A000
-    style ESC fill:#D8F0D8,stroke:#3D7A3D
-    style RES fill:#D4E6F1,stroke:#2E6B8A
+    style ISA fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style EPA fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style HITL fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style ESC fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style RES fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
 ```
 
 ---

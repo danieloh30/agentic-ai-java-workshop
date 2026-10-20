@@ -29,7 +29,7 @@ This lab assembles their work into one processing pipeline: parallel analysis su
 Complete the full multi-agent pipeline. After this exercise, a single `POST /incident-management/process/{id}` triggers:
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     IPW(["IncidentProcessingWorkflow<br/>@SequenceAgent"])
     IAW(["IncidentAnalysisWorkflow<br/>@ParallelMapperAgent x3"])
@@ -54,15 +54,15 @@ flowchart TD
 
     RA -->|IncidentOutcome| IMS
 
-    style IPW fill:#D4E6F1,stroke:#2E6B8A
-    style IAW fill:#D4E6F1,stroke:#2E6B8A
-    style ISA fill:#FFE4CC,stroke:#B87333
-    style RA fill:#D8F0D8,stroke:#3D7A3D
-    style IA fill:#D8F0D8,stroke:#3D7A3D
-    style EA fill:#D8F0D8,stroke:#3D7A3D
-    style DA fill:#D8F0D8,stroke:#3D7A3D
-    style TA fill:#FFF8DC,stroke:#C4A000
-    style IMS fill:#E8DCC4,stroke:#6B5B45
+    style IPW fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style IAW fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style ISA fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style RA fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style IA fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style EA fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style DA fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style TA fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style IMS fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
 ```
 
 !!! note "Where is `IncidentAnalysisAgent`?"

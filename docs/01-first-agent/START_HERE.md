@@ -160,7 +160,7 @@ Save all three files. Quarkus hot-reloads automatically.
 Before testing, trace the execution path in your head:
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     A(["TriageWorkflow.processTriage()"])
     B{"LLM: Critical?"}
@@ -174,13 +174,13 @@ flowchart TD
     B -->|Yes| C --> D --> G
     B -->|No| E --> F --> G
 
-    style A fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F
-    style B fill:#FFE4CC,stroke:#B87333,color:#1F1F1F
-    style C fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F
-    style D fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F
-    style E fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F
-    style F fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F
-    style G fill:#E8DCC4,stroke:#000000,color:#1F1F1F
+    style A fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style B fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style C fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style D fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style E fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style F fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style G fill:#E8DCC4,stroke:#000000,color:#1F1F1F,stroke-width:2px
 ```
 
 The LLM decides *whether* to call the tool based on the `@SystemMessage` policy. If the report says "false alarm, no action needed", the LLM returns `TRIAGE_NOT_REQUIRED` directly — no tool call, and the service resolves the incident.

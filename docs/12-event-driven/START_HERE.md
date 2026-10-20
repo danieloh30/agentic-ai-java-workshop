@@ -41,7 +41,7 @@ The capstone rewires the pipeline around **messaging**. An incident lands as an 
 | **Sink** | Read the resolution, mark the incident RESOLVED | `@Incoming` + `@Transactional` |
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035','fontSize':'18px'},'flowchart': {'nodeSpacing':40,'rankSpacing':50,'useMaxWidth':false}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'18px'},'flowchart': {'nodeSpacing':40,'rankSpacing':55,'useMaxWidth':false,'padding':18}}}%%
 flowchart TB
     API(["POST /publish/#123;id#125;"])
     T1[["incidents topic"]]
@@ -59,13 +59,13 @@ flowchart TB
     T2 --> SINK
     SINK --> DB
 
-    style API fill:#E8DCC4,stroke:#6B5B45
-    style T1 fill:#FFE4CC,stroke:#B87333
-    style T2 fill:#FFE4CC,stroke:#B87333
-    style CONS fill:#DCE8F0,stroke:#3D5A7A
-    style SEQ fill:#D8F0D8,stroke:#3D7A3D
-    style SINK fill:#DCE8F0,stroke:#3D5A7A
-    style DB fill:#EDE0F0,stroke:#7A4A8A
+    style API fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style T1 fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style T2 fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style CONS fill:#DCE8F0,stroke:#3D5A7A,color:#1F1F1F,stroke-width:2px
+    style SEQ fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style SINK fill:#DCE8F0,stroke:#3D5A7A,color:#1F1F1F,stroke-width:2px
+    style DB fill:#EDE0F0,stroke:#7A4A8A,color:#1F1F1F,stroke-width:2px
 ```
 
 !!! note "No Kafka to install — Dev Services provides it"

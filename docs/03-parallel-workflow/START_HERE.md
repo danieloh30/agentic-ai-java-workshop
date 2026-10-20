@@ -32,7 +32,7 @@ This introduces two concepts: **dynamic `@SystemMessage`** (same agent interface
 ## How `AgenticScope` connects agents
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'neutral','themeVariables': {'lineColor':'#4A4035'}}}%%
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
     A([IncidentAnalysisAgent x3])
     B([Output → List of String])
@@ -51,14 +51,14 @@ flowchart TD
     A2 --> B
     A3 --> B
 
-    style A fill:#D4E6F1,stroke:#2E6B8A
-    style B fill:#E8E0F0,stroke:#6B5B8A
-    style C fill:#E8E0F0,stroke:#6B5B8A
-    style D fill:#E8DCC4,stroke:#6B5B45
-    style A1 fill:#D8F0D8,stroke:#3D7A3D
-    style A2 fill:#D8F0D8,stroke:#3D7A3D
-    style A3 fill:#D8F0D8,stroke:#3D7A3D
-    style parallel fill:#F5F5F0,stroke:#8B8070
+    style A fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style B fill:#E8E0F0,stroke:#6B5B8A,color:#1F1F1F,stroke-width:2px
+    style C fill:#E8E0F0,stroke:#6B5B8A,color:#1F1F1F,stroke-width:2px
+    style D fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style A1 fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style A2 fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style A3 fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style parallel fill:#F5F5F0,stroke:#8B8070,color:#1F1F1F,stroke-width:2px
 ```
 
 Each parallel invocation of `IncidentAnalysisAgent` writes its result under `"incidentAnalysis"`. The `@ParallelMapperAgent` framework collects these into a `List<String>` and passes it to the `@Output` method, which maps them positionally into `IncidentAnalysisResults`.
