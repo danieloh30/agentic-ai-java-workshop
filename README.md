@@ -17,7 +17,9 @@ Build an agentic incident management platform for **Apex Systems**, a fictional 
 
 ### Part 1 — Fundamental patterns
 
-Exercises 1–7 take you from a single agent and tool to parallel workflows, a supervisor, AI governance, human-in-the-loop approval, OpenTelemetry tracing, and remote agents over A2A. Exercise 8 is an optional bonus: generate and refine a post-incident report in a quality loop.
+Build the foundations of agentic incident management for **Apex Systems** through seven short exercises. Start with a declarative agent that calls a tool, then add prompt-based policies, parallel specialists, and supervisor orchestration. Apply coding-assistant governance, introduce human approval and tracing, and delegate impact assessment to a remote agent over A2A.
+
+Designed for a **90-minute session**, with 80 minutes of hands-on work and a 10-minute introduction. **Exercise 8 is an optional 15-minute bonus** that adds a report-quality loop after the core session.
 
 | Exercise and guide | What you will build and verify | Working project | Reference solution |
 |--------------------|--------------------------------|-----------------|--------------------|
@@ -36,7 +38,7 @@ Work through the guides in order. Exercises 1–4 share the root `lab/` project;
 
 **Six short exercises, one running application.** Choose [`part2/lab/`](part2/lab/) for code-along or [`part2/solution/`](part2/solution/) for the completed run-and-read route. Start Quarkus dev mode once and stay in that folder through Exercises 9–14. Select the exercise mode in the dashboard; save code/configuration edits for automatic hot reload. No reset commands, project copies, branch switches, or manual restarts are part of the walkthrough.
 
-The core is **15 + 10 + 10 + 15 + 10 + 15 = 75 minutes**, with 15 minutes of session overhead in the 90-minute event slot. PostgreSQL, Kafka, and the bundled MCP fixture start up front. Existing incident, conversation, and processing records remain available through dev-mode reloads.
+The six exercises provide **75 minutes of hands-on work in a 90-minute session**. PostgreSQL, Kafka, and the bundled MCP fixture start up front. Existing incident, conversation, and processing records remain available through dev-mode reloads.
 
 | Exercise and guide | Time | What you build and verify | Dashboard mode |
 |--------------------|------|---------------------------|----------------|
@@ -51,7 +53,7 @@ Missing MCP evidence stops planning; eviction removes messages from the store; d
 
 ### Part 3 — Reliable Response and Evaluation
 
-Six cumulative exercises in a separate **90-minute event slot**: **10 + 10 + 15 + 15 + 10 + 15 = 75 minutes**, with 15 minutes for introduction, transitions, and troubleshooting. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
+Six short exercises provide **75 minutes of hands-on work in a 90-minute session**. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
 
 The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edits use hot reload; **Exercise 18 deliberately restarts the JVM once** to prove a pending approval survives. No reset commands or per-exercise project switches are needed. Evaluation plumbing, the fixed dataset and scripted test server are supplied; learner tasks stay small.
 

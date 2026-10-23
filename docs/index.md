@@ -146,6 +146,10 @@ No agent behavior yet: that's Exercise 1.
 
 ### Part 1 — Fundamental Patterns
 
+Build the foundations of agentic incident management for **Apex Systems** through seven short exercises. Start with a declarative agent that calls a tool, then add prompt-based policies, parallel specialists, and supervisor orchestration. Apply coding-assistant governance, introduce human approval and tracing, and delegate impact assessment to a remote agent over A2A.
+
+Designed for a **90-minute session**, with 80 minutes of hands-on work and a 10-minute introduction. Begin in the shared `lab/` project, then follow the guides into the runnable approval, observability, and A2A examples. **Exercise 8 is an optional 15-minute bonus** that adds a report-quality loop after the core session.
+
 | Exercise | Time | Focus |
 |----------|------|-------|
 | [1. Agent + tool](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
@@ -159,7 +163,7 @@ No agent behavior yet: that's Exercise 1.
 
 ### Part 2 — From Patterns to Production (Advanced & Enterprise)
 
-A separate **90-minute session**: six 10–15 minute exercises total 75 minutes, with 15 minutes for introduction, transitions, and troubleshooting. Use one shared project (`part2/lab/` or `part2/solution/`) and the same Quarkus dev-mode terminal from Exercise 9 through 14. Save edits for hot reload; select the dashboard mode rather than copying/resetting projects. Preflight container and dependency downloads before the session.
+Six short exercises provide **75 minutes of hands-on work in a 90-minute session**. Use one shared project (`part2/lab/` or `part2/solution/`) and the same Quarkus dev-mode terminal from Exercise 9 through 14. Save edits for hot reload; select the dashboard mode rather than copying/resetting projects. Preflight container and dependency downloads before the session.
 
 | Exercise | Time | Focus |
 |----------|------|-------|
@@ -172,7 +176,7 @@ A separate **90-minute session**: six 10–15 minute exercises total 75 minutes,
 
 ### Part 3 — Reliable Response and Evaluation
 
-Six cumulative exercises in a separate **90-minute event slot**: **10 + 10 + 15 + 15 + 10 + 15 = 75 minutes**, with 15 minutes for introduction, transitions, and troubleshooting. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
+Six short exercises provide **75 minutes of hands-on work in a 90-minute session**. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
 
 The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edits use hot reload; **Exercise 18 deliberately restarts the JVM once** to prove a pending approval survives. No reset commands or per-exercise project switches are needed. Evaluation plumbing, the fixed dataset and scripted test server are supplied; learner tasks stay small.
 
