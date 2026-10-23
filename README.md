@@ -23,14 +23,14 @@ Designed for a **90-minute session**, with 80 minutes of hands-on work and a 10-
 
 | Exercise and guide | What you will build and verify | Working project | Reference solution |
 |--------------------|--------------------------------|-----------------|--------------------|
-| [1. Agent + tool](docs/01-first-agent/START_HERE.md) | A declarative triage agent that calls a tool to update an incident's status | [Shared lab](lab/) | [Solution](solutions/01-first-agent/) |
-| [2. Policy as prompt](docs/02-maintenance-agent/START_HERE.md) | A diagnostic agent whose behavior changes through its system message | [Shared lab](lab/) | [Solution](solutions/02-maintenance-agent/) |
-| [3. Parallel agents](docs/03-parallel-workflow/START_HERE.md) | Concurrent incident analyses combined into a structured result | [Shared lab](lab/) | [Solution](solutions/03-parallel-workflow/) |
-| [4. Supervisor orchestration](docs/04-supervisor/START_HERE.md) | A supervisor coordinating specialist agents within an incident-processing workflow | [Shared lab](lab/) | [Solution](solutions/04-supervisor/) |
-| [5. AI governance](docs/05-ai-governance/START_HERE.md) | Project rules in `AGENTS.md` that guide an AI coding assistant and support code and prompt audits | [Shared lab](lab/) | Documentation only |
-| [6. Human gate + tracing](docs/06-hitl-observability/START_HERE.md) | Human approval for escalation and OpenTelemetry traces of agent execution | [Run + read](solutions/06-hitl-observability/) | [Solution](solutions/06-hitl-observability/) |
-| [7. Remote agents (A2A)](docs/07-a2a/START_HERE.md) | Impact assessment delegated to a remote agent over A2A | [Main app](solutions/07-a2a/multi-agent-system/) + [remote agent](solutions/07-a2a/remote-a2a-agent/) | [Solution](solutions/07-a2a/) |
-| [8. Quality loop (bonus)](docs/08-quarkus-flow/START_HERE.md) | A post-incident report drafted, critiqued, and refined until it meets a quality threshold | [Start lab](solutions/08-quarkus-flow/lab/) | [Solution](solutions/08-quarkus-flow/) |
+| [**1. Agent + tool**](docs/01-first-agent/START_HERE.md) | A declarative triage agent that calls a tool to update an incident's status | [Shared lab](lab/) | [Solution](solutions/01-first-agent/) |
+| [**2. Policy as prompt**](docs/02-maintenance-agent/START_HERE.md) | A diagnostic agent whose behavior changes through its system message | [Shared lab](lab/) | [Solution](solutions/02-maintenance-agent/) |
+| [**3. Parallel agents**](docs/03-parallel-workflow/START_HERE.md) | Concurrent incident analyses combined into a structured result | [Shared lab](lab/) | [Solution](solutions/03-parallel-workflow/) |
+| [**4. Supervisor orchestration**](docs/04-supervisor/START_HERE.md) | A supervisor coordinating specialist agents within an incident-processing workflow | [Shared lab](lab/) | [Solution](solutions/04-supervisor/) |
+| [**5. AI governance**](docs/05-ai-governance/START_HERE.md) | Project rules in `AGENTS.md` that guide an AI coding assistant and support code and prompt audits | [Shared lab](lab/) | Documentation only |
+| [**6. Human gate + tracing**](docs/06-hitl-observability/START_HERE.md) | Human approval for escalation and OpenTelemetry traces of agent execution | [Run + read](solutions/06-hitl-observability/) | [Solution](solutions/06-hitl-observability/) |
+| [**7. Remote agents (A2A)**](docs/07-a2a/START_HERE.md) | Impact assessment delegated to a remote agent over A2A | [Main app](solutions/07-a2a/multi-agent-system/) + [remote agent](solutions/07-a2a/remote-a2a-agent/) | [Solution](solutions/07-a2a/) |
+| [**8. Quality loop (bonus)**](docs/08-quarkus-flow/START_HERE.md) | A post-incident report drafted, critiqued, and refined until it meets a quality threshold | [Start lab](solutions/08-quarkus-flow/lab/) | [Solution](solutions/08-quarkus-flow/) |
 
 Work through the guides in order. Exercises 1–4 share the root `lab/` project; Exercises 2 and 3 use their reference solutions for end-to-end checks. Exercise 5 audits the current lab, Exercises 6 and 7 use runnable solutions, and Exercise 8 has a separate starter.
 
@@ -42,12 +42,12 @@ The six exercises provide **75 minutes of hands-on work in a 90-minute session**
 
 | Exercise and guide | Time | What you build and verify | Dashboard mode |
 |--------------------|------|---------------------------|----------------|
-| [9. Structured Planning](docs/09-plan-execute/START_HERE.md) | 15 min | Validated specialist plans, bounded review, and explicit recommendation readiness | Planning / MCP |
-| [10. Required MCP Evidence](docs/10-mcp-evidence/START_HERE.md) | 10 min | A required tool lookup before planning; fail closed when evidence is unavailable | Planning / MCP |
-| [11. Memory Boundaries](docs/11-memory-tiering/START_HERE.md) | 10 min | Conversation isolation and observable eviction from the PostgreSQL-backed window | Memory |
-| [12. Voting and Disagreement](docs/12-consensus-voting/START_HERE.md) | 15 min | Parallel specialist ballots and deterministic majority-or-review policy | Voting |
-| [13. Event-Driven Processing](docs/13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes | Events / Replay |
-| [14. Persistent Outcomes and Replay](docs/14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes | Events / Replay |
+| [**9. Structured Planning**](docs/09-plan-execute/START_HERE.md) | 15 min | Validated specialist plans, bounded review, and explicit recommendation readiness | Planning / MCP |
+| [**10. Required MCP Evidence**](docs/10-mcp-evidence/START_HERE.md) | 10 min | A required tool lookup before planning; fail closed when evidence is unavailable | Planning / MCP |
+| [**11. Memory Boundaries**](docs/11-memory-tiering/START_HERE.md) | 10 min | Conversation isolation and observable eviction from the PostgreSQL-backed window | Memory |
+| [**12. Voting and Disagreement**](docs/12-consensus-voting/START_HERE.md) | 15 min | Parallel specialist ballots and deterministic majority-or-review policy | Voting |
+| [**13. Event-Driven Processing**](docs/13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes | Events / Replay |
+| [**14. Persistent Outcomes and Replay**](docs/14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes | Events / Replay |
 
 Missing MCP evidence stops planning; eviction removes messages from the store; disagreement can require review; a completed recommendation is not proof of incident recovery. Part 3 follows a pending approval across full application shutdown. Optional challenges are outside the core timebox.
 
@@ -59,12 +59,12 @@ The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edit
 
 | Exercise | Time | Workspace |
 |----------|------|-----------|
-| [15. Runtime Skills](docs/15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
-| [16. Runtime Output Guardrails](docs/16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
-| [17. Asynchronous Approval](docs/17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
-| [18. Restart Recovery](docs/18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
-| [19. Deterministic Regression Tests](docs/19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
-| [20. Quality Evaluation](docs/20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
+| [**15. Runtime Skills**](docs/15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
+| [**16. Runtime Output Guardrails**](docs/16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
+| [**17. Asynchronous Approval**](docs/17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
+| [**18. Restart Recovery**](docs/18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
+| [**19. Deterministic Regression Tests**](docs/19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
+| [**20. Quality Evaluation**](docs/20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
 
 Start with [Exercise 15](docs/15-runtime-skills/START_HERE.md) and preflight dependency/container downloads before the event. Live evaluation uses paid model calls; automated regression tests use a local scripted model and an isolated test database.
 

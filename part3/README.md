@@ -6,12 +6,12 @@ Choose `lab/` for code-along or `solution/` for the completed run-and-read route
 
 | Exercise | Time | Workspace |
 |----------|------|-----------|
-| [15. Runtime Skills](../docs/15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
-| [16. Runtime Output Guardrails](../docs/16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
-| [17. Asynchronous Approval](../docs/17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
-| [18. Restart Recovery](../docs/18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
-| [19. Deterministic Regression Tests](../docs/19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
-| [20. Quality Evaluation](../docs/20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
+| [**15. Runtime Skills**](../docs/15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
+| [**16. Runtime Output Guardrails**](../docs/16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
+| [**17. Asynchronous Approval**](../docs/17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
+| [**18. Restart Recovery**](../docs/18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
+| [**19. Deterministic Regression Tests**](../docs/19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
+| [**20. Quality Evaluation**](../docs/20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
 
 From the repository root:
 

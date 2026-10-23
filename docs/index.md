@@ -152,14 +152,14 @@ Designed for a **90-minute session**, with 80 minutes of hands-on work and a 10-
 
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [1. Agent + tool](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
-| [2. Policy as prompt](02-maintenance-agent/START_HERE.md) | 10 min | `DiagnosticAgent` + `@SystemMessage` as policy |
-| [3. Parallel agents](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
-| [4. Supervisor orchestration](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
-| [5. AI governance](05-ai-governance/START_HERE.md) | 10 min | `AGENTS.md` + OpenCode CLI |
-| [6. Human gate + tracing](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
-| [7. Remote agents (A2A)](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
-| [8. Quality loop (bonus)](08-quarkus-flow/START_HERE.md) | 15 min | Programmatic loop with `AgenticServices.loopBuilder()` |
+| [**1. Agent + tool**](01-first-agent/START_HERE.md) | 15 min | `TriageAgent` + `TriageTool` |
+| [**2. Policy as prompt**](02-maintenance-agent/START_HERE.md) | 10 min | `DiagnosticAgent` + `@SystemMessage` as policy |
+| [**3. Parallel agents**](03-parallel-workflow/START_HERE.md) | 10 min | `@ParallelMapperAgent` + `@Output` |
+| [**4. Supervisor orchestration**](04-supervisor/START_HERE.md) | 15 min | Full multi-agent supervisor |
+| [**5. AI governance**](05-ai-governance/START_HERE.md) | 10 min | `AGENTS.md` + OpenCode CLI |
+| [**6. Human gate + tracing**](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
+| [**7. Remote agents (A2A)**](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
+| [**8. Quality loop (bonus)**](08-quarkus-flow/START_HERE.md) | 15 min | Programmatic loop with `AgenticServices.loopBuilder()` |
 
 ### Part 2 — From Patterns to Production (Advanced & Enterprise)
 
@@ -167,12 +167,12 @@ Six short exercises provide **75 minutes of hands-on work in a 90-minute session
 
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [9. Structured Planning](09-plan-execute/START_HERE.md) | 15 min | Validated specialist plans, bounded review, and explicit recommendation readiness |
-| [10. Required MCP Evidence](10-mcp-evidence/START_HERE.md) | 10 min | A required tool lookup before planning; fail closed when evidence is unavailable |
-| [11. Memory Boundaries](11-memory-tiering/START_HERE.md) | 10 min | Conversation isolation and observable eviction from the PostgreSQL-backed window |
-| [12. Voting and Disagreement](12-consensus-voting/START_HERE.md) | 15 min | Parallel specialist ballots and deterministic majority-or-review policy |
-| [13. Event-Driven Processing](13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes |
-| [14. Persistent Outcomes and Replay](14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes |
+| [**9. Structured Planning**](09-plan-execute/START_HERE.md) | 15 min | Validated specialist plans, bounded review, and explicit recommendation readiness |
+| [**10. Required MCP Evidence**](10-mcp-evidence/START_HERE.md) | 10 min | A required tool lookup before planning; fail closed when evidence is unavailable |
+| [**11. Memory Boundaries**](11-memory-tiering/START_HERE.md) | 10 min | Conversation isolation and observable eviction from the PostgreSQL-backed window |
+| [**12. Voting and Disagreement**](12-consensus-voting/START_HERE.md) | 15 min | Parallel specialist ballots and deterministic majority-or-review policy |
+| [**13. Event-Driven Processing**](13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes |
+| [**14. Persistent Outcomes and Replay**](14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes |
 
 ### Part 3 — Reliable Response and Evaluation
 
@@ -182,12 +182,12 @@ The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edit
 
 | Exercise | Time | Workspace |
 |----------|------|-----------|
-| [15. Runtime Skills](15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
-| [16. Runtime Output Guardrails](16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
-| [17. Asynchronous Approval](17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
-| [18. Restart Recovery](18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
-| [19. Deterministic Regression Tests](19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
-| [20. Quality Evaluation](20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
+| [**15. Runtime Skills**](15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
+| [**16. Runtime Output Guardrails**](16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
+| [**17. Asynchronous Approval**](17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
+| [**18. Restart Recovery**](18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
+| [**19. Deterministic Regression Tests**](19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
+| [**20. Quality Evaluation**](20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
 
 Start with [Exercise 15](15-runtime-skills/START_HERE.md) and preflight dependency/container downloads before the event. Live evaluation uses paid model calls; automated regression tests use a local scripted model and an isolated test database.
 
