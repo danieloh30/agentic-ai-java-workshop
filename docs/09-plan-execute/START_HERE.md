@@ -17,15 +17,32 @@ Riley needs an incident-specific response plan grounded in deployment evidence. 
 Fetch required evidence through MCP, then run **Plan → Execute → Review**, bounded to three iterations. Inspect evidence, rejected plans, reviewer feedback, and the final outcome. Specialists produce recommendations; they do not modify a deployment. The dashboard therefore keeps the incident **In Progress**, even when the reviewer accepts the recommendation.
 
 ```mermaid
-flowchart LR
-    MCP[Required MCP evidence] --> VALID{Evidence valid?}
-    VALID -->|No| STOP[EVIDENCE_UNAVAILABLE]
-    VALID -->|Yes| PLAN[Plan]
-    PLAN --> CHECK[Java prerequisite check]
-    CHECK --> EXEC[Specialist recommendations]
-    EXEC --> REVIEW[Review]
-    REVIEW -->|Feedback, at most 3 iterations| PLAN
-    REVIEW -->|Ready| HUMAN[Operator verification still required]
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
+flowchart TD
+    MCP(["Required MCP evidence"])
+    VALID{"Evidence valid?"}
+    STOP["EVIDENCE_UNAVAILABLE"]
+    PLAN(["Plan"])
+    CHECK["Java prerequisite check"]
+    EXEC(["Specialist recommendations"])
+    REVIEW{"Review"}
+    HUMAN(["Operator verification<br/>still required"])
+
+    MCP --> VALID
+    VALID -->|No| STOP
+    VALID -->|Yes| PLAN
+    PLAN --> CHECK --> EXEC --> REVIEW
+    REVIEW -->|"Feedback, at most 3 iterations"| PLAN
+    REVIEW -->|Ready| HUMAN
+
+    style MCP fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style VALID fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style STOP fill:#F8D7DA,stroke:#A94442,color:#1F1F1F,stroke-width:2px
+    style PLAN fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style CHECK fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style EXEC fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style REVIEW fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style HUMAN fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
 ```
 
 ## Step 0 — Start green (2 min)

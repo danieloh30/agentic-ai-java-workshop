@@ -21,15 +21,32 @@ The path is **publish → Kafka → triage/recommendation agents → Kafka → t
 The dashboard leaves an active incident **In Progress**. Only an actual recovery/approval process should close it.
 
 ```mermaid
-flowchart LR
-    SUB[Register request] --> IN[Kafka incidents]
-    IN --> CACHE{Completed request?}
-    CACHE -->|Yes| REUSE[Reuse saved outcome]
-    CACHE -->|No| AGENTS[Triage and recommend]
-    REUSE --> OUT[Kafka outcomes]
+%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
+flowchart TD
+    SUB(["Register request"])
+    IN["Kafka incidents"]
+    CACHE{"Completed request?"}
+    REUSE(["Reuse saved outcome"])
+    AGENTS(["Triage and recommend"])
+    OUT["Kafka outcomes"]
+    DB[("Commit correlated result")]
+    UI(["Dashboard: awaiting review<br/>or failed"])
+
+    SUB --> IN --> CACHE
+    CACHE -->|Yes| REUSE
+    CACHE -->|No| AGENTS
+    REUSE --> OUT
     AGENTS --> OUT
-    OUT --> DB[Commit correlated result]
-    DB --> UI[Dashboard: awaiting review or failed]
+    OUT --> DB --> UI
+
+    style SUB fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style IN fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style CACHE fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
+    style REUSE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+    style AGENTS fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
+    style OUT fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
+    style DB fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style UI fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
 ```
 
 ## Step 0 — Start green (3 min)
