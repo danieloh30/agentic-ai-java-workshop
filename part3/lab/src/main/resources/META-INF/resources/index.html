@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Apex | Reliable incident response</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="brand">APEX <span>SYSTEMS</span></div>
+      <span class="eyebrow">ENTERPRISE AGENTIC AI · PART 3</span>
+    </header>
+    <main>
+      <div class="intro">
+        <p class="eyebrow">EXERCISES 15–20 · ONE SHARED APPLICATION</p>
+        <h1>From recommendation<br />to reliable response.</h1>
+        <p>
+          Load a runbook, enforce the response contract, and carry one proposal
+          through approval and recovery. Then measure what changed.
+        </p>
+      </div>
+      <nav aria-label="Workshop workspace">
+        <button data-tab="recommend" aria-selected="true">
+          15–16 · Skills & guardrails</button
+        ><button data-tab="respond" aria-selected="false">
+          17–18 · Approval & recovery</button
+        ><button data-tab="evaluate" aria-selected="false">
+          19–20 · Tests & evaluation
+        </button>
+      </nav>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <section id="recommend" class="workspace">
+        <div class="two-col">
+          <article>
+            <span class="step">01 / RECOMMEND</span>
+            <h2>Use an incident runbook</h2>
+            <p>
+              The <code>incident-response</code> skill is available through the
+              model’s <code>activate_skill</code> tool. Activation is a model
+              choice; Exercise 19 verifies the tool round trip with a scripted
+              model.
+            </p>
+            <label for="priority">Priority</label
+            ><select id="priority">
+              <option>P2</option>
+              <option>P1</option>
+              <option>P3</option>
+              <option>P4</option></select
+            ><label for="report">Operator report</label
+            ><textarea id="report" rows="6">
+Intermittent checkout 503 errors started after release 2.4. Error rate is 8%. No rollback or verification has run.</textarea
+            ><button id="preview" class="primary">
+              Generate recommendation
+            </button>
+            <p class="muted">
+              Live model call. The output guardrail checks the contract and may
+              request up to two repairs. The evidence check then requires exact
+              report excerpts.
+            </p>
+          </article>
+          <article>
+            <span class="step">02 / INSPECT</span>
+            <h2>Recommendation contract</h2>
+            <div id="preview-result" class="empty">
+              Generate a recommendation to inspect its evidence, suggested
+              action, and operator checks.
+            </div>
+            <div class="callout">
+              Approval records a human decision. This workshop does not execute
+              infrastructure changes or mark an incident resolved.
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="respond" class="workspace" hidden>
+        <div class="two-col">
+          <article>
+            <span class="step">03 / SUBMIT</span>
+            <h2>Queue a response</h2>
+            <label for="incident">Incident</label
+            ><select id="incident"></select
+            ><label for="response-report">Operator report</label
+            ><textarea id="response-report" rows="5">
+Intermittent checkout 503 errors started after release 2.4. Error rate is 8%. No rollback or verification has run.</textarea
+            ><label for="request-id">Request ID</label
+            ><input id="request-id" maxlength="80" />
+            <div class="actions">
+              <button id="queue" class="primary">Submit response</button
+              ><button id="new-id">New request ID</button>
+            </div>
+            <p class="muted">
+              Submission returns HTTP 202. The worker persists a proposal, then
+              stops at WAITING_APPROVAL. Reusing an ID with the same payload
+              returns the existing request.
+            </p>
+            <div class="callout">
+              <strong>Exercise 18:</strong> leave a proposal waiting, stop
+              Quarkus with Ctrl+C, and run <code>./dev.sh</code> again in this
+              folder. Keep the database container and volume. Compare the
+              proposal hash and attempt count before approving.
+            </div>
+          </article>
+          <article>
+            <span class="step">04 / REVIEW</span>
+            <h2>Saved responses</h2>
+            <button id="refresh">Refresh saved state</button>
+            <div id="responses" class="empty">No responses yet.</div>
+          </article>
+        </div>
+      </section>
+      <section id="evaluate" class="workspace" hidden>
+        <div class="two-col">
+          <article>
+            <span class="step">05 / VERIFY</span>
+            <h2>Deterministic regression checks</h2>
+            <p>
+              In the same project, run <code>./mvnw test</code> in another
+              terminal, or use Quarkus continuous testing. Tests use a local
+              scripted model and isolated Dev Services database; no paid model
+              calls.
+            </p>
+            <p>
+              Exercise 19 covers contract failures, a skill activation round
+              trip, stale decisions, duplicate requests, recovery, and the
+              evaluation rubric.
+            </p>
+            <h2>Measure a candidate</h2>
+            <p>
+              The fixed three-case dataset includes checkout errors, a P1 login
+              outage, and an instruction injection. Deterministic checks and
+              model-judge scores are displayed separately.
+            </p>
+            <label for="run-label">Run label</label
+            ><input id="run-label" value="baseline" maxlength="60" /><button
+              id="run-evaluation"
+              class="primary"
+            >
+              Run live evaluation · 3 cases
+            </button>
+            <p class="muted">
+              At least six paid model calls (three recommendations + three judge
+              calls), plus skill tool turns and guardrail repairs. Keep the
+              dataset and apex-v1 judge rubric fixed for comparisons. Scores
+              vary; review the judge’s reasons and actual outputs.
+            </p>
+          </article>
+          <article>
+            <span class="step">06 / COMPARE</span>
+            <h2>Evaluation history</h2>
+            <button id="refresh-evaluations">Refresh runs</button>
+            <div id="evaluations" class="empty">No completed runs yet.</div>
+          </article>
+        </div>
+      </section>
+      <footer>
+        APEX SYSTEMS / INCIDENT RESPONSE LAB
+        <span
+          >75 minutes of core exercises · 15 minutes of session overhead</span
+        >
+      </footer>
+    </main>
+  </body>
+</html>

@@ -37,3 +37,7 @@ All projects target:
 - **Java 25+** (`maven.compiler.release`)
 - **Quarkus** (`quarkus.platform.version` — kept current via Dependabot)
 - **Quarkus LangChain4j** (`quarkus-langchain4j.version`)
+
+### Part 3 — Reliable Response and Evaluation
+
+Exercises 15–20 use one shared [`part3/lab/`](../part3/lab/) starter or [`part3/solution/`](../part3/solution/) completed application. Start `./dev.sh` once and keep the same folder; Exercise 18 deliberately restarts the JVM with a retained database volume. See the [Part 3 guide](../part3/README.md) for the 75-minute core and setup.

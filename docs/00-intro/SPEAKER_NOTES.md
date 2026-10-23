@@ -110,6 +110,23 @@ Select Planning / MCP, Memory, Voting, or Events / Replay in the dashboard. Code
 | [**13 — Event-Driven Processing**](../13-event-driven/START_HERE.md) | 10 min | Jordan — Java platform engineer | A sequential agent workflow triggered by Kafka, with correlated outcomes |
 | [**14 — Persistent Outcomes and Replay**](../14-persistent-outcomes/START_HERE.md) | 15 min | Jordan — Java platform engineer | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes |
 
+### Part 3 — Reliable Response and Evaluation
+
+Six cumulative exercises in a separate **90-minute event slot**: **10 + 10 + 15 + 15 + 10 + 15 = 75 minutes**, with 15 minutes for introduction, transitions, and troubleshooting. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
+
+The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edits use hot reload; **Exercise 18 deliberately restarts the JVM once** to prove a pending approval survives. No reset commands or per-exercise project switches are needed. Evaluation plumbing, the fixed dataset and scripted test server are supplied; learner tasks stay small.
+
+| Exercise | Time | Workspace |
+|----------|------|-----------|
+| [15. Runtime Skills](../15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
+| [16. Runtime Output Guardrails](../16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
+| [17. Asynchronous Approval](../17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
+| [18. Restart Recovery](../18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
+| [19. Deterministic Regression Tests](../19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
+| [20. Quality Evaluation](../20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
+
+Start with [Exercise 15](../15-runtime-skills/START_HERE.md) and preflight dependency/container downloads before the event. Live evaluation uses paid model calls; automated regression tests use a local scripted model and an isolated test database.
+
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses OpenCode CLI to govern and validate the system you built.  
 **Exercise 6** runs and reads the completed HITL solution, tests approval decisions, and inspects OpenTelemetry traces.<br>
@@ -118,6 +135,8 @@ Select Planning / MCP, Memory, Voting, or Events / Replay in the dashboard. Code
 **Exercises 9–14** are cumulative code-along labs in the same `part2/lab/` project. Each adds one focused behavior; later exercises reuse prior code and records. The completed route uses the same `part2/solution/` folder throughout. Supporting infrastructure is supplied and optional challenges are outside the core timebox.
 
 ---
+
+**Exercises 15–20** stay in one `part3/lab/` or `part3/solution/` project. Start with `./dev.sh`; retain its dedicated PostgreSQL volume. Keep the same dev-mode session except for Exercise 18’s deliberate restart. Allocate 5 minutes for introduction, 5 for transitions and 5 for troubleshooting. Preflight downloads; larger evaluation datasets and production deployment are optional follow-up work.
 
 ## The technology stack
 

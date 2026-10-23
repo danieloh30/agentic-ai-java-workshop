@@ -2,14 +2,14 @@
 
 # Enterprise Agentic AI: Architecting Autonomous Java Systems for Production
 
-**Two workshop parts · Separate 90-minute event slots**
+**Three workshop parts · Separate 90-minute event slots**
 
 !!! tip "Quick access"
     Short URL for this guide: **[bit.ly/agents-labs](https://bit.ly/agents-labs){:target="_blank"}** — share it or bookmark it.
 
     [:fontawesome-solid-file-pdf: Intro slide deck](images/intro-deck.pdf){:target="_blank" .md-button }
 
-Build intelligent, secure, and observable multi-agent applications on **Quarkus**. **Part 1** introduces agents, supervisor orchestration, human-in-the-loop approval, OpenTelemetry tracing, and A2A remote agents. **Part 2** adds required MCP evidence, validated planning, memory eviction and isolation, majority-or-review voting, and persisted Kafka processing outcomes. Each part fits its own 90-minute event slot; Part 2 has 75 minutes of core labs and 15 minutes of session overhead.
+Build intelligent, secure, and observable multi-agent applications on **Quarkus**. **Part 1** introduces agents, supervisor orchestration, human-in-the-loop approval, OpenTelemetry tracing, and A2A remote agents. **Part 2** adds required MCP evidence, validated planning, memory eviction and isolation, majority-or-review voting, and persisted Kafka processing outcomes. **Part 3** adds runtime skills, output guardrails, asynchronous approval, full-restart recovery, deterministic regression tests, and quality evaluation. Each part fits its own 90-minute event slot; Parts 2 and 3 each have 75 minutes of core labs and 15 minutes of session overhead.
 
 ## Prerequisites
 
@@ -137,9 +137,12 @@ No agent behavior yet: that's Exercise 1.
 <img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
 !!! tip "Reference solutions"
-    Solutions live in `solutions/`. Each exercise guide links to its solution at the top — use them only if you get stuck.
+    Part 1 references live in `solutions/`. Parts 2 and 3 use `part2/solution/` and `part3/solution/`. Choose starter or completed code at the start of a part and keep that folder; compare individual files when stuck.
 
 ## Exercises
+
+!!! tip "Starting Part 3 instead?"
+    From the repository root, run `cd part3/lab`, export `OPENAI_API_KEY`, then run `./dev.sh`. Choose `part3/solution` for completed code. Keep that folder throughout Exercises 15–20. Follow [Exercise 15](15-runtime-skills/START_HERE.md) for setup and preflight. Exercise 18 deliberately restarts the JVM with the database retained.
 
 ### Part 1 — Fundamental Patterns
 
@@ -167,6 +170,23 @@ A separate **90-minute session**: six 10–15 minute exercises total 75 minutes,
 | [13. Event-Driven Processing](13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes |
 | [14. Persistent Outcomes and Replay](14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes |
 
+### Part 3 — Reliable Response and Evaluation
+
+Six cumulative exercises in a separate **90-minute event slot**: **10 + 10 + 15 + 15 + 10 + 15 = 75 minutes**, with 15 minutes for introduction, transitions, and troubleshooting. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
+
+The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edits use hot reload; **Exercise 18 deliberately restarts the JVM once** to prove a pending approval survives. No reset commands or per-exercise project switches are needed. Evaluation plumbing, the fixed dataset and scripted test server are supplied; learner tasks stay small.
+
+| Exercise | Time | Workspace |
+|----------|------|-----------|
+| [15. Runtime Skills](15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
+| [16. Runtime Output Guardrails](16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
+| [17. Asynchronous Approval](17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
+| [18. Restart Recovery](18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
+| [19. Deterministic Regression Tests](19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
+| [20. Quality Evaluation](20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
+
+Start with [Exercise 15](15-runtime-skills/START_HERE.md) and preflight dependency/container downloads before the event. Live evaluation uses paid model calls; automated regression tests use a local scripted model and an isolated test database.
+
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 
 ## Repository layout
@@ -180,3 +200,5 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | `solutions/08-quarkus-flow/lab/` | Separate starter project for the bonus exercise (not the root `lab/`) |
 | `part2/lab/` | Shared runnable starter for Exercises 9–14; keep dev mode running |
 | `part2/solution/` | Completed shared Part 2 application |
+| `part3/lab/` | Shared starter for Exercises 15–20, started with `./dev.sh` |
+| `part3/solution/` | Completed Part 3 application |

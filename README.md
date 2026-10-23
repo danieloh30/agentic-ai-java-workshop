@@ -7,10 +7,11 @@
 **Hands-On Workshop**  
 **Part 1:** 90 minutes (10 min intro · 80 min hands-on), plus an optional 15-minute bonus<br>
 **Part 2:** 90-minute event slot (75 min labs · 10 min introduction/transitions · 5 min troubleshooting)<br>
+**Part 3:** 90-minute event slot (75 min labs · 15 min introduction/transitions/troubleshooting)<br>
 **Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/ (short URL: [bit.ly/agents-labs](https://bit.ly/agents-labs))  
 **Intro deck:** [intro-deck.pdf](docs/images/intro-deck.pdf)
 
-Build an agentic incident management platform for **Apex Systems**, a fictional enterprise IT services company, using **Quarkus**, **Quarkus LangChain4j**, and **OpenCode CLI** or another AI coding assistant. Part 1 introduces agents, tools, orchestration, governance, and observability. Part 2 extends those foundations with MCP-grounded planning, bounded conversational memory and eviction, majority-or-review voting, and persisted event-processing outcomes.
+Build an agentic incident management platform for **Apex Systems**, a fictional enterprise IT services company, using **Quarkus**, **Quarkus LangChain4j**, and **OpenCode CLI** or another AI coding assistant. Part 1 introduces agents, tools, orchestration, governance, and observability. Part 2 extends those foundations with MCP-grounded planning, bounded conversational memory and eviction, majority-or-review voting, and persisted event-processing outcomes. Part 3 carries an incident response through runtime skills, guardrails, durable approval, restart recovery, deterministic regression checks, and quality evaluation.
 
 ## Learning path
 
@@ -46,7 +47,24 @@ The core is **15 + 10 + 10 + 15 + 10 + 15 = 75 minutes**, with 15 minutes of ses
 | [13. Event-Driven Processing](docs/13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes | Events / Replay |
 | [14. Persistent Outcomes and Replay](docs/14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes | Events / Replay |
 
-Missing MCP evidence stops planning; eviction removes messages from the store; disagreement can require review; a completed recommendation is not proof of incident recovery. Keeping a waiting workflow across full application shutdown remains a later topic. Optional challenges are outside the core timebox.
+Missing MCP evidence stops planning; eviction removes messages from the store; disagreement can require review; a completed recommendation is not proof of incident recovery. Part 3 follows a pending approval across full application shutdown. Optional challenges are outside the core timebox.
+
+### Part 3 — Reliable Response and Evaluation
+
+Six cumulative exercises in a separate **90-minute event slot**: **10 + 10 + 15 + 15 + 10 + 15 = 75 minutes**, with 15 minutes for introduction, transitions, and troubleshooting. Choose `part3/lab/` for code-along or `part3/solution/` for completed code, then stay in that folder throughout. The same Apex incident response moves from a runtime skill to a guarded recommendation, asynchronous approval, restart recovery, regression checks, and a measured quality experiment.
+
+The supplied launcher starts persistent PostgreSQL before Quarkus dev mode. Edits use hot reload; **Exercise 18 deliberately restarts the JVM once** to prove a pending approval survives. No reset commands or per-exercise project switches are needed. Evaluation plumbing, the fixed dataset and scripted test server are supplied; learner tasks stay small.
+
+| Exercise | Time | Workspace |
+|----------|------|-----------|
+| [15. Runtime Skills](docs/15-runtime-skills/START_HERE.md) | 10 min | Skills & guardrails |
+| [16. Runtime Output Guardrails](docs/16-output-guardrails/START_HERE.md) | 10 min | Skills & guardrails |
+| [17. Asynchronous Approval](docs/17-async-approval/START_HERE.md) | 15 min | Approval & recovery |
+| [18. Restart Recovery](docs/18-restart-recovery/START_HERE.md) | 15 min | Approval & recovery |
+| [19. Deterministic Regression Tests](docs/19-regression-tests/START_HERE.md) | 10 min | Tests & evaluation |
+| [20. Quality Evaluation](docs/20-quality-evaluation/START_HERE.md) | 15 min | Tests & evaluation |
+
+Start with [Exercise 15](docs/15-runtime-skills/START_HERE.md) and preflight dependency/container downloads before the event. Live evaluation uses paid model calls; automated regression tests use a local scripted model and an isolated test database.
 
 ## Repository layout
 
@@ -58,6 +76,8 @@ Missing MCP evidence stops planning; eviction removes messages from the store; d
 | `solutions/08-quarkus-flow/lab/` | Starter project for the optional quality-loop exercise |
 | [`part2/lab/`](part2/lab/) | Shared runnable starter for all six Part 2 exercises |
 | [`part2/solution/`](part2/solution/) | Completed shared Part 2 application |
+| [`part3/lab/`](part3/lab/) | Shared starter for Exercises 15–20 |
+| [`part3/solution/`](part3/solution/) | Completed Part 3 application |
 
 For Part 2, edit only the files listed in each guide inside your chosen shared project. The older isolated `solutions/09-*` through `solutions/12-*` folders are retained as historical references, not the current event path.
 
@@ -99,6 +119,16 @@ For Part 1, stop the current application before switching projects. For Part 2, 
 The **Part 2 event path never requires a reset**. Continue editing the same `part2/lab/` project while dev mode runs.
 
 For separate Part 1 practice sessions, `./reset-labs.sh lab` restores the root starter and `./reset-labs.sh ex08` restores the bonus starter. These optional commands discard edits to their listed files. The script's legacy `ex09`–`ex12` options affect only the old isolated reference folders; they do not reset the shared Part 2 application.
+
+For **Part 3**, start from the repository root:
+
+```bash
+cd part3/lab
+export OPENAI_API_KEY=your-key
+./dev.sh
+```
+
+Choose `part3/solution` for completed code. Keep that folder through Exercises 15–20; use a second terminal there for `./mvnw test`. The launcher provisions a dedicated database container/volume. See [Part 3 setup and pacing](part3/README.md) for preflight and the single deliberate restart experiment.
 
 ## Prerequisites
 

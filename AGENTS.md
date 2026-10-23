@@ -114,6 +114,10 @@ Exercise 5 is documentation-only and uses `lab/AGENTS.md`; its solution folder c
 
 ---
 
+**Current Part 3 (Exercises 15–20):** choose `part3/lab/` or `part3/solution/` once and start `./dev.sh`. Six cumulative exercises cover native runtime skills, output guardrails, asynchronous approval, restart recovery, deterministic regression tests, and quality evaluation (10 + 10 + 15 + 15 + 10 + 15 = 75 minutes). The launcher starts PostgreSQL with a retained named volume. Hot reload preserves work; Ex18 deliberately restarts the JVM once. `ResponseAgent` and `QualityJudge` remain declarative `@Agent` interfaces. `ResponseStore` is a supplied explicit database-backed state machine, not a Flow checkpoint engine; no production remediation executes. Tests use a local scripted OpenAI server and an isolated Dev Services database. Live evaluations use a fixed dataset and judge rubric; persist outputs/checks/scores and dataset/skill hashes separately.
+
+---
+
 ## Existing agents (04-supervisor — the richest exercise)
 
 | Interface | File | Role | outputKey |
