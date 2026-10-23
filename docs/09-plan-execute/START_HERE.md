@@ -1,126 +1,97 @@
-# Exercise 9 — Plan & Execute with MCP Evidence
+# Exercise 9 — Structured Planning
 
-<span class="badge badge--code-along">Code-Along</span> <span class="badge">Part 2 · 20 minutes</span>
+<span class="badge badge--code-along">Code-Along</span> <span class="badge">Part 2 · 15 minutes</span>
 
 **Persona:** Riley — SRE lead<br>
-**You work in:** `solutions/09-plan-execute/lab/`<br>
-**Files to edit:** `agentic/agents/PlannerAgent.java` and `agentic/workflow/PlanExecuteFlow.java`, under `src/main/java/com/incidentmanagement/`.
+**Working project for all six exercises:** `part2/lab/`<br>
+**File to edit:** `src/main/java/com/incidentmanagement/agentic/agents/PlannerAgent.java`.
 
-## Welcome to Part 2 — From Patterns to Production
+## One application for Part 2
 
-This is a separate event session: **75 minutes of labs + 10 minutes of introduction/transitions + 5 minutes of troubleshooting = 90 minutes maximum**. Exercises 9–12 take **20 + 15 + 20 + 20 minutes**. Optional challenges are outside that schedule. Pre-pull dependencies and container images before the event. Each starter builds with runnable defaults; you improve behavior rather than fix an initial deployment error.
+Part 2 is six short exercises: **9 Planning (15 min), 10 MCP evidence (10 min), 11 Memory (10 min), 12 Voting (15 min), 13 Events (10 min), and 14 Persistent outcomes/replay (15 min)**. That is **75 minutes of labs**, leaving 15 minutes for introduction, transitions, and troubleshooting in a 90-minute event slot.
+
+Start Quarkus **once**, keep this folder and terminal for the entire part, and save edits to trigger hot reload on the next request. Select the relevant mode in the dashboard. Do not reset files, replace projects, switch Git branches, or restart dev mode between exercises. PostgreSQL and Kafka start up front; the MCP fixture server is bundled in the same application. The dev schema uses `update`, and the idempotent startup seed preserves existing records across hot reload.
+
+Choose `part2/lab/` for code-along, or `part2/solution/` for a completed run-and-read route. Stay with that choice for all six exercises. Optional challenges and test-suite runs are outside the core timebox; preflight dependency and container downloads before the event.
 
 ## Enterprise context and goal
 
-Riley needs an incident-specific response plan grounded in deployment evidence. An LLM should not invent a recent deployment, execute a malformed plan, or turn a proposed mitigation into a claim of verified recovery.
+Riley needs different specialist work for different incidents, with an inspectable plan and a bounded review loop. Build **Plan → Execute → Review** using the incident facts already provided. Deployment evidence is explicitly **not fetched yet**; connecting it is Exercise 10.
 
-Fetch required evidence through MCP, then run **Plan → Execute → Review**, bounded to three iterations. Inspect evidence, rejected plans, reviewer feedback, and the final outcome. Specialists produce recommendations; they do not modify a deployment. The dashboard therefore keeps the incident **In Progress**, even when the reviewer accepts the recommendation.
+Specialists recommend actions and production checks; they do not execute changes or observe recovery. An accepted recommendation becomes `RECOMMENDATION_READY`, while an unfinished run after three iterations becomes `NEEDS_OPERATOR_REVIEW`. The incident stays **In Progress**.
 
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
-    MCP(["Required MCP evidence"])
-    VALID{"Evidence valid?"}
-    STOP["EVIDENCE_UNAVAILABLE"]
-    PLAN(["Plan"])
-    CHECK["Java prerequisite check"]
+    FACTS(["Incident facts"])
+    PLAN(["Structured specialist plan"])
+    CHECK["Java prerequisite validation"]
     EXEC(["Specialist recommendations"])
-    REVIEW{"Review"}
-    HUMAN(["Operator verification<br/>still required"])
-
-    MCP --> VALID
-    VALID -->|No| STOP
-    VALID -->|Yes| PLAN
-    PLAN --> CHECK --> EXEC --> REVIEW
+    REVIEW{"Recommendation ready?"}
+    DONE(["Operator verification<br/>still required"])
+    FACTS --> PLAN --> CHECK --> EXEC --> REVIEW
     REVIEW -->|"Feedback, at most 3 iterations"| PLAN
-    REVIEW -->|Ready| HUMAN
-
-    style MCP fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
-    style VALID fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
-    style STOP fill:#F8D7DA,stroke:#A94442,color:#1F1F1F,stroke-width:2px
+    REVIEW -->|Yes| DONE
+    style FACTS fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
     style PLAN fill:#D4E6F1,stroke:#2E6B8A,color:#1F1F1F,stroke-width:2px
     style CHECK fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
     style EXEC fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
     style REVIEW fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
-    style HUMAN fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
+    style DONE fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
 ```
 
-## Step 0 — Start green (2 min)
+## Step 1 — Start once (2 min)
+
+From the repository root:
 
 ```bash
-cd solutions/09-plan-execute/lab
+cd part2/lab
 export OPENAI_API_KEY=your-key
 ./mvnw quarkus:dev
 ```
 
-Open [the dashboard](http://localhost:8080). The supplied fixture MCP server runs in this same application at `/mcp`; no second process is needed. The client still uses real MCP over Streamable HTTP. `EVIDENCE_MCP_URL` can point to a separately deployed compatible server.
+Open [the dashboard](http://localhost:8080) and select **9–10 · Planning / MCP**. Leave this terminal running through Exercise 14. In the completed solution, the MCP lookup is already wired; inspect that code now and follow its behavior in Exercise 10.
 
-The starter intentionally returns `EVIDENCE_UNAVAILABLE` until you connect the lookup. It boots successfully and makes no model call when required evidence is absent.
+## Step 2 — Read the plan contract (3 min)
 
-## Step 1 — Teach the planner its boundaries (6 min)
+The supplied models define a record `ExecutionPlan(List<ResolutionStep> steps, String rationale)` and four steps: `DIAGNOSE`, `MITIGATE`, `VERIFY`, `COMMUNICATE`. The supplied executor checks prerequisite ordering before running any specialist. On a replan, earlier accepted results can satisfy prerequisites.
 
-Open `PlannerAgent.java`. It is a declarative interface: `@Agent(outputKey = "plan")` returns an `ExecutionPlan` record. Keep its existing `@UserMessage`, including `{evidence}` and `{feedback}`, and replace the short `@SystemMessage` with:
+The planner is a declarative `@Agent(outputKey = "plan")`. Its prompt determines the work; Java checks whether the plan can be executed. Structured output alone does not guarantee a valid plan.
+
+## Step 3 — Give the planner its rules (5 min)
+
+Replace the short `@SystemMessage` in `PlannerAgent.java` with the following. Keep its `@Agent` and existing `@UserMessage`, including the evidence and feedback placeholders.
 
 ```java
 @SystemMessage("""
-        You plan IT incident response; you do not execute production changes.
-        Available specialist steps:
-        DIAGNOSE: identify the likely cause using supplied facts and deployment evidence.
-        MITIGATE: recommend a mitigation; requires a diagnosis.
-        VERIFY: assess the recommendation and name checks an operator must perform;
-                requires mitigation. Do not claim these checks have actually run.
-        COMMUNICATE: write a stakeholder update; include this for P1/P2 incidents.
+            You plan IT incident response; you do not execute production changes.
+            Available specialist steps:
+            DIAGNOSE: identify the likely cause using supplied facts and deployment evidence.
+            MITIGATE: recommend a mitigation; requires a diagnosis.
+            VERIFY: assess the recommendation and name checks an operator must perform;
+                    requires mitigation. Do not claim these checks have actually run.
+            COMMUNICATE: write a stakeholder update; include this for P1/P2 incidents.
 
-        Order DIAGNOSE before MITIGATE before VERIFY.
-        On replanning, use feedback and prior results; schedule only unfinished work.
-        Never invent deployments, metrics, tool results, or completed actions.
-        Return the ordered steps and a one-sentence rationale.
-        """)
+            Order DIAGNOSE before MITIGATE before VERIFY.
+            On replanning, use feedback and prior results; schedule only unfinished work.
+            Never invent deployments, metrics, tool results, or completed actions.
+            Return the ordered steps and a one-sentence rationale.
+            """)
 ```
 
-The supplied Java `PlanValidator` checks prerequisites **before any specialist executes**. A rejected plan returns feedback to the planner; it cannot bypass the check by producing valid JSON. Prior accepted work can satisfy prerequisites on a replan.
+Save. Dev mode picks up the change when you next make a request. All the specialists, validator, and bounded loop are supplied.
 
-## Step 2 — Connect required MCP evidence (5 min)
+## Step 4 — Inspect one recommendation (5 min)
 
-In `PlanExecuteFlow.resolve(...)`, replace the unavailable placeholder with:
-
-```java
-var evidence = evidenceClient.fetch(incident.system);
-```
-
-Read the supplied `DeploymentEvidenceClient`: it calls `getRecentDeployments` through an injected named `McpClient`, parses the tool result, and validates its service and required fields. Transport errors, tool errors, and invalid evidence all stop the run before planning.
-
-This lookup is mandatory, so workflow code calls it explicitly. There is no extra LLM call to decide whether evidence should be fetched. `@McpToolBox` instead offers tools for a model to select. Neither approach is remote agent delegation: that was A2A in Exercise 7.
-
-The fixture returns `workshop-release-42` and a memory-limit change for `auth-service`. These are **fixed teaching data**, not live infrastructure observations or proof of causation. The tool is an MCP server tool, using `io.quarkiverse.mcp.server.Tool`; the incident agents remain declarative `@Agent` interfaces.
-
-## Step 3 — Inspect success and missing evidence (7 min)
-
-1. Open incident **#2**, enter `Auth pods are OOMKilled every five minutes`, and click **Process Incident**.
-2. Reopen the incident. Its saved Description contains deployment evidence, the selected plan, iteration history, and an outcome. It stays **In Progress** because no production change or recovery check was executed.
-3. Inspect the iteration history: an invalid plan is rejected before execution; reviewer feedback can drive another plan. After three iterations, an unaccepted recommendation becomes `NEEDS_OPERATOR_REVIEW`. An accepted recommendation becomes `RECOMMENDATION_READY`.
-4. Stop dev mode and start the supplied unavailable-evidence scenario:
-
-    ```bash
-    ./mvnw quarkus:dev -Dquarkus.profile=dev,unavailable
-    ```
-
-5. Process #2 again. Expect `EVIDENCE_UNAVAILABLE`, zero iterations, and no fabricated deployment-based diagnosis. This profile changes the MCP fixture response; the request still crosses the MCP boundary.
-
-!!! tip "Inspect structured output without another UI run"
-    The dashboard persists the summary. `POST /incident-plan/2` runs a **new** diagnostic workflow and returns `evidence`, `history`, `outcome`, and `iterations` without saving it. It does not retrieve the previous run.
+1. Open incident **#2** and submit `Auth pods are OOMKilled every five minutes`.
+2. Read the planning result and expand **Saved planning result** to inspect the persisted summary, selected steps, iteration feedback, and outcome.
+3. The evidence section says `not_requested` and `Not fetched`. This is an honest baseline, not a fabricated tool result. The planner must work from incident facts alone.
+4. Confirm the incident remains **In Progress**. A complete recommendation is not production recovery.
 
 ## Done when
 
-- [ ] The planner receives evidence returned by MCP and an inspectable structured plan.
-- [ ] You can explain why required evidence is fetched by code rather than left to model choice.
-- [ ] Missing evidence stops the run before any LLM call.
-- [ ] You distinguish an accepted recommendation from a resolved production incident.
+- [ ] You can identify the plan, prerequisite check, specialist results, and review outcome.
+- [ ] You can explain how feedback and the three-iteration budget bound replanning.
+- [ ] You distinguish incident facts from evidence that has not been retrieved.
 
-## Supplied verification and optional challenges
-
-`./mvnw test` uses a local scripted model and the bundled MCP server, with PostgreSQL Dev Services; no paid model calls are made. The solution tests reject an invalid plan, verify evidence reaches the planner, and inspect history. The starter tests check the supplied MCP and validation infrastructure.
-
-Outside the core timebox: compare a P4 plan, add another evidence tool, or deliberately supply `VERIFY → MITIGATE` and inspect validator feedback. Dynamic model selection and durable workflow recovery are later topics.
-
-**Full solution:** copy the two edited files from the parent `solutions/09-plan-execute/` project if needed. Stop this application before starting [Exercise 10](../10-memory-tiering/START_HERE.md).
+**Keep the same application running.** Continue to [Exercise 10 — Required MCP Evidence](../10-mcp-evidence/START_HERE.md); there is no reset or folder change. If stuck, compare only `PlannerAgent.java` with its counterpart in `part2/solution/`.

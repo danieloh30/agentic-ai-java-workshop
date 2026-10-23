@@ -1,9 +1,5 @@
-# Exercise 10 — Memory Tiering and Eviction
+# Memory snapshot — Historical isolated reference
 
-**Core timebox:** 15 minutes. Part 2 totals 75 minutes of labs within a 90-minute event slot.
+This folder predates the six-exercise Part 2 format. It remains available as an isolated reference, but it is **not** the current event working project.
 
-[Workshop guide](https://danieloh30.github.io/agentic-ai-java-workshop/10-memory-tiering/START_HERE/).
-
-Completed reference solution. Use the lab/ subdirectory for the hands-on exercise.
-
-Start with `./mvnw quarkus:dev`, an `OPENAI_API_KEY`, and Docker or Podman running. `./mvnw test` uses scripted model responses rather than paid LLM calls. Optional challenges are outside the core timebox.
+For Exercises 9–14, choose [the shared starter](https://github.com/danieloh30/agentic-ai-java-workshop/tree/main/part2/lab) or [the completed shared solution](https://github.com/danieloh30/agentic-ai-java-workshop/tree/main/part2/solution), and keep dev mode running in that folder for all six exercises. [Start with Exercise 9](https://danieloh30.github.io/agentic-ai-java-workshop/09-plan-execute/START_HERE/).

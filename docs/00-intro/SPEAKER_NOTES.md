@@ -97,23 +97,25 @@ Each exercise adds a capability that a specific Apex Systems role needs. The per
 
 ### Part 2 — From Patterns to Production
 
-**Separate 90-minute event:** 75 minutes of labs (Ex 9: 20, Ex 10: 15, Ex 11: 20, Ex 12: 20), 10 minutes for introduction/transitions, and 5 minutes for troubleshooting. Preflight dependencies and containers before the session. Starters build with runnable defaults; do not spend the core time writing supplied infrastructure. Optional challenges are outside this schedule.
+**Six short exercises in one application:** 15 + 10 + 10 + 15 + 10 + 15 = 75 minutes, plus 15 minutes for introduction, transitions, and troubleshooting in a separate 90-minute event slot. Start `part2/lab/` once (or choose `part2/solution/` for run-and-read) and keep that folder and dev-mode terminal until Exercise 14 is complete.
 
-Ex 9 connects a required MCP evidence lookup before validated planning. Ex 10 demonstrates eviction from the persisted memory window. Ex 11 uses fixed ballots to show majority versus operator review. Ex 12 persists correlated recommendations and reuses completed results on replay; processing completion never proves production recovery.
+Select Planning / MCP, Memory, Voting, or Events / Replay in the dashboard. Code and property edits trigger normal hot reload; PostgreSQL schema updates and idempotent seeding preserve the earlier work and records. There are no reset commands, project replacements, profile switches, or manual restarts in the core path. Preflight container images and dependencies before the event.
 
-| Exercise | Persona | Problem | Pattern you learn |
-|----------|---------|---------|-------------------|
-| [**9 — Plan & Execute**](../09-plan-execute/START_HERE.md) | **Riley** — SRE lead | Ground specialist plans in required deployment evidence and reject invalid step ordering | MCP lookup + validated `ExecutionPlan` + bounded Plan → Execute → Review loop |
-| [**10 — Memory Tiering**](../10-memory-tiering/START_HERE.md) | **Sam** — NOC analyst | Keep incident conversations separate and observe which messages are retained or evicted | `@MemoryId` + bounded message window + PostgreSQL storage and eviction |
-| [**11 — Consensus & Voting**](../11-consensus-voting/START_HERE.md) | **Priya** — IT service manager | Compare specialist judgments and request operator review when agreement is insufficient | `@ParallelAgent` + validated ballots + deterministic majority-or-review policy |
-| [**12 — Event-Driven Agents (capstone)**](../12-event-driven/START_HERE.md) | **Jordan** — Java platform engineer | Accept alerts asynchronously, retain correlated recommendations, and reuse completed results on replay | Kafka + transactional result storage + duplicate-safe completed replay |
+| Exercise | Time | Persona | Outcome |
+|----------|------|---------|---------|
+| [**9 — Structured Planning**](../09-plan-execute/START_HERE.md) | 15 min | Riley — SRE lead | Validated specialist plans, bounded review, and explicit recommendation readiness |
+| [**10 — Required MCP Evidence**](../10-mcp-evidence/START_HERE.md) | 10 min | Riley — SRE lead | A required tool lookup before planning; fail closed when evidence is unavailable |
+| [**11 — Memory Boundaries**](../11-memory-tiering/START_HERE.md) | 10 min | Sam — NOC analyst | Conversation isolation and observable eviction from the PostgreSQL-backed window |
+| [**12 — Voting and Disagreement**](../12-consensus-voting/START_HERE.md) | 15 min | Priya — IT service manager | Parallel specialist ballots and deterministic majority-or-review policy |
+| [**13 — Event-Driven Processing**](../13-event-driven/START_HERE.md) | 10 min | Jordan — Java platform engineer | A sequential agent workflow triggered by Kafka, with correlated outcomes |
+| [**14 — Persistent Outcomes and Replay**](../14-persistent-outcomes/START_HERE.md) | 15 min | Jordan — Java platform engineer | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes |
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses OpenCode CLI to govern and validate the system you built.  
 **Exercise 6** runs and reads the completed HITL solution, tests approval decisions, and inspects OpenTelemetry traces.<br>
 **Exercise 7** runs a pre-built A2A solution to explore remote agent patterns.  
 **Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a programmatic quality loop with Quarkus Flow.<br>
-**Exercises 9–12** are focused code-along labs with runnable defaults, each in its own `solutions/<exercise>/lab/` project. Complete the listed one or two file edits, then verify behavior through the dashboard, fixed voting fixtures, or the replay command. Supporting infrastructure is supplied; optional challenges are outside the core timebox.
+**Exercises 9–14** are cumulative code-along labs in the same `part2/lab/` project. Each adds one focused behavior; later exercises reuse prior code and records. The completed route uses the same `part2/solution/` folder throughout. Supporting infrastructure is supplied and optional challenges are outside the core timebox.
 
 ---
 
@@ -181,7 +183,9 @@ Goal: human approval             → @HumanInTheLoop                 (Ex 6)
 Goal: delegate to remote agent   → A2A + @A2AClientAgent           (Ex 7)
 Goal: programmatic quality loop  → AgenticServices.loopBuilder()   (Ex 8)
 Goal: plan, execute, review      → ExecutionPlan + reviewed loop   (Ex 9)
-Goal: incident conversation      → @MemoryId + ChatMemoryStore     (Ex 10)
-Goal: compare votes and tally    → @ParallelAgent + @Output        (Ex 11)
-Goal: process incident events    → @Incoming/@Outgoing + Kafka     (Ex 12)
+Goal: required external evidence → deterministic MCP lookup        (Ex 10)
+Goal: incident conversation      → @MemoryId + ChatMemoryStore     (Ex 11)
+Goal: compare votes and tally    → @ParallelAgent + @Output        (Ex 12)
+Goal: process incident events    → @Incoming/@Outgoing + Kafka     (Ex 13)
+Goal: reuse completed requests   → persisted outcomes + replay      (Ex 14)
 ```

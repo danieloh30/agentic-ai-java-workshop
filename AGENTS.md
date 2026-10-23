@@ -110,6 +110,8 @@ solutions/
 
 Exercise 5 is documentation-only and uses `lab/AGENTS.md`; its solution folder contains only a README.
 
+**Current Part 2 (Exercises 9–14):** use `part2/lab/` for all six cumulative labs, or `part2/solution/` for the completed application. One Quarkus dev-mode session exposes Planning/MCP, Memory, Voting, and Events/Replay dashboard modes. The core path never resets files or switches projects. Dev-mode schema `update` and idempotent `IncidentSeed` preserve records across hot reload. The older `solutions/09-*` through `solutions/12-*` folders are historical isolated snapshots. Exercise timeboxes are 15 + 10 + 10 + 15 + 10 + 15 = 75 minutes.
+
 ---
 
 ## Existing agents (04-supervisor — the richest exercise)

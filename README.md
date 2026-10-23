@@ -33,16 +33,20 @@ Work through the guides in order. Exercises 1–4 share the root `lab/` project;
 
 ### Part 2 — From Patterns to Production
 
-Each exercise has its own runnable starter, reference solution, enterprise scenario, and verification steps. The core timeboxes are **20 minutes for Ex 9, 15 for Ex 10, 20 for Ex 11, and 20 for Ex 12**: 75 minutes of labs, with 15 minutes reserved for introduction, transitions, and troubleshooting. Supporting infrastructure is supplied so participants make one or two focused edits per exercise.
+**Six short exercises, one running application.** Choose [`part2/lab/`](part2/lab/) for code-along or [`part2/solution/`](part2/solution/) for the completed run-and-read route. Start Quarkus dev mode once and stay in that folder through Exercises 9–14. Select the exercise mode in the dashboard; save code/configuration edits for automatic hot reload. No reset commands, project copies, branch switches, or manual restarts are part of the walkthrough.
 
-| Exercise and guide | What you will build and verify | Working project | Reference solution |
-|--------------------|--------------------------------|-----------------|--------------------|
-| [9. Plan & Execute](docs/09-plan-execute/START_HERE.md) | Required MCP evidence, validated specialist plans, bounded re-planning, and inspectable outcomes | [Start lab](solutions/09-plan-execute/lab/) | [Solution](solutions/09-plan-execute/) |
-| [10. Memory Tiering](docs/10-memory-tiering/START_HERE.md) | A bounded PostgreSQL-backed conversation window; observe eviction and isolation between incidents | [Start lab](solutions/10-memory-tiering/lab/) | [Solution](solutions/10-memory-tiering/) |
-| [11. Consensus & Voting](docs/11-consensus-voting/START_HERE.md) | Three parallel persona voters; validated ballots, strict majority, or explicit operator review | [Start lab](solutions/11-consensus-voting/lab/) | [Solution](solutions/11-consensus-voting/) |
-| [12. Event-Driven Agents](docs/12-event-driven/START_HERE.md) | A Kafka-triggered recommendation pipeline; persisted correlated outcomes and duplicate-safe completed replay | [Start lab](solutions/12-event-driven/lab/) | [Solution](solutions/12-event-driven/) |
+The core is **15 + 10 + 10 + 15 + 10 + 15 = 75 minutes**, with 15 minutes of session overhead in the 90-minute event slot. PostgreSQL, Kafka, and the bundled MCP fixture start up front. Existing incident, conversation, and processing records remain available through dev-mode reloads.
 
-The guides explain each exercise's practical boundaries: missing MCP evidence stops planning, evicted messages leave the memory store, disagreement can require operator review, and completed event processing produces a recommendation rather than proof of incident recovery. Optional challenges are outside the 90-minute event slot.
+| Exercise and guide | Time | What you build and verify | Dashboard mode |
+|--------------------|------|---------------------------|----------------|
+| [9. Structured Planning](docs/09-plan-execute/START_HERE.md) | 15 min | Validated specialist plans, bounded review, and explicit recommendation readiness | Planning / MCP |
+| [10. Required MCP Evidence](docs/10-mcp-evidence/START_HERE.md) | 10 min | A required tool lookup before planning; fail closed when evidence is unavailable | Planning / MCP |
+| [11. Memory Boundaries](docs/11-memory-tiering/START_HERE.md) | 10 min | Conversation isolation and observable eviction from the PostgreSQL-backed window | Memory |
+| [12. Voting and Disagreement](docs/12-consensus-voting/START_HERE.md) | 15 min | Parallel specialist ballots and deterministic majority-or-review policy | Voting |
+| [13. Event-Driven Processing](docs/13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes | Events / Replay |
+| [14. Persistent Outcomes and Replay](docs/14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes | Events / Replay |
+
+Missing MCP evidence stops planning; eviction removes messages from the store; disagreement can require review; a completed recommendation is not proof of incident recovery. Keeping a waiting workflow across full application shutdown remains a later topic. Optional challenges are outside the core timebox.
 
 ## Repository layout
 
@@ -52,9 +56,10 @@ The guides explain each exercise's practical boundaries: missing MCP evidence st
 | [`docs/`](docs/) | All lab instructions (Markdown) and images |
 | [`solutions/`](solutions/) | Reference solution projects for each exercise |
 | `solutions/08-quarkus-flow/lab/` | Starter project for the optional quality-loop exercise |
-| `solutions/{09-plan-execute,10-memory-tiering,11-consensus-voting,12-event-driven}/lab/` | Separate starter projects for Part 2 |
+| [`part2/lab/`](part2/lab/) | Shared runnable starter for all six Part 2 exercises |
+| [`part2/solution/`](part2/solution/) | Completed shared Part 2 application |
 
-For Part 2, edit files inside the exercise's **`lab/` subdirectory**. Its parent folder contains the completed reference solution. Part 2 starters build with runnable defaults. Follow each guide's one or two focused edits; optional challenges are outside the event timebox.
+For Part 2, edit only the files listed in each guide inside your chosen shared project. The older isolated `solutions/09-*` through `solutions/12-*` folders are retained as historical references, not the current event path.
 
 Start here:
 
@@ -81,27 +86,19 @@ cd lab
 For **Part 2**, start Exercise 9 from the repository root:
 
 ```bash
-cd solutions/09-plan-execute/lab
+cd part2/lab
 ./mvnw quarkus:dev
 ```
 
-Follow the matching guide to complete its TODO files, then open [http://localhost:8080](http://localhost:8080). For Exercises 10–12, use the corresponding starter directory from the table above. Export `OPENAI_API_KEY` again if you switch to a new terminal.
+Follow the matching guide, then open [http://localhost:8080](http://localhost:8080). For Part 2, keep the same terminal and project through Exercise 14 and choose the dashboard mode for each exercise. Use `part2/solution/` instead if you prefer the completed run-and-read route.
 
-Run one exercise at a time. Stop the current Quarkus dev mode with **Ctrl+C** before starting another exercise or finishing testing. Quarkus manages the exercise's Dev Services containers; the first launch may take longer while images are downloaded. Exercise 12 starts both PostgreSQL and a Kafka broker.
+For Part 1, stop the current application before switching projects. For Part 2, **leave dev mode running between exercises** and stop it only when finished. Quarkus manages Dev Services; preflight dependency and container downloads before the event. The shared Part 2 application starts PostgreSQL and Kafka once, and its idempotent seed preserves existing data through hot reload.
 
-## Reset labs
+## Optional practice resets
 
-From the repository root, restore the selected exercise's TODO files. These commands discard edits to those files and clean assistant configuration artifacts under the lab and solution folders:
+The **Part 2 event path never requires a reset**. Continue editing the same `part2/lab/` project while dev mode runs.
 
-```bash
-./reset-labs.sh          # Reset all starters: Ex 1-4 and Ex 8-12
-./reset-labs.sh lab      # Reset root lab only (Exercises 1-4)
-./reset-labs.sh ex08     # Reset Exercise 08 lab only
-./reset-labs.sh ex09     # Reset Exercise 09 lab only
-./reset-labs.sh ex10     # Reset Exercise 10 lab only
-./reset-labs.sh ex11     # Reset Exercise 11 lab only
-./reset-labs.sh ex12     # Reset Exercise 12 lab only
-```
+For separate Part 1 practice sessions, `./reset-labs.sh lab` restores the root starter and `./reset-labs.sh ex08` restores the bonus starter. These optional commands discard edits to their listed files. The script's legacy `ex09`–`ex12` options affect only the old isolated reference folders; they do not reset the shared Part 2 application.
 
 ## Prerequisites
 
@@ -110,6 +107,6 @@ From the repository root, restore the selected exercise's TODO files. These comm
 - [OpenCode CLI](https://opencode.ai/) or any AGENTS.md-compatible AI coding assistant
 - **OpenAI API key** in `OPENAI_API_KEY`; the exercises default to `gpt-4o`
 - Free port **8080**; Exercise 7 also uses **8888** for its remote A2A agent
-- **Docker or Podman running** for Quarkus Dev Services, including PostgreSQL, observability services, and Exercise 12's Kafka broker
+- **Docker or Podman running** for Quarkus Dev Services, including PostgreSQL, observability services, and Part 2's Kafka broker
 
 Quarkus and extension dependencies are declared in each project's `pom.xml`. See the [setup guide](docs/index.md#prerequisites) for Java and Maven installation instructions.

@@ -23,7 +23,7 @@ Confirm these before the workshop starts:
 | [OpenCode CLI](https://opencode.ai/){:target="_blank"} or any AGENTS.md-compatible AI assistant | Install and configure before the workshop |
 | LLM API key | `OPENAI_API_KEY` (OpenAI, Anthropic, or compatible provider) |
 | Free ports **8080**, **8888** | One process per exercise set |
-| Docker or Podman | For Quarkus Dev Services (PostgreSQL, LGTM, and Kafka in Exercise 12) |
+| Docker or Podman | For Quarkus Dev Services (PostgreSQL, LGTM, and Kafka in Part 2) |
 
 ### Install Java 25
 
@@ -132,7 +132,7 @@ Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — Incide
 No agent behavior yet: that's Exercise 1.
 
 !!! tip "Starting Part 2 instead?"
-    From the repository root, run `cd solutions/09-plan-execute/lab` and `./mvnw quarkus:dev`. The bundled MCP fixture server starts in the same application. Exercises 10–12 each have their own `solutions/<exercise>/lab/` starter. Stop the current application before switching exercises; all use port 8080.
+    From the repository root, run `cd part2/lab` and `./mvnw quarkus:dev` once. Keep that folder and terminal for all six exercises, selecting Planning / MCP, Memory, Voting, or Events / Replay in the dashboard. The completed route uses `part2/solution/`. PostgreSQL, Kafka, and the MCP fixture start up front; normal hot reload preserves existing exercise records. No manual reset or restart is needed between Part 2 exercises.
 
 <img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 
@@ -156,14 +156,16 @@ No agent behavior yet: that's Exercise 1.
 
 ### Part 2 — From Patterns to Production (Advanced & Enterprise)
 
-A separate **90-minute session**: 75 minutes of core labs, 10 minutes for introduction/transitions, and 5 minutes for troubleshooting. Preflight dependencies and container images before the event. All Part 2 starters build with runnable defaults; optional challenges are outside the schedule.
+A separate **90-minute session**: six 10–15 minute exercises total 75 minutes, with 15 minutes for introduction, transitions, and troubleshooting. Use one shared project (`part2/lab/` or `part2/solution/`) and the same Quarkus dev-mode terminal from Exercise 9 through 14. Save edits for hot reload; select the dashboard mode rather than copying/resetting projects. Preflight container and dependency downloads before the session.
 
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | Required MCP evidence + validated planning + bounded re-planning |
-| [10. Memory Tiering](10-memory-tiering/START_HERE.md) | 15 min | Bounded conversation memory, PostgreSQL storage, isolation, and observable eviction |
-| [11. Consensus & Voting](11-consensus-voting/START_HERE.md) | 20 min | Parallel persona voters + validated ballots + majority or operator review |
-| [12. Event-Driven Agents](12-event-driven/START_HERE.md) | 20 min | Kafka-triggered sequence + persisted correlated recommendations + completed-request replay |
+| [9. Structured Planning](09-plan-execute/START_HERE.md) | 15 min | Validated specialist plans, bounded review, and explicit recommendation readiness |
+| [10. Required MCP Evidence](10-mcp-evidence/START_HERE.md) | 10 min | A required tool lookup before planning; fail closed when evidence is unavailable |
+| [11. Memory Boundaries](11-memory-tiering/START_HERE.md) | 10 min | Conversation isolation and observable eviction from the PostgreSQL-backed window |
+| [12. Voting and Disagreement](12-consensus-voting/START_HERE.md) | 15 min | Parallel specialist ballots and deterministic majority-or-review policy |
+| [13. Event-Driven Processing](13-event-driven/START_HERE.md) | 10 min | A sequential agent workflow triggered by Kafka, with correlated outcomes |
+| [14. Persistent Outcomes and Replay](14-persistent-outcomes/START_HERE.md) | 15 min | Reuse completed work after hot reload and inspect durable, duplicate-safe outcomes |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 
@@ -176,3 +178,5 @@ Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the s
 | `docs/` | These lab instructions (this site) |
 | `solutions/` | Reference solution projects for each exercise — copy files from here if you get stuck |
 | `solutions/08-quarkus-flow/lab/` | Separate starter project for the bonus exercise (not the root `lab/`) |
+| `part2/lab/` | Shared runnable starter for Exercises 9–14; keep dev mode running |
+| `part2/solution/` | Completed shared Part 2 application |
