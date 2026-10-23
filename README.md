@@ -10,7 +10,7 @@
 **Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/ (short URL: [bit.ly/agents-labs](https://bit.ly/agents-labs))  
 **Intro deck:** [intro-deck.pdf](docs/images/intro-deck.pdf)
 
-Build an agentic incident management platform for **Apex Systems**, a fictional enterprise IT services company, using **Quarkus**, **Quarkus LangChain4j**, and **OpenCode CLI** or another AI coding assistant. Part 1 introduces agents, tools, orchestration, governance, and observability. Part 2 extends those foundations with planning, conversational memory, consensus voting, and event-driven processing.
+Build an agentic incident management platform for **Apex Systems**, a fictional enterprise IT services company, using **Quarkus**, **Quarkus LangChain4j**, and **OpenCode CLI** or another AI coding assistant. Part 1 introduces agents, tools, orchestration, governance, and observability. Part 2 extends those foundations with MCP-grounded planning, bounded conversational memory and eviction, majority-or-review voting, and persisted event-processing outcomes.
 
 ## Learning path
 
@@ -33,7 +33,7 @@ Work through the guides in order. Exercises 1–4 share the root `lab/` project;
 
 ### Part 2 — From Patterns to Production
 
-Each exercise has its own starter project, reference solution, enterprise scenario, and dashboard verification steps. Each exercise has a 20-minute timebox.
+Each exercise has its own runnable starter, reference solution, enterprise scenario, and verification steps. The core timeboxes are **20 minutes for Ex 9, 15 for Ex 10, 20 for Ex 11, and 20 for Ex 12**: 75 minutes of labs, with 15 minutes reserved for introduction, transitions, and troubleshooting. Supporting infrastructure is supplied so participants make one or two focused edits per exercise.
 
 | Exercise and guide | What you will build and verify | Working project | Reference solution |
 |--------------------|--------------------------------|-----------------|--------------------|
@@ -42,7 +42,7 @@ Each exercise has its own starter project, reference solution, enterprise scenar
 | [11. Consensus & Voting](docs/11-consensus-voting/START_HERE.md) | Three parallel persona voters; validated ballots, strict majority, or explicit operator review | [Start lab](solutions/11-consensus-voting/lab/) | [Solution](solutions/11-consensus-voting/) |
 | [12. Event-Driven Agents](docs/12-event-driven/START_HERE.md) | A Kafka-triggered recommendation pipeline; persisted correlated outcomes and duplicate-safe completed replay | [Start lab](solutions/12-event-driven/lab/) | [Solution](solutions/12-event-driven/) |
 
-The guides explain each exercise's practical boundaries: memory stores a configured window, voting recommends an action, and the event pipeline records a resolution without applying changes to external systems.
+The guides explain each exercise's practical boundaries: missing MCP evidence stops planning, evicted messages leave the memory store, disagreement can require operator review, and completed event processing produces a recommendation rather than proof of incident recovery. Optional challenges are outside the 90-minute event slot.
 
 ## Repository layout
 

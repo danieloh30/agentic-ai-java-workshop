@@ -2,14 +2,14 @@
 
 # Enterprise Agentic AI: Architecting Autonomous Java Systems for Production
 
-**Hands-On Workshop · 90 min**
+**Two workshop parts · Separate 90-minute event slots**
 
 !!! tip "Quick access"
     Short URL for this guide: **[bit.ly/agents-labs](https://bit.ly/agents-labs){:target="_blank"}** — share it or bookmark it.
 
     [:fontawesome-solid-file-pdf: Intro slide deck](images/intro-deck.pdf){:target="_blank" .md-button }
 
-Build intelligent, secure, and observable multi-agent applications on **Quarkus** — from a single agent to a full supervisor orchestration with human-in-the-loop, OpenTelemetry tracing, and A2A remote agents.
+Build intelligent, secure, and observable multi-agent applications on **Quarkus**. **Part 1** introduces agents, supervisor orchestration, human-in-the-loop approval, OpenTelemetry tracing, and A2A remote agents. **Part 2** adds required MCP evidence, validated planning, memory eviction and isolation, majority-or-review voting, and persisted Kafka processing outcomes. Each part fits its own 90-minute event slot; Part 2 has 75 minutes of core labs and 15 minutes of session overhead.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ Confirm these before the workshop starts:
 | [OpenCode CLI](https://opencode.ai/){:target="_blank"} or any AGENTS.md-compatible AI assistant | Install and configure before the workshop |
 | LLM API key | `OPENAI_API_KEY` (OpenAI, Anthropic, or compatible provider) |
 | Free ports **8080**, **8888** | One process per exercise set |
-| Docker or Podman | For Quarkus Dev Services (PostgreSQL, LGTM) |
+| Docker or Podman | For Quarkus Dev Services (PostgreSQL, LGTM, and Kafka in Exercise 12) |
 
 ### Install Java 25
 
@@ -130,6 +130,9 @@ cd lab
 
 Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — Incident Dashboard with 8 seeded incidents and status cards.
 No agent behavior yet: that's Exercise 1.
+
+!!! tip "Starting Part 2 instead?"
+    From the repository root, run `cd solutions/09-plan-execute/lab` and `./mvnw quarkus:dev`. The bundled MCP fixture server starts in the same application. Exercises 10–12 each have their own `solutions/<exercise>/lab/` starter. Stop the current application before switching exercises; all use port 8080.
 
 <img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 

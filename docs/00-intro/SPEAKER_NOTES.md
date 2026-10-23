@@ -103,17 +103,17 @@ Ex 9 connects a required MCP evidence lookup before validated planning. Ex 10 de
 
 | Exercise | Persona | Problem | Pattern you learn |
 |----------|---------|---------|-------------------|
-| [**9 — Plan & Execute**](../09-plan-execute/START_HERE.md) | **Riley** — SRE lead | Plan incident-specific specialist work and re-plan when review identifies gaps | Structured `ExecutionPlan` + Plan → Execute → Review loop |
-| [**10 — Memory Tiering**](../10-memory-tiering/START_HERE.md) | **Sam** — NOC analyst | Continue investigations without repeating observations or mixing incident conversations | `@MemoryId` + bounded message window + PostgreSQL `ChatMemoryStore` |
-| [**11 — Consensus & Voting**](../11-consensus-voting/START_HERE.md) | **Priya** — IT service manager | Compare reliability, customer-impact, and cost/risk judgments before choosing a response | `@ParallelAgent` + structured ballots + deterministic `@Output` tally |
-| [**12 — Event-Driven Agents (capstone)**](../12-event-driven/START_HERE.md) | **Jordan** — Java platform engineer | Accept alerts while agent processing continues and record results asynchronously | Kafka + `@Incoming`/`@Outgoing` + `@Blocking` |
+| [**9 — Plan & Execute**](../09-plan-execute/START_HERE.md) | **Riley** — SRE lead | Ground specialist plans in required deployment evidence and reject invalid step ordering | MCP lookup + validated `ExecutionPlan` + bounded Plan → Execute → Review loop |
+| [**10 — Memory Tiering**](../10-memory-tiering/START_HERE.md) | **Sam** — NOC analyst | Keep incident conversations separate and observe which messages are retained or evicted | `@MemoryId` + bounded message window + PostgreSQL storage and eviction |
+| [**11 — Consensus & Voting**](../11-consensus-voting/START_HERE.md) | **Priya** — IT service manager | Compare specialist judgments and request operator review when agreement is insufficient | `@ParallelAgent` + validated ballots + deterministic majority-or-review policy |
+| [**12 — Event-Driven Agents (capstone)**](../12-event-driven/START_HERE.md) | **Jordan** — Java platform engineer | Accept alerts asynchronously, retain correlated recommendations, and reuse completed results on replay | Kafka + transactional result storage + duplicate-safe completed replay |
 
 **Exercises 1–4** are hands-on code-along — you type agent code into stub files with hot reload.  
 **Exercise 5** uses OpenCode CLI to govern and validate the system you built.  
 **Exercise 6** runs and reads the completed HITL solution, tests approval decisions, and inspects OpenTelemetry traces.<br>
 **Exercise 7** runs a pre-built A2A solution to explore remote agent patterns.  
 **Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a programmatic quality loop with Quarkus Flow.<br>
-**Exercises 9–12** are advanced code-along labs, each in its own `solutions/<exercise>/lab/` project. Start with the web UI tests; the collapsed Advanced sections offer additional API exploration.
+**Exercises 9–12** are focused code-along labs with runnable defaults, each in its own `solutions/<exercise>/lab/` project. Complete the listed one or two file edits, then verify behavior through the dashboard, fixed voting fixtures, or the replay command. Supporting infrastructure is supplied; optional challenges are outside the core timebox.
 
 ---
 
@@ -139,10 +139,10 @@ After this lab you will be able to:
 - Distribute agents across services with **A2A** (`@A2AClientAgent`)
 - Add **human-in-the-loop** gates and read **OpenTelemetry** spans for compliance and FinOps
 - Use **programmatic orchestration** (`AgenticServices.loopBuilder()`) to combine agent calls with explicit state, feedback, and bounded iteration
-- Build **Plan & Execute** workflows that select specialist steps and re-plan from reviewer feedback
-- Give an incident assistant **bounded, database-backed conversation memory** isolated by `@MemoryId`
-- Run **parallel voters** and inspect a deterministic tally of their actions, confidence scores, and rationales
-- Connect agents to **Kafka events**, distinguishing publication from asynchronous processing and result recording
+- Fetch required evidence through **MCP**, validate specialist plans in Java, and re-plan from reviewer feedback within an iteration limit
+- Give an incident assistant **bounded, database-backed conversation memory** isolated by `@MemoryId`, and verify that evicted messages leave storage
+- Run **parallel voters**, validate their ballots, and distinguish a strict majority from disagreement requiring operator review
+- Connect agents to **Kafka events**, persist correlated outcomes, and replay completed requests without confusing a recommendation with verified recovery
 
 ---
 
