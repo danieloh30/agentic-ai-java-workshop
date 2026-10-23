@@ -2,31 +2,39 @@ package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.ExecutionPlan;
 
-import io.quarkiverse.langchain4j.RegisterAiService;
-import jakarta.enterprise.context.ApplicationScoped;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.agentic.Agent;
 
 /**
- * The "Plan" half of Plan &amp; Execute. This LLM planner does not resolve the incident
- * itself — it decides <em>which</em> specialists to run and <em>in what order</em>,
- * returning a structured {@link ExecutionPlan} the {@code PlanExecuteFlow} then carries out.
+ * The "Plan" half of Plan &amp; Execute. This LLM planner does not do the work itself —
+ * it decides <em>which</em> specialists to run and <em>in what order</em>, returning a
+ * structured {@link ExecutionPlan} the executor then carries out.
  *
- * <p>TODO (Exercise 9): make this a working planner.
- * <ol>
- *   <li>Add a {@code @SystemMessage} describing the planner's role and the available steps
- *       (DIAGNOSE, MITIGATE, VERIFY, COMMUNICATE), the ordering rules (diagnose before
- *       mitigate before verify; communicate for high-priority incidents), and — importantly —
- *       that when {@code feedback} is present it should plan ONLY the additional steps still
- *       needed (this is what enables dynamic re-planning).</li>
- *   <li>Add a {@code @UserMessage} that passes the incident facts and the {@code {feedback}}
- *       placeholder.</li>
- * </ol>
- * Returning the {@link ExecutionPlan} record gives you structured output for free.
+ * <p>On the first pass, {@code feedback} is empty and the planner builds an initial plan
+ * from the incident facts. On a re-plan, {@code feedback} carries the reviewer's verdict
+ * and the work done so far, so the planner can append the steps still needed — this is
+ * the "dynamic re-planning" step of the pattern.
  */
-@ApplicationScoped
-@RegisterAiService
 public interface PlannerAgent {
 
-    // TODO: annotate with @SystemMessage and @UserMessage (see the class Javadoc above).
+    // TODO Ex9: replace this runnable prompt with the ordering and replanning rules in the guide.
+    @SystemMessage("""
+            Plan incident response using DIAGNOSE, MITIGATE, VERIFY, COMMUNICATE.
+            Return an ordered plan and rationale. Use only supplied facts and evidence.
+            Never claim to have performed changes or observed recovery.
+            """)
+    @UserMessage("""
+            Incident: {system}/{service} (priority {priority}, #{incidentNumber})
+            Description: {description}
+            Operator report: {report}
+            Required deployment evidence (workshop fixture): {evidence}
+
+            Work done so far / reviewer feedback (empty on the first plan):
+            {feedback}
+            """)
+    @Agent(description = "Builds a structured specialist plan using incident facts and retrieved evidence.",
+           outputKey = "plan")
     ExecutionPlan plan(String system, String service, String priority, String description,
-                       Integer incidentNumber, String report, String feedback);
+                       Integer incidentNumber, String report, String evidence, String feedback);
 }

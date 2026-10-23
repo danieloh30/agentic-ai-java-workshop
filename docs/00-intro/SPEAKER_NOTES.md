@@ -97,6 +97,10 @@ Each exercise adds a capability that a specific Apex Systems role needs. The per
 
 ### Part 2 — From Patterns to Production
 
+**Separate 90-minute event:** 75 minutes of labs (Ex 9: 20, Ex 10: 15, Ex 11: 20, Ex 12: 20), 10 minutes for introduction/transitions, and 5 minutes for troubleshooting. Preflight dependencies and containers before the session. Starters build with runnable defaults; do not spend the core time writing supplied infrastructure. Optional challenges are outside this schedule.
+
+Ex 9 connects a required MCP evidence lookup before validated planning. Ex 10 demonstrates eviction from the persisted memory window. Ex 11 uses fixed ballots to show majority versus operator review. Ex 12 persists correlated recommendations and reuses completed results on replay; processing completion never proves production recovery.
+
 | Exercise | Persona | Problem | Pattern you learn |
 |----------|---------|---------|-------------------|
 | [**9 — Plan & Execute**](../09-plan-execute/START_HERE.md) | **Riley** — SRE lead | Plan incident-specific specialist work and re-plan when review identifies gaps | Structured `ExecutionPlan` + Plan → Execute → Review loop |

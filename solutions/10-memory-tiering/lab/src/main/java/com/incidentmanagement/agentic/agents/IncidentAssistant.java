@@ -1,30 +1,57 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.memory.PersistentChatMemoryStore;
+
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.agentic.declarative.ChatMemoryProviderSupplier;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.service.MemoryId;
+import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+import io.quarkus.arc.Arc;
 
 /**
  * A conversational incident assistant — a declarative agentic {@code @Agent} with its own
- * two-tier memory.
+ * two-tier memory, wired the agentic-native way.
  *
- * <p>TODO (Exercise 10): give the assistant memory.
- * <ol>
- *   <li>Annotate {@link #chat} with a {@code @SystemMessage} (tell it to remember what the
- *       engineer already said and build on it) and with
- *       {@code @Agent(description = "...", outputKey = "assistantReply")}. The
- *       {@code @MemoryId} on {@code incidentId} is what scopes a conversation to one incident.</li>
- *   <li>Add a static method annotated {@code @ChatMemoryProviderSupplier} that returns a
- *       {@code ChatMemory}: a {@code MessageWindowChatMemory} (Tier 1 — the last N messages)
- *       built over the {@code PersistentChatMemoryStore} bean (Tier 2 — durable). Resolve the
- *       store with {@code io.quarkus.arc.Arc.container().instance(...).get()} so its
- *       {@code @Transactional} methods keep their interceptors. The supplier method signature
- *       must be {@code static ChatMemory chatMemory(Object memoryId)}.</li>
- * </ol>
+ * <p>{@code @ChatMemoryProviderSupplier} is a {@code quarkus-langchain4j-agentic} feature:
+ * a static method that hands the agent a {@link ChatMemory}. Here that provider
+ * builds both tiers —
+ * <ul>
+ *   <li><b>Tier 1 (working memory):</b> a {@link MessageWindowChatMemory} that keeps only
+ *       the last N messages actually sent to the model;</li>
+ *   <li><b>Tier 2 (durable store):</b> that window reads/writes through the
+ *       {@link PersistentChatMemoryStore} bean, so the retained window survives restarts when the database is retained.</li>
+ * </ul>
+ * The {@code @MemoryId} parameter is what scopes a conversation to one incident.
  */
 public interface IncidentAssistant {
 
-    // TODO: add @SystemMessage and @Agent(...); this is the agent's one conversational method.
+    @SystemMessage("""
+            You are an on-call incident assistant for an IT incident-management system.
+            You help an engineer reason about ONE incident across a back-and-forth
+            conversation. Remember what the engineer has already told you in this
+            conversation and build on it — do not ask again for facts you were given.
+            Be concise and concrete. Never invent metrics, logs, or actions that were not
+            stated. If you don't have enough information, say what you'd need.
+            """)
+    @Agent(description = "Conversational assistant that reasons about a single incident with memory of the conversation so far.",
+           outputKey = "assistantReply")
     String chat(@MemoryId Integer incidentId, @UserMessage String message);
 
-    // TODO: add the @ChatMemoryProviderSupplier static method (see the class Javadoc above).
+    /**
+     * Agentic memory wiring: window (Tier 1) over the durable, CDI-managed store (Tier 2).
+     * We resolve the store through Arc so its {@code @Transactional} Panache methods keep
+     * their interceptors.
+     */
+    @ChatMemoryProviderSupplier
+    static ChatMemory chatMemory(Object memoryId) {
+        PersistentChatMemoryStore store = Arc.container().instance(PersistentChatMemoryStore.class).get();
+        return MessageWindowChatMemory.builder()
+                .id(memoryId)
+                .maxMessages(6) // Ex10: compare with 20; evicted messages leave the store too.
+                .chatMemoryStore(store)
+                .build();
+    }
 }

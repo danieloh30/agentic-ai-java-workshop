@@ -1,41 +1,37 @@
 package com.incidentmanagement.messaging;
 
 import com.incidentmanagement.agentic.workflow.IncidentResolutionWorkflow;
-import com.incidentmanagement.model.IncidentEvent;
-import com.incidentmanagement.model.ResolutionEvent;
-
+import com.incidentmanagement.model.*;
 import io.smallrye.reactive.messaging.annotations.Blocking;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.reactive.messaging.*;
 
-import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.eclipse.microprofile.reactive.messaging.Outgoing;
-
-/**
- * The heart of the event-driven pattern: an agentic pipeline wired between two Kafka topics.
- *
- * <p>Each message on {@code incidents-in} is handed to the {@link IncidentResolutionWorkflow}
- * (triage → resolve), and the resulting {@link ResolutionEvent} is published to
- * {@code resolutions-out}. Because the agent calls block on the LLM, the method is
- * {@code @Blocking} — SmallRye runs it on a worker thread so the event loop stays free.
- */
+/** Blocking model calls run on a worker; terminal errors become visible domain outcomes. */
 @ApplicationScoped
 public class IncidentEventConsumer {
+    @Inject IncidentResolutionWorkflow workflow;
+    @Inject ResolutionStore store;
 
-    @Inject
-    IncidentResolutionWorkflow workflow;
-
-    @Incoming("incidents-in")
-    @Outgoing("resolutions-out")
-    @Blocking
+    @Incoming("incidents-in") @Outgoing("resolutions-out") @Blocking
     public ResolutionEvent process(IncidentEvent event) {
-        Log.infof("Consuming incident event #%d (%s/%s P%s)",
-                event.incidentId(), event.system(), event.service(), event.priority());
-
-        ResolutionEvent result = workflow.process(event);
-
-        Log.infof("Pipeline resolved incident #%d → publishing to resolutions-out", event.incidentId());
-        return result;
+        if (!store.input(event.requestId()).equals(event))
+            throw new IllegalArgumentException("Event does not match its registered request");
+        // A completed redelivery reuses the durable result without another model call.
+        ResolutionEvent saved = store.completed(event.requestId());
+        if (saved != null) {
+            if (!saved.incidentId().equals(event.incidentId())) throw new IllegalArgumentException("Mismatched incident");
+            Log.infof("Reusing completed request for incident #%d", event.incidentId());
+            return saved;
+        }
+        Log.infof("Processing incident #%d from Kafka", event.incidentId());
+        try {
+            return workflow.process(event);
+        } catch (RuntimeException failure) {
+            Log.warnf("Agent processing failed for incident #%d", event.incidentId());
+            return new ResolutionEvent(event.requestId(), event.incidentId(), "FAILED", "",
+                    "Agent processing failed; operator review required");
+        }
     }
 }

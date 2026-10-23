@@ -1,8 +1,12 @@
 package com.incidentmanagement.agentic.workflow;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.incidentmanagement.evidence.DeploymentEvidenceClient;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,10 +33,10 @@ import io.quarkus.logging.Log;
  * <ol>
  *   <li><b>Plan</b> — {@link PlannerAgent} turns the incident (plus any reviewer feedback)
  *       into an ordered {@link ExecutionPlan} of specialist steps.</li>
- *   <li><b>Execute</b> — each planned step that has not run yet calls its specialist and
+ *   <li><b>Execute</b> — each step requested by the current plan calls its specialist and
  *       writes the result into the scope.</li>
- *   <li><b>Review</b> — {@link ResolutionReviewAgent} decides whether the incident is
- *       resolved; if not, its feedback drives a re-plan on the next iteration.</li>
+ *   <li><b>Review</b> — {@link ResolutionReviewAgent} decides whether the recommendation is
+ *       ready; if not, its feedback drives a re-plan on the next iteration.</li>
  * </ol>
  * Unlike a fixed sequence, the <em>set and order</em> of specialists is chosen by the LLM
  * at run time — that is what makes this Plan &amp; Execute rather than a static workflow.
@@ -42,6 +46,7 @@ public class PlanExecuteFlow {
 
     private static final int MAX_ITERATIONS = 3;
 
+    @Inject DeploymentEvidenceClient evidenceClient;
     @Inject PlannerAgent plannerAgent;
     @Inject ResolutionReviewAgent reviewAgent;
     @Inject DiagnosisAgent diagnosisAgent;
@@ -51,6 +56,12 @@ public class PlanExecuteFlow {
 
     public Map<String, Object> resolve(IncidentInfo incident, Integer incidentNumber, String report) {
 
+        var evidence = evidenceClient.fetch(incident.system);
+        if (!evidence.usableFor(incident.system)) {
+            return Map.of("outcome", "EVIDENCE_UNAVAILABLE", "recommendationReady", false,
+                    "iteration", 0, "evidence", evidence, "history", List.of());
+        }
+        List<Map<String, Object>> history = new ArrayList<>();
         var planAction = AgenticServices.agentAction(scope -> {
             String feedback = scope.readState("feedback", "");
             int iteration = scope.readState("iteration", 0) + 1;
@@ -59,14 +70,21 @@ public class PlanExecuteFlow {
             ExecutionPlan plan = plannerAgent.plan(
                     incident.system, incident.service, incident.priority,
                     incident.description != null ? incident.description : "",
-                    incidentNumber, report != null ? report : "", feedback);
+                    incidentNumber, report != null ? report : "", evidence.toString(), feedback);
             scope.writeState("plan", plan);
-            Log.infof("Plan (iteration %d): %s — %s", iteration, plan.steps(), plan.rationale());
+            Log.infof("Planned response for incident #%d, iteration %d", incidentNumber, iteration);
         });
 
         var executeAction = AgenticServices.agentAction(scope -> {
             ExecutionPlan plan = scope.readState("plan", null);
-            if (plan == null || plan.steps() == null) {
+            try {
+                PlanValidator.validate(plan, !scope.readState("diagnosis", "").isBlank(),
+                        !scope.readState("mitigation", "").isBlank());
+                scope.writeState("invalidPlan", false);
+            } catch (IllegalArgumentException invalid) {
+                scope.writeState("invalidPlan", true);
+                scope.writeState("recommendationReady", false);
+                scope.writeState("feedback", "Plan rejected before execution: " + invalid.getMessage());
                 return;
             }
             // Run exactly what the current plan asks for. On a re-plan the planner only
@@ -76,10 +94,17 @@ public class PlanExecuteFlow {
             for (ResolutionStep step : planned) {
                 Log.infof("Execute: %s", step);
                 switch (step) {
-                    case DIAGNOSE -> scope.writeState("diagnosis",
-                            diagnosisAgent.diagnose(incident, incidentNumber, report != null ? report : ""));
-                    case MITIGATE -> scope.writeState("mitigation",
-                            mitigationAgent.mitigate(incident, incidentNumber, scope.readState("diagnosis", "")));
+                    case DIAGNOSE -> {
+                        scope.writeState("mitigation", "");
+                        scope.writeState("verification", "");
+                        scope.writeState("diagnosis", diagnosisAgent.diagnose(incident, incidentNumber,
+                                report != null ? report : "", evidence.toString()));
+                    }
+                    case MITIGATE -> {
+                        scope.writeState("verification", "");
+                        scope.writeState("mitigation", mitigationAgent.mitigate(incident, incidentNumber,
+                                scope.readState("diagnosis", "")));
+                    }
                     case VERIFY -> scope.writeState("verification",
                             verificationAgent.verify(incident, incidentNumber,
                                     scope.readState("diagnosis", ""), scope.readState("mitigation", "")));
@@ -92,6 +117,12 @@ public class PlanExecuteFlow {
         });
 
         var reviewAction = AgenticServices.agentAction(scope -> {
+            if (scope.readState("invalidPlan", false)) {
+                history.add(Map.of("iteration", scope.readState("iteration", 0),
+                        "plan", scope.readState("plan", new ExecutionPlan(List.of(), "")),
+                        "feedback", scope.readState("feedback", ""), "accepted", false));
+                return;
+            }
             String diagnosis = scope.readState("diagnosis", "");
             String mitigation = scope.readState("mitigation", "");
             String verification = scope.readState("verification", "");
@@ -101,7 +132,7 @@ public class PlanExecuteFlow {
                     incident.system, incident.service, incident.priority, incidentNumber,
                     diagnosis, mitigation, verification, communication);
 
-            scope.writeState("resolved", review.resolved());
+            scope.writeState("recommendationReady", review.recommendationReady());
             scope.writeState("feedback", """
                     Reviewer verdict: %s
                     Diagnosis so far: %s
@@ -111,17 +142,24 @@ public class PlanExecuteFlow {
                     diagnosis.isBlank() ? "(none)" : diagnosis,
                     mitigation.isBlank() ? "(none)" : mitigation,
                     verification.isBlank() ? "(none)" : verification));
-            Log.infof("Review: resolved=%b — %s", review.resolved(), review.feedback());
+            history.add(Map.of("iteration", scope.readState("iteration", 0), "plan", scope.readState("plan", null),
+                    "feedback", review.feedback(), "accepted", true, "recommendationReady", review.recommendationReady()));
+            Log.infof("Review for incident #%d: recommendationReady=%b", incidentNumber, review.recommendationReady());
         });
 
         UntypedAgent workflow = AgenticServices.loopBuilder()
                 .name("incident-plan-execute-loop")
                 .maxIterations(MAX_ITERATIONS)
-                .exitCondition((scope, iteration) -> scope.readState("resolved", false))
+                .exitCondition((scope, iteration) -> scope.readState("recommendationReady", false))
                 .subAgents(planAction, executeAction, reviewAction)
                 .build();
 
         var result = workflow.invokeWithAgenticScope(Map.of());
-        return result.agenticScope().state();
+        var state = new java.util.LinkedHashMap<String, Object>(result.agenticScope().state());
+        state.put("evidence", evidence);
+        state.put("history", history);
+        state.put("outcome", Boolean.TRUE.equals(state.get("recommendationReady"))
+                ? "RECOMMENDATION_READY" : "NEEDS_OPERATOR_REVIEW");
+        return state;
     }
 }

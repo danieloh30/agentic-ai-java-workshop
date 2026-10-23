@@ -7,6 +7,7 @@ package com.incidentmanagement.model;
  * <p>Serialized to/from JSON by Quarkus's automatic Jackson (de)serializer detection.
  */
 public record IncidentEvent(
+        String requestId,
         Integer incidentId,
         String system,
         String service,

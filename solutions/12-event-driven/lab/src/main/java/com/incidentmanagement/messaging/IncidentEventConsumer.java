@@ -1,43 +1,39 @@
 package com.incidentmanagement.messaging;
 
 import com.incidentmanagement.agentic.workflow.IncidentResolutionWorkflow;
-import com.incidentmanagement.model.IncidentEvent;
-import com.incidentmanagement.model.ResolutionEvent;
-
+import com.incidentmanagement.model.*;
+import io.smallrye.reactive.messaging.annotations.Blocking;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.reactive.messaging.*;
 
-/**
- * The heart of the event-driven pattern: an agentic pipeline wired between two Kafka topics.
- * (Exercise 12, Step 2)
- *
- * <p>Your job is to turn {@code process(...)} into a Kafka processor: consume each incident from
- * {@code incidents-in}, run the agentic {@link IncidentResolutionWorkflow}, and publish the result
- * to {@code resolutions-out}. The {@link ResolutionSink} on the other end persists it.
- *
- * <p>TODO (Step 2):
- *   1. Annotate {@code process(...)} with:
- *        {@code @Incoming("incidents-in")}
- *        {@code @Outgoing("resolutions-out")}
- *        {@code @Blocking}   // the LLM calls block, so run on a worker thread
- *   2. Replace the body: call {@code workflow.process(event)} and return the ResolutionEvent.
- *
- * Imports you'll need:
- *   import org.eclipse.microprofile.reactive.messaging.Incoming;
- *   import org.eclipse.microprofile.reactive.messaging.Outgoing;
- *   import io.smallrye.reactive.messaging.annotations.Blocking;
- */
+/** Blocking model calls run on a worker; terminal errors become visible domain outcomes. */
 @ApplicationScoped
 public class IncidentEventConsumer {
+    @Inject IncidentResolutionWorkflow workflow;
+    @Inject ResolutionStore store;
 
-    @Inject
-    IncidentResolutionWorkflow workflow;
-
-    // TODO Step 2: add @Incoming("incidents-in") @Outgoing("resolutions-out") @Blocking,
-    // then call the workflow and return its ResolutionEvent.
+    @Incoming("incidents-in") @Outgoing("resolutions-out") @Blocking
     public ResolutionEvent process(IncidentEvent event) {
-        Log.infof("Consuming incident event #%d", event.incidentId());
-        throw new UnsupportedOperationException("TODO: run the pipeline and return the ResolutionEvent (Exercise 12)");
+        if (!store.input(event.requestId()).equals(event))
+            throw new IllegalArgumentException("Event does not match its registered request");
+        // A completed redelivery reuses the durable result without another model call.
+        ResolutionEvent saved = store.completed(event.requestId());
+        if (saved != null) {
+            if (!saved.incidentId().equals(event.incidentId())) throw new IllegalArgumentException("Mismatched incident");
+            Log.infof("Reusing completed request for incident #%d", event.incidentId());
+            return saved;
+        }
+        Log.infof("Processing incident #%d from Kafka", event.incidentId());
+        try {
+            // TODO Ex12: replace this explicit failure with return workflow.process(event);
+            return new ResolutionEvent(event.requestId(), event.incidentId(), "FAILED", "",
+                    "Lab consumer is not connected yet; complete Exercise 12 before submitting.");
+        } catch (RuntimeException failure) {
+            Log.warnf("Agent processing failed for incident #%d", event.incidentId());
+            return new ResolutionEvent(event.requestId(), event.incidentId(), "FAILED", "",
+                    "Agent processing failed; operator review required");
+        }
     }
 }

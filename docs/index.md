@@ -153,12 +153,14 @@ No agent behavior yet: that's Exercise 1.
 
 ### Part 2 — From Patterns to Production (Advanced & Enterprise)
 
+A separate **90-minute session**: 75 minutes of core labs, 10 minutes for introduction/transitions, and 5 minutes for troubleshooting. Preflight dependencies and container images before the event. All Part 2 starters build with runnable defaults; optional challenges are outside the schedule.
+
 | Exercise | Time | Focus |
 |----------|------|-------|
-| [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | An LLM planner emits a structured plan over specialist `@Agent`s + dynamic re-planning |
-| [10. Memory Tiering](10-memory-tiering/START_HERE.md) | 20 min | A conversational `@Agent` with two-tier memory: a windowed working memory over a durable PostgreSQL store |
-| [11. Consensus & Voting](11-consensus-voting/START_HERE.md) | 20 min | Three persona `@Agent`s vote in parallel via `@ParallelAgent`; a deterministic `@Output` tally picks the winner |
-| [12. Event-Driven Agents](12-event-driven/START_HERE.md) | 20 min | Capstone: a `@SequenceAgent` pipeline wired between Kafka topics (Redpanda Dev Services) — agents triggered by events |
+| [9. Plan & Execute](09-plan-execute/START_HERE.md) | 20 min | Required MCP evidence + validated planning + bounded re-planning |
+| [10. Memory Tiering](10-memory-tiering/START_HERE.md) | 15 min | Bounded conversation memory, PostgreSQL storage, isolation, and observable eviction |
+| [11. Consensus & Voting](11-consensus-voting/START_HERE.md) | 20 min | Parallel persona voters + validated ballots + majority or operator review |
+| [12. Event-Driven Agents](12-event-driven/START_HERE.md) | 20 min | Kafka-triggered sequence + persisted correlated recommendations + completed-request replay |
 
 Start with the **[Lab Overview](00-intro/SPEAKER_NOTES.md)** to understand the scenario, architecture, and learning path.
 

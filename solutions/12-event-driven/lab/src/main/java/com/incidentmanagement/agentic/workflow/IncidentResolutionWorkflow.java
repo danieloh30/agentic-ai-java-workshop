@@ -1,42 +1,41 @@
 package com.incidentmanagement.agentic.workflow;
 
+import com.incidentmanagement.agentic.agents.ResolutionAgent;
+import com.incidentmanagement.agentic.agents.TriageAgent;
 import com.incidentmanagement.model.IncidentEvent;
 import com.incidentmanagement.model.ResolutionEvent;
 
+import dev.langchain4j.agentic.declarative.Output;
+import dev.langchain4j.agentic.declarative.SequenceAgent;
 import dev.langchain4j.agentic.scope.AgenticScope;
 
 /**
- * The agentic pipeline that runs for each incoming event: triage, then resolve. (Exercise 12, Step 1)
+ * The agentic pipeline that runs for each incoming event: triage, then resolve.
  *
- * <p>The two stages ({@code TriageAgent}, {@code ResolutionAgent}) are written for you. Your job
- * is to chain them with a declarative {@code @SequenceAgent} and assemble their outputs into a
- * {@link ResolutionEvent}.
+ * <p>A declarative {@code @SequenceAgent} chains the two {@code @Agent}s through a shared
+ * scope — {@link TriageAgent} writes {@code triage}, {@link ResolutionAgent} reads it and
+ * writes {@code resolution}. The {@code @Output} method then assembles both, plus the
+ * incident id, into the {@link ResolutionEvent} that gets published downstream.
  *
- * <p>TODO (Step 1):
- *   1. Annotate {@code process(...)} with
- *      {@code @SequenceAgent(outputKey = "resolutionResult",
- *              subAgents = { TriageAgent.class, ResolutionAgent.class })}.
- *      TriageAgent writes "triage" into the scope; ResolutionAgent reads it and writes "resolution".
- *   2. Implement the {@code @Output output(AgenticScope scope)} method: read "incidentEvent",
- *      "triage" and "resolution" from the scope and build a {@link ResolutionEvent}.
- *
- * Reading from the scope:
- *   IncidentEvent event = scope.readState("incidentEvent", (IncidentEvent) null);
- *   String triage = scope.readState("triage", "");
- *
- * Imports you'll need:
- *   import com.incidentmanagement.agentic.agents.TriageAgent;
- *   import com.incidentmanagement.agentic.agents.ResolutionAgent;
- *   import dev.langchain4j.agentic.declarative.Output;
- *   import dev.langchain4j.agentic.declarative.SequenceAgent;
+ * <p>This is the same composition pattern you met in Exercises 2–4; here it's driven by a
+ * Kafka event instead of an HTTP request. The agents don't know or care what triggered them.
  */
 public interface IncidentResolutionWorkflow {
 
-    // TODO Step 1.1: add @SequenceAgent(outputKey = "resolutionResult", subAgents = { ... })
+    @SequenceAgent(
+            outputKey = "resolutionResult",
+            subAgents = {
+                    TriageAgent.class,
+                    ResolutionAgent.class
+            })
     ResolutionEvent process(IncidentEvent incidentEvent);
 
-    // TODO Step 1.2: add @Output above this method and build the ResolutionEvent from the scope.
+    @Output
     static ResolutionEvent output(AgenticScope scope) {
-        throw new UnsupportedOperationException("TODO: assemble the ResolutionEvent (Exercise 12)");
+        IncidentEvent event = scope.readState("incidentEvent", (IncidentEvent) null);
+        String triage = scope.readState("triage", "");
+        String resolution = scope.readState("resolution", "");
+        if (event == null || resolution.isBlank()) throw new IllegalStateException("Missing pipeline output");
+        return new ResolutionEvent(event.requestId(), event.incidentId(), "AWAITING_REVIEW", triage, resolution);
     }
 }

@@ -1,18 +1,29 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.IncidentInfo;
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
 
 /**
  * A specialist the planner can call: investigate and identify root cause.
- * The {@code description} you give its {@code @Agent} annotation is how the planner
- * decides when to schedule this step — so write it for the planner to read.
+ * The {@code description} is how the planner decides when to schedule this step.
  */
 public interface DiagnosisAgent {
 
-    // TODO Exercise 09 — Step 1: turn this into an @Agent specialist.
-    // Add @SystemMessage (diagnosis persona), @UserMessage (the incident facts +
-    // {report}), and @Agent(description = "...", outputKey = "diagnosis").
-    // The description is what the planner uses to decide to call you.
-    // See docs/09-plan-execute/START_HERE.md. Keep the method signature.
-    String diagnose(IncidentInfo incidentInfo, Integer incidentNumber, String report);
+    @SystemMessage("""
+            You are a diagnosis specialist for an IT incident-management system.
+            Identify the single most likely root cause of the incident and the evidence
+            for it. Use only the incident facts provided; do not invent metrics or logs.
+            Keep it to 2–4 sentences.
+            """)
+    @UserMessage("""
+            Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
+            Description: {incidentInfo.description}
+            Operator report: {report}
+            Deployment evidence: {evidence}
+            """)
+    @Agent(description = "Investigates the incident and identifies the most likely root cause.",
+           outputKey = "diagnosis")
+    String diagnose(IncidentInfo incidentInfo, Integer incidentNumber, String report, String evidence);
 }

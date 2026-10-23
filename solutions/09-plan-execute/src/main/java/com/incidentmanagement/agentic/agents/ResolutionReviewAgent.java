@@ -4,28 +4,22 @@ import com.incidentmanagement.model.ResolutionReview;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import io.quarkiverse.langchain4j.RegisterAiService;
-import jakarta.enterprise.context.ApplicationScoped;
+import dev.langchain4j.agentic.Agent;
 
 /**
  * The gate between "Execute" and a possible re-plan. After a round of specialists has run,
- * this reviewer judges whether the incident is actually resolved. If not, its feedback is
+ * this reviewer judges whether the recommendation is complete. If not, its feedback is
  * fed back to the {@link PlannerAgent} so it can plan the remaining steps.
  */
-@ApplicationScoped
-@RegisterAiService
 public interface ResolutionReviewAgent {
 
     @SystemMessage("""
-            You are a resolution reviewer for an IT incident-management system.
-            Given the incident and the specialists' outputs so far, decide whether the
-            incident can be considered resolved.
-
-            Mark it resolved when there is a diagnosis, a mitigation, and a verification whose
-            verdict is RESOLVED. If any of those is missing, or the verification verdict is
-            NOT RESOLVED, then it is not resolved — say concisely what step is still needed so
-            the planner can schedule it. Trust the verification verdict; do not demand
-            production monitoring evidence beyond it. Judge only from the outputs provided.
+            You review the completeness of an IT incident response recommendation.
+            Set recommendationReady=true only when diagnosis, proposed mitigation, and
+            a READY verification assessment are present; require a stakeholder update for P1/P2.
+            If work is missing or verification says NEEDS_REVISION, return false and concise
+            feedback naming the additional work needed. Do not claim production recovery:
+            the specialists only recommend actions and checks, and never execute them.
             """)
     @UserMessage("""
             Incident: {system}/{service} (priority {priority}, #{incidentNumber})
@@ -35,6 +29,8 @@ public interface ResolutionReviewAgent {
             Verification: {verification}
             Communication: {communication}
             """)
+    @Agent(description = "Reviews recommendation completeness and identifies additional work.",
+           outputKey = "review")
     ResolutionReview review(String system, String service, String priority, Integer incidentNumber,
                             String diagnosis, String mitigation, String verification, String communication);
 }

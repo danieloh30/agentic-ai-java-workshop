@@ -38,10 +38,10 @@ public class IncidentManagementService {
                 result.totalVoters(), result.unanimous());
 
         StringBuilder summary = new StringBuilder();
-        summary.append("Consensus decision: ").append(result.decision())
+        summary.append("Outcome: ").append(result.requiresReview() ? "NEEDS_OPERATOR_REVIEW" : result.decision())
                 .append(result.unanimous() ? " (unanimous)"
                         : " (" + result.agreement() + " of " + result.totalVoters() + " voters)")
-                .append("\n\nBallots:");
+                .append("\n").append(result.reason()).append("\n\nBallots:");
         for (Vote v : result.votes()) {
             summary.append("\n  • ").append(v.action())
                     .append(" (confidence ").append(v.confidence()).append(") — ")

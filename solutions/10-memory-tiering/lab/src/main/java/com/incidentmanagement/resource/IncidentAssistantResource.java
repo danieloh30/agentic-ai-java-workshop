@@ -44,7 +44,7 @@ public class IncidentAssistantResource {
         if (message == null || message.isBlank()) {
             throw new BadRequestException("Send the engineer's message as the request body (text/plain).");
         }
-        Log.infof("Assistant chat for incident #%d: %s", incidentId, message);
+        Log.infof("Assistant chat for incident #%d", incidentId);
         String reply = incidentAssistant.chat(incidentId, message);
         return Map.of("incidentId", incidentId, "reply", reply);
     }

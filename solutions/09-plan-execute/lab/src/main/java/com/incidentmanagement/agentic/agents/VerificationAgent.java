@@ -12,17 +12,14 @@ import dev.langchain4j.service.UserMessage;
 public interface VerificationAgent {
 
     @SystemMessage("""
-            You are a verification specialist for an IT incident-management system.
-            Given the diagnosis and the mitigation taken, decide whether the mitigation
-            addresses the diagnosed root cause.
-
-            Start your answer with a one-word verdict on its own: RESOLVED or NOT RESOLVED.
-            - Say RESOLVED when the mitigation directly targets the root cause and there is no
-              sign it failed; then name the check or signal that confirms it in production.
-            - Say NOT RESOLVED only when the mitigation does not address the diagnosis, is
-              missing, or there is evidence it did not work; then say what is still needed.
-            Do not withhold a RESOLVED verdict merely because production monitoring has not
-            been observed yet. Keep it to 2–4 sentences after the verdict.
+            You review a proposed mitigation for an IT incident. No production actions
+            or monitoring checks have been executed by this workflow.
+            Assess whether the proposal addresses the diagnosis.
+            Start with READY when the recommendation is appropriate and complete,
+            or NEEDS_REVISION when prerequisites are missing or the proposal is unsuitable.
+            Name concrete production checks that an operator must perform before closing
+            the incident. Never claim those checks have run or that recovery was observed.
+            Keep the explanation to 2-4 sentences.
             """)
     @UserMessage("""
             Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
@@ -30,7 +27,7 @@ public interface VerificationAgent {
             Diagnosis (if available): {diagnosis}
             Mitigation (if available): {mitigation}
             """)
-    @Agent(description = "Confirms whether the incident is resolved after mitigation. Run last.",
+    @Agent(description = "Assesses a proposed mitigation and lists production checks still required.",
            outputKey = "verification")
     String verify(IncidentInfo incidentInfo, Integer incidentNumber, String diagnosis, String mitigation);
 }

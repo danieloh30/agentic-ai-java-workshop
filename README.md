@@ -6,7 +6,7 @@
 
 **Hands-On Workshop**  
 **Part 1:** 90 minutes (10 min intro · 80 min hands-on), plus an optional 15-minute bonus<br>
-**Part 2:** 80 minutes (four 20-minute exercises)<br>
+**Part 2:** 90-minute event slot (75 min labs · 10 min introduction/transitions · 5 min troubleshooting)<br>
 **Lab site:** https://danieloh30.github.io/agentic-ai-java-workshop/ (short URL: [bit.ly/agents-labs](https://bit.ly/agents-labs))  
 **Intro deck:** [intro-deck.pdf](docs/images/intro-deck.pdf)
 
@@ -37,10 +37,10 @@ Each exercise has its own starter project, reference solution, enterprise scenar
 
 | Exercise and guide | What you will build and verify | Working project | Reference solution |
 |--------------------|--------------------------------|-----------------|--------------------|
-| [9. Plan & Execute](docs/09-plan-execute/START_HERE.md) | A structured execution plan over specialist agents, with review and dynamic re-planning | [Start lab](solutions/09-plan-execute/lab/) | [Solution](solutions/09-plan-execute/) |
-| [10. Memory Tiering](docs/10-memory-tiering/START_HERE.md) | A bounded conversation window backed by PostgreSQL; test follow-up recall and isolation between incidents | [Start lab](solutions/10-memory-tiering/lab/) | [Solution](solutions/10-memory-tiering/) |
-| [11. Consensus & Voting](docs/11-consensus-voting/START_HERE.md) | Three persona agents voting in parallel, with a Java tally that exposes agreement, confidence, and rationale | [Start lab](solutions/11-consensus-voting/lab/) | [Solution](solutions/11-consensus-voting/) |
-| [12. Event-Driven Agents](docs/12-event-driven/START_HERE.md) | A Kafka-triggered triage–resolution pipeline; follow asynchronous handoffs and view the recorded result in the dashboard | [Start lab](solutions/12-event-driven/lab/) | [Solution](solutions/12-event-driven/) |
+| [9. Plan & Execute](docs/09-plan-execute/START_HERE.md) | Required MCP evidence, validated specialist plans, bounded re-planning, and inspectable outcomes | [Start lab](solutions/09-plan-execute/lab/) | [Solution](solutions/09-plan-execute/) |
+| [10. Memory Tiering](docs/10-memory-tiering/START_HERE.md) | A bounded PostgreSQL-backed conversation window; observe eviction and isolation between incidents | [Start lab](solutions/10-memory-tiering/lab/) | [Solution](solutions/10-memory-tiering/) |
+| [11. Consensus & Voting](docs/11-consensus-voting/START_HERE.md) | Three parallel persona voters; validated ballots, strict majority, or explicit operator review | [Start lab](solutions/11-consensus-voting/lab/) | [Solution](solutions/11-consensus-voting/) |
+| [12. Event-Driven Agents](docs/12-event-driven/START_HERE.md) | A Kafka-triggered recommendation pipeline; persisted correlated outcomes and duplicate-safe completed replay | [Start lab](solutions/12-event-driven/lab/) | [Solution](solutions/12-event-driven/) |
 
 The guides explain each exercise's practical boundaries: memory stores a configured window, voting recommends an action, and the event pipeline records a resolution without applying changes to external systems.
 
@@ -54,7 +54,7 @@ The guides explain each exercise's practical boundaries: memory stores a configu
 | `solutions/08-quarkus-flow/lab/` | Starter project for the optional quality-loop exercise |
 | `solutions/{09-plan-execute,10-memory-tiering,11-consensus-voting,12-event-driven}/lab/` | Separate starter projects for Part 2 |
 
-For Part 2, edit files inside the exercise's **`lab/` subdirectory**. Its parent folder contains the completed reference solution. Follow the guide's listed TODO files; some starters intentionally fail to boot until those steps are complete.
+For Part 2, edit files inside the exercise's **`lab/` subdirectory**. Its parent folder contains the completed reference solution. Part 2 starters build with runnable defaults. Follow each guide's one or two focused edits; optional challenges are outside the event timebox.
 
 Start here:
 
@@ -87,7 +87,7 @@ cd solutions/09-plan-execute/lab
 
 Follow the matching guide to complete its TODO files, then open [http://localhost:8080](http://localhost:8080). For Exercises 10–12, use the corresponding starter directory from the table above. Export `OPENAI_API_KEY` again if you switch to a new terminal.
 
-Run one exercise at a time. Stop the current Quarkus dev mode with **Ctrl+C** before starting another exercise or finishing testing. Quarkus manages the exercise's Dev Services containers; the first launch may take longer while images are downloaded. Exercise 12 starts both PostgreSQL and a Redpanda broker compatible with Kafka.
+Run one exercise at a time. Stop the current Quarkus dev mode with **Ctrl+C** before starting another exercise or finishing testing. Quarkus manages the exercise's Dev Services containers; the first launch may take longer while images are downloaded. Exercise 12 starts both PostgreSQL and a Kafka broker.
 
 ## Reset labs
 
@@ -110,6 +110,6 @@ From the repository root, restore the selected exercise's TODO files. These comm
 - [OpenCode CLI](https://opencode.ai/) or any AGENTS.md-compatible AI coding assistant
 - **OpenAI API key** in `OPENAI_API_KEY`; the exercises default to `gpt-4o`
 - Free port **8080**; Exercise 7 also uses **8888** for its remote A2A agent
-- **Docker or Podman running** for Quarkus Dev Services, including PostgreSQL, observability services, and Exercise 12's Redpanda broker
+- **Docker or Podman running** for Quarkus Dev Services, including PostgreSQL, observability services, and Exercise 12's Kafka broker
 
 Quarkus and extension dependencies are declared in each project's `pom.xml`. See the [setup guide](docs/index.md#prerequisites) for Java and Maven installation instructions.

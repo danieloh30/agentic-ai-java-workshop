@@ -1,45 +1,54 @@
 package com.incidentmanagement.agentic.workflow;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.incidentmanagement.agentic.agents.CostVoter;
+import com.incidentmanagement.agentic.agents.CustomerImpactVoter;
+import com.incidentmanagement.agentic.agents.ReliabilityVoter;
 import com.incidentmanagement.model.ConsensusResult;
 import com.incidentmanagement.model.IncidentInfo;
+import com.incidentmanagement.model.Vote;
 
+import dev.langchain4j.agentic.declarative.Output;
+import dev.langchain4j.agentic.declarative.ParallelAgent;
 import dev.langchain4j.agentic.scope.AgenticScope;
 
 /**
- * Consensus &amp; Voting workflow. (Exercise 11, Step 2)
+ * Consensus &amp; Voting, the agentic-native way.
  *
- * <p>Wire the three persona voters into a single parallel vote, then tally their ballots.
+ * <p>{@code @ParallelAgent} fans out the <em>same</em> incident to three persona voters at
+ * once — each an independent {@code @Agent} that writes its {@link Vote} into the shared
+ * {@link AgenticScope} under its own {@code outputKey}. When all three have voted, the
+ * {@code @Output} method tallies the ballots into a single {@link ConsensusResult}.
  *
- * <p>TODO (Step 2):
- *   1. Annotate {@code decide(...)} with
- *      {@code @ParallelAgent(outputKey = "consensusResult",
- *              subAgents = { ReliabilityVoter.class, CustomerImpactVoter.class, CostVoter.class })}
- *      so all three voters run in parallel over the same incident, each writing its Vote into
- *      the shared scope under its own outputKey (reliabilityVote / customerVote / costVote).
- *   2. Implement the {@code @Output tally(AgenticScope scope)} method below: read the three
- *      votes from the scope, count them per action, pick the majority (break ties by the higher
- *      summed confidence), and return a {@link ConsensusResult}.
- *
- * Reading a vote from the scope:
- *   Vote v = scope.readState("reliabilityVote", (Vote) null);
- *
- * Imports you'll need:
- *   import com.incidentmanagement.agentic.agents.ReliabilityVoter;
- *   import com.incidentmanagement.agentic.agents.CustomerImpactVoter;
- *   import com.incidentmanagement.agentic.agents.CostVoter;
- *   import com.incidentmanagement.model.RecommendedAction;
- *   import com.incidentmanagement.model.Vote;
- *   import dev.langchain4j.agentic.declarative.Output;
- *   import dev.langchain4j.agentic.declarative.ParallelAgent;
- *   (plus java.util.* for the tally)
+ * <p>The "voting" is deterministic Java over structured records — not an LLM guessing a
+ * winner — which is exactly why each voter returns a {@code Vote} record rather than prose.
  */
 public interface ConsensusWorkflow {
 
-    // TODO Step 2.1: add @ParallelAgent(outputKey = "consensusResult", subAgents = { ... })
+    @ParallelAgent(
+            outputKey = "consensusResult",
+            subAgents = {
+                    ReliabilityVoter.class,
+                    CustomerImpactVoter.class,
+                    CostVoter.class
+            })
     ConsensusResult decide(IncidentInfo incidentInfo, String report);
 
-    // TODO Step 2.2: add @Output above this method and tally the three ballots from the scope.
+    /**
+     * Tally the three ballots. A strict majority wins; otherwise request operator review.
+     */
+    @Output
     static ConsensusResult tally(AgenticScope scope) {
-        throw new UnsupportedOperationException("TODO: tally the votes (Exercise 11)");
+        List<Vote> votes = new ArrayList<>();
+        for (String key : List.of("reliabilityVote", "customerVote", "costVote")) {
+            Vote v = scope.readState(key, (Vote) null);
+            if (v != null) {
+                votes.add(v);
+            }
+        }
+
+        return ConsensusPolicy.tally(votes);
     }
 }

@@ -37,16 +37,14 @@ EX09_FILES=(
 
 EX10_FILES=(
     "$EX10_BASE/agentic/agents/IncidentAssistant.java"
-    "$EX10_BASE/memory/PersistentChatMemoryStore.java"
 )
 
 EX11_FILES=(
     "$EX11_BASE/agents/CostVoter.java"
-    "$EX11_BASE/workflow/ConsensusWorkflow.java"
+    "$EX11_BASE/workflow/ConsensusPolicy.java"
 )
 
 EX12_FILES=(
-    "$EX12_BASE/agentic/workflow/IncidentResolutionWorkflow.java"
     "$EX12_BASE/messaging/IncidentEventConsumer.java"
 )
 
@@ -89,7 +87,7 @@ usage() {
 
 TARGET="${1:-all}"
 
-echo "Resetting lab stubs to original TODO state..."
+echo "Resetting participant files to their original starter state..."
 echo ""
 
 case "$TARGET" in

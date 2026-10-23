@@ -21,8 +21,9 @@ public interface DiagnosisAgent {
             Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
             Description: {incidentInfo.description}
             Operator report: {report}
+            Deployment evidence: {evidence}
             """)
     @Agent(description = "Investigates the incident and identifies the most likely root cause.",
            outputKey = "diagnosis")
-    String diagnose(IncidentInfo incidentInfo, Integer incidentNumber, String report);
+    String diagnose(IncidentInfo incidentInfo, Integer incidentNumber, String report, String evidence);
 }

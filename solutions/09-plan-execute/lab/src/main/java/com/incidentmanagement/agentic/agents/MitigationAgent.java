@@ -1,18 +1,29 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.IncidentInfo;
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
 
 /**
  * A specialist the planner can call: take an action that reduces or removes impact.
- * A good {@code description} tells the planner this depends on a diagnosis, so it
- * schedules the two in the right order.
+ * The planner will normally schedule this after {@link DiagnosisAgent}.
  */
 public interface MitigationAgent {
 
-    // TODO Exercise 09 — Step 2: turn this into an @Agent specialist.
-    // Add @SystemMessage (mitigation persona), @UserMessage (the incident facts +
-    // {diagnosis}), and @Agent(description = "...", outputKey = "mitigation").
-    // Hint the ordering in the description (e.g. "Best run after a diagnosis exists.").
-    // See docs/09-plan-execute/START_HERE.md. Keep the method signature.
+    @SystemMessage("""
+            You are a mitigation specialist for an IT incident-management system.
+            Given the incident and its diagnosis, state the single concrete mitigating
+            action to take and its expected effect. Do not claim work is already done that
+            you were not asked to do. Keep it to 2–4 sentences.
+            """)
+    @UserMessage("""
+            Incident: {incidentInfo.system}/{incidentInfo.service} (P{incidentInfo.priority}, #{incidentNumber})
+            Description: {incidentInfo.description}
+
+            Diagnosis (if available): {diagnosis}
+            """)
+    @Agent(description = "Recommends a concrete mitigation after diagnosis; never executes production changes.",
+           outputKey = "mitigation")
     String mitigate(IncidentInfo incidentInfo, Integer incidentNumber, String diagnosis);
 }

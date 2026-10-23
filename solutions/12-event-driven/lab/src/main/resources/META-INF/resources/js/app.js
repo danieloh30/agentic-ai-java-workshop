@@ -215,7 +215,7 @@ function openDetailPanel(incidentId) {
     const priority = getPriorityPresentation(incident.priority);
     const canProcess = ['OPEN', 'TRIAGING', 'IN_PROGRESS'].includes(incident.status);
 
-    const resolutionHtml = incident.status === 'RESOLVED' ? `
+    const resolutionHtml = `
         <div class="detail-divider"></div>
         <div class="detail-value" id="detail-resolution-status" role="status">Loading pipeline result...</div>
         <div id="detail-resolution-fields" hidden>
@@ -224,11 +224,11 @@ function openDetailPanel(incidentId) {
                 <div class="detail-value detail-pipeline-text" id="detail-triage"></div>
             </div>
             <div class="detail-field">
-                <div class="detail-label">Resolution</div>
+                <div class="detail-label">Recommendation / Processing Outcome</div>
                 <div class="detail-value detail-pipeline-text" id="detail-resolution"></div>
             </div>
         </div>
-    ` : '';
+    `;
 
     let formHtml = '';
     if (canProcess) {
@@ -272,7 +272,7 @@ function openDetailPanel(incidentId) {
 
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
-    if (incident.status === 'RESOLVED') loadResolution(incidentId);
+    loadResolution(incidentId);
 }
 
 function loadResolution(incidentId) {
@@ -291,11 +291,15 @@ function loadResolution(incidentId) {
         .then(result => {
             if (!isCurrentPanel()) return;
             if (!result) {
-                status.textContent = 'No pipeline result is available for this incident in the current server session.';
+                status.textContent = 'No processing request has been submitted for this incident.';
+                return;
+            }
+            if (result.processingStatus === 'PUBLISHED') {
+                status.textContent = 'Request accepted; agent processing is pending. Close and reopen to refresh.';
                 return;
             }
             triage.textContent = result.triage || 'No triage provided.';
-            resolution.textContent = result.resolution || 'No resolution provided.';
+            resolution.textContent = `${result.processingStatus}: ${result.resolution || 'No recommendation provided.'}\nRequest: ${result.requestId}`;
             status.hidden = true;
             fields.hidden = false;
         })
@@ -329,7 +333,7 @@ function processFromPanel(incidentId, status) {
         })
         .then(() => {
             lastUpdatedIncidentId = incidentId;
-            showToast(`Incident successfully processed from ${statusLabels[status]}`);
+            showToast('Incident submitted; processing continues. Reopen it to check the outcome.');
             closeDetailPanel();
             loadAllIncidents();
         })

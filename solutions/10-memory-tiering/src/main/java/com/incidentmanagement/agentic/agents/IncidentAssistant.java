@@ -16,13 +16,13 @@ import io.quarkus.arc.Arc;
  * two-tier memory, wired the agentic-native way.
  *
  * <p>{@code @ChatMemoryProviderSupplier} is a {@code quarkus-langchain4j-agentic} feature:
- * a static method that hands the agent a {@link ChatMemoryProvider}. Here that provider
+ * a static method that hands the agent a {@link ChatMemory}. Here that provider
  * builds both tiers —
  * <ul>
  *   <li><b>Tier 1 (working memory):</b> a {@link MessageWindowChatMemory} that keeps only
  *       the last N messages actually sent to the model;</li>
  *   <li><b>Tier 2 (durable store):</b> that window reads/writes through the
- *       {@link PersistentChatMemoryStore} bean, so the full transcript survives restarts.</li>
+ *       {@link PersistentChatMemoryStore} bean, so the retained window survives restarts when the database is retained.</li>
  * </ul>
  * The {@code @MemoryId} parameter is what scopes a conversation to one incident.
  */
@@ -50,7 +50,7 @@ public interface IncidentAssistant {
         PersistentChatMemoryStore store = Arc.container().instance(PersistentChatMemoryStore.class).get();
         return MessageWindowChatMemory.builder()
                 .id(memoryId)
-                .maxMessages(20)
+                .maxMessages(6) // Ex10: compare with 20; evicted messages leave the store too.
                 .chatMemoryStore(store)
                 .build();
     }

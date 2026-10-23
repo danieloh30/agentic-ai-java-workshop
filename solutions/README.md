@@ -16,23 +16,25 @@ Exercise 5 is documentation-only and keeps a README placeholder instead. **Only 
 
 ### Part 2 — From Patterns to Production
 
+**90-minute event slot:** 20 + 15 + 20 + 20 minutes of labs, plus 15 minutes for introduction, transitions, and troubleshooting. Part 2 starters are runnable; each guide limits required edits and supplies infrastructure.
+
 | Exercise | Solution folder | What it shows |
 |----------|----------------|--------------|
-| Ex 9 | [`09-plan-execute/`](09-plan-execute/) | An LLM planner emits a structured `ExecutionPlan` over specialist `@Agent`s, executed on an `AgenticServices` loop with dynamic re-planning |
+| Ex 9 | [`09-plan-execute/`](09-plan-execute/) | Required MCP evidence precedes a validated `ExecutionPlan`, bounded re-planning, and recommendation review |
 | Ex 10 | [`10-memory-tiering/`](10-memory-tiering/) | A conversational `@Agent` with two-tier memory — a `MessageWindowChatMemory` (working memory) over a durable `ChatMemoryStore` backed by PostgreSQL, wired via `@ChatMemoryProviderSupplier` |
-| Ex 11 | [`11-consensus-voting/`](11-consensus-voting/) | Three persona voter `@Agent`s run in parallel via `@ParallelAgent`, each returning a structured `Vote`; an `@Output` method tallies the ballots into a `ConsensusResult` |
-| Ex 12 | [`12-event-driven/`](12-event-driven/) | Capstone — a `@SequenceAgent` triage→resolve pipeline wired between Kafka topics (`@Incoming`/`@Outgoing`, Redpanda via Dev Services); agents triggered by events, results consumed by a downstream sink |
+| Ex 11 | [`11-consensus-voting/`](11-consensus-voting/) | Three persona voter `@Agent`s run in parallel via `@ParallelAgent`, each returning a structured `Vote`; an `@Output` method applies validated majority-or-review policy |
+| Ex 12 | [`12-event-driven/`](12-event-driven/) | Capstone — a `@SequenceAgent` triage→resolve pipeline wired between Kafka topics (`@Incoming`/`@Outgoing`, Kafka via Dev Services); correlated recommendations persisted by a downstream sink, with completed replay |
 
 ### Additional reference projects
 
 | Folder | What it shows |
 |--------|--------------|
 | [`06-hitl-observability/observability-reference`](06-hitl-observability/observability-reference) | Prompt injection guard + observability |
-| [`08-quarkus-flow/lab/`](08-quarkus-flow/lab/) | Bonus exercise starter project (TODO stubs) |
-| [`09-plan-execute/lab/`](09-plan-execute/lab/) | Exercise 9 starter project (TODO stubs) |
-| [`10-memory-tiering/lab/`](10-memory-tiering/lab/) | Exercise 10 starter project (TODO stubs) |
-| [`11-consensus-voting/lab/`](11-consensus-voting/lab/) | Exercise 11 starter project (TODO stubs) |
-| [`12-event-driven/lab/`](12-event-driven/lab/) | Exercise 12 starter project (TODO stubs) |
+| [`08-quarkus-flow/lab/`](08-quarkus-flow/lab/) | Bonus exercise runnable starter project (focused TODOs) |
+| [`09-plan-execute/lab/`](09-plan-execute/lab/) | Exercise 9 runnable starter project (focused TODOs) |
+| [`10-memory-tiering/lab/`](10-memory-tiering/lab/) | Exercise 10 runnable starter project (focused TODOs) |
+| [`11-consensus-voting/lab/`](11-consensus-voting/lab/) | Exercise 11 runnable starter project (focused TODOs) |
+| [`12-event-driven/lab/`](12-event-driven/lab/) | Exercise 12 runnable starter project (focused TODOs) |
 
 ## Versions
 

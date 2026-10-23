@@ -4,8 +4,7 @@ import com.incidentmanagement.model.ExecutionPlan;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import io.quarkiverse.langchain4j.RegisterAiService;
-import jakarta.enterprise.context.ApplicationScoped;
+import dev.langchain4j.agentic.Agent;
 
 /**
  * The "Plan" half of Plan &amp; Execute. This LLM planner does not do the work itself —
@@ -17,36 +16,33 @@ import jakarta.enterprise.context.ApplicationScoped;
  * and the work done so far, so the planner can append the steps still needed — this is
  * the "dynamic re-planning" step of the pattern.
  */
-@ApplicationScoped
-@RegisterAiService
 public interface PlannerAgent {
 
     @SystemMessage("""
-            You are the planning agent for an IT incident-management system.
-            You do NOT resolve the incident yourself. You decide which specialist steps to
-            run, and in what order, then hand that plan off to an executor.
+            You plan IT incident response; you do not execute production changes.
+            Available specialist steps:
+            DIAGNOSE: identify the likely cause using supplied facts and deployment evidence.
+            MITIGATE: recommend a mitigation; requires a diagnosis.
+            VERIFY: assess the recommendation and name checks an operator must perform;
+                    requires mitigation. Do not claim these checks have actually run.
+            COMMUNICATE: write a stakeholder update; include this for P1/P2 incidents.
 
-            The available steps are:
-              - DIAGNOSE:    investigate and identify the most likely root cause
-              - MITIGATE:    take a concrete action to reduce or remove impact (needs a diagnosis first)
-              - VERIFY:      confirm whether the incident now appears resolved (needs mitigation first)
-              - COMMUNICATE: write a stakeholder status update
-
-            Rules:
-              - Order steps so each has what it needs: DIAGNOSE before MITIGATE before VERIFY.
-              - Include COMMUNICATE for high-priority incidents (P1/P2); it is optional for low ones.
-              - Do not repeat a step that the feedback shows is already done and adequate.
-              - If feedback is provided, plan ONLY the additional steps still needed to resolve it.
-              - Keep the rationale to a single sentence.
+            Order DIAGNOSE before MITIGATE before VERIFY.
+            On replanning, use feedback and prior results; schedule only unfinished work.
+            Never invent deployments, metrics, tool results, or completed actions.
+            Return the ordered steps and a one-sentence rationale.
             """)
     @UserMessage("""
             Incident: {system}/{service} (priority {priority}, #{incidentNumber})
             Description: {description}
             Operator report: {report}
+            Required deployment evidence (workshop fixture): {evidence}
 
             Work done so far / reviewer feedback (empty on the first plan):
             {feedback}
             """)
+    @Agent(description = "Builds a structured specialist plan using incident facts and retrieved evidence.",
+           outputKey = "plan")
     ExecutionPlan plan(String system, String service, String priority, String description,
-                       Integer incidentNumber, String report, String feedback);
+                       Integer incidentNumber, String report, String evidence, String feedback);
 }

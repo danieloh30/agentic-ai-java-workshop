@@ -23,7 +23,7 @@ public interface MitigationAgent {
 
             Diagnosis (if available): {diagnosis}
             """)
-    @Agent(description = "Takes a concrete action to reduce or remove the incident's impact. Best run after a diagnosis exists.",
+    @Agent(description = "Recommends a concrete mitigation after diagnosis; never executes production changes.",
            outputKey = "mitigation")
     String mitigate(IncidentInfo incidentInfo, Integer incidentNumber, String diagnosis);
 }

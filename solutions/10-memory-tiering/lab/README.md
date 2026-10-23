@@ -1,5 +1,9 @@
-# Exercise 04 — Supervisor orchestration
+# Exercise 10 — Memory Tiering and Eviction
 
-See `docs/04-supervisor/START_HERE.md` for instructions.
+**Core timebox:** 15 minutes. Part 2 totals 75 minutes of labs within a 90-minute event slot.
 
-Completed Quarkus solution(s) are in this folder. Upstream mapping: `docs/ATTRIBUTION.md` and `solutions/README.md`.
+[Workshop guide](https://danieloh30.github.io/agentic-ai-java-workshop/10-memory-tiering/START_HERE/).
+
+Runnable starter: edit IncidentAssistant.java. Supporting infrastructure is supplied.
+
+Start with `./mvnw quarkus:dev`, an `OPENAI_API_KEY`, and Docker or Podman running. `./mvnw test` uses scripted model responses rather than paid LLM calls. Optional challenges are outside the core timebox.

@@ -11,5 +11,7 @@ public record ConsensusResult(
         boolean unanimous,
         int agreement,
         int totalVoters,
-        List<Vote> votes) {
+        List<Vote> votes,
+        boolean requiresReview,
+        String reason) {
 }

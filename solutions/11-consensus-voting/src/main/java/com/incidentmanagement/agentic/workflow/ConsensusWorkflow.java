@@ -1,16 +1,13 @@
 package com.incidentmanagement.agentic.workflow;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import com.incidentmanagement.agentic.agents.CostVoter;
 import com.incidentmanagement.agentic.agents.CustomerImpactVoter;
 import com.incidentmanagement.agentic.agents.ReliabilityVoter;
 import com.incidentmanagement.model.ConsensusResult;
 import com.incidentmanagement.model.IncidentInfo;
-import com.incidentmanagement.model.RecommendedAction;
 import com.incidentmanagement.model.Vote;
 
 import dev.langchain4j.agentic.declarative.Output;
@@ -40,8 +37,7 @@ public interface ConsensusWorkflow {
     ConsensusResult decide(IncidentInfo incidentInfo, String report);
 
     /**
-     * Tally the three ballots. Majority action wins; ties are broken by the higher summed
-     * confidence of the tied actions.
+     * Tally the three ballots. A strict majority wins; otherwise request operator review.
      */
     @Output
     static ConsensusResult tally(AgenticScope scope) {
@@ -53,26 +49,6 @@ public interface ConsensusWorkflow {
             }
         }
 
-        // Count votes and accumulate confidence per action.
-        Map<RecommendedAction, Integer> counts = new EnumMap<>(RecommendedAction.class);
-        Map<RecommendedAction, Integer> confidence = new EnumMap<>(RecommendedAction.class);
-        for (Vote v : votes) {
-            counts.merge(v.action(), 1, Integer::sum);
-            confidence.merge(v.action(), v.confidence(), Integer::sum);
-        }
-
-        RecommendedAction winner = null;
-        for (RecommendedAction action : counts.keySet()) {
-            if (winner == null
-                    || counts.get(action) > counts.get(winner)
-                    || (counts.get(action).equals(counts.get(winner))
-                        && confidence.get(action) > confidence.get(winner))) {
-                winner = action;
-            }
-        }
-
-        int agreement = winner == null ? 0 : counts.get(winner);
-        boolean unanimous = !votes.isEmpty() && agreement == votes.size();
-        return new ConsensusResult(winner, unanimous, agreement, votes.size(), votes);
+        return ConsensusPolicy.tally(votes);
     }
 }

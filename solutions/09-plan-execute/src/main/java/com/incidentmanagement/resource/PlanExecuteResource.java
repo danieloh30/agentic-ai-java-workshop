@@ -58,8 +58,11 @@ public class PlanExecuteResource {
             response.put("plan", p.steps());
             response.put("planRationale", p.rationale());
         }
+        response.put("outcome", state.get("outcome"));
+        response.put("evidence", state.get("evidence"));
+        response.put("history", state.get("history"));
         response.put("iterations", state.getOrDefault("iteration", 0));
-        response.put("resolved", state.getOrDefault("resolved", false));
+        response.put("recommendationReady", state.getOrDefault("recommendationReady", false));
         response.put("diagnosis", state.getOrDefault("diagnosis", ""));
         response.put("mitigation", state.getOrDefault("mitigation", ""));
         response.put("verification", state.getOrDefault("verification", ""));

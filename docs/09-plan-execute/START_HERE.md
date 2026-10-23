@@ -1,335 +1,109 @@
-# Exercise 9 — Plan & Execute
+# Exercise 9 — Plan & Execute with MCP Evidence
 
-<span class="badge badge--code-along">Code-Along</span> <span class="badge" style="background:#1E5AA8;color:white;">Part 2 · Advanced</span>
+<span class="badge badge--code-along">Code-Along</span> <span class="badge">Part 2 · 20 minutes</span>
 
-**Timebox:** 20 minutes  
 **Persona:** Riley — SRE lead<br>
-**You work in:** `solutions/09-plan-execute/lab/`  
-**Files to edit:**
-
-- `src/.../agentic/agents/PlannerAgent.java`
-- `src/.../agentic/workflow/PlanExecuteFlow.java`
-
-!!! tip "Full solution"
-    If stuck, the completed files are in [`solutions/09-plan-execute/`](https://github.com/danieloh30/agentic-ai-java-workshop/tree/main/solutions/09-plan-execute){:target="_blank"} — copy them over your TODO files and restart.
-
----
+**You work in:** `solutions/09-plan-execute/lab/`<br>
+**Files to edit:** `agentic/agents/PlannerAgent.java` and `agentic/workflow/PlanExecuteFlow.java`, under `src/main/java/com/incidentmanagement/`.
 
 ## Welcome to Part 2 — From Patterns to Production
 
-In Part 1 you built the fundamental patterns: a single agent, policy-as-prompt, parallel agents, a supervisor, governance, a human gate, remote agents, and a quality loop. Part 2 makes those systems **production-grade**: they plan their own work, remember across runs, cross-check each other, and react to events. This is Exercise 1 of the advanced track.
+This is a separate event session: **75 minutes of labs + 10 minutes of introduction/transitions + 5 minutes of troubleshooting = 90 minutes maximum**. Exercises 9–12 take **20 + 15 + 20 + 20 minutes**. Optional challenges are outside that schedule. Pre-pull dependencies and container images before the event. Each starter builds with runnable defaults; you improve behavior rather than fix an initial deployment error.
 
-## Enterprise context
+## Enterprise context and goal
 
-**Riley, Apex Systems' SRE lead, coordinates the technical response when an incident reaches the on-call team.** A P1 authentication outage may need diagnosis, mitigation, verification, and stakeholder communication. A P4 delay affecting static assets in one region may need fewer steps. Riley needs to see what work is planned, which specialists are involved, and whether the proposed response addresses the reported failure. Running the same steps for every incident wastes attention; stopping after a suggested mitigation leaves verification unfinished.
+Riley needs an incident-specific response plan grounded in deployment evidence. An LLM should not invent a recent deployment, execute a malformed plan, or turn a proposed mitigation into a claim of verified recovery.
 
-Riley needs an explicit plan that names the specialist steps before they run, plus a review that can identify unfinished work and request another round. This lab exposes the plan, specialist results, and reviewer verdict, then uses feedback to re-plan within a three-iteration limit. Comparing the P1 and P4 cases lets Riley check whether the chosen work fits the incident and whether the final summary explains the outcome. The dashboard saves that summary and a review-based status; the specialists simulate response reasoning rather than changing a real Kubernetes deployment.
-
-## The goal
-
-Build the Plan → Execute → Review loop, process P1 and P4 incidents in the web UI, and inspect their selected steps and saved summaries. Explain how reviewer feedback changes the next plan and how the iteration limit prevents an unbounded run.
-
-## Why Plan & Execute?
-
-Look at what you built earlier:
-
-- **Exercise 4 (supervisor)** routes between agents, but it decides **one step at a time** as it goes.
-- **Exercise 8 (quality loop)** repeats the *same two* agents until a score passes.
-
-Neither one **lays out the whole job up front**. A P4 "slow assets in EU" and a P1 "auth completely down" are not the same amount of work — but a hardcoded pipeline treats them identically.
-
-**Plan & Execute** fixes this. A **planner** looks at the goal and its available specialists, decides **which to call and in what order** *before* execution, runs them through a shared scope, and **re-plans** if a reviewer says the goal isn't met yet.
-
-### Three moving parts
-
-You'll assemble the pattern from pieces you've already met:
-
-| Part | Who does it | Built with |
-|------|-------------|------------|
-| **Plan** | `PlannerAgent` — an LLM that returns a structured `ExecutionPlan` (an ordered list of steps) | `@RegisterAiService` with a record return type (structured output, Exercise 8) |
-| **Execute** | Four specialist `@Agent`s: Diagnosis, Mitigation, Verification, Communication | plain `@Agent`s (Exercise 4) |
-| **Review → re-plan** | `ResolutionReviewAgent` decides *resolved?*; if not, its feedback drives a new plan | an `AgenticServices` loop (Exercise 8) |
+Fetch required evidence through MCP, then run **Plan → Execute → Review**, bounded to three iterations. Inspect evidence, rejected plans, reviewer feedback, and the final outcome. Specialists produce recommendations; they do not modify a deployment. The dashboard therefore keeps the incident **In Progress**, even when the reviewer accepts the recommendation.
 
 ```mermaid
-%%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
-flowchart TD
-    START(["Incident from DB"])
-    PLAN(["PlannerAgent<br/>returns ExecutionPlan<br/>(which steps, what order)"])
-    EXEC(["Execute planned steps<br/>Diagnosis · Mitigation<br/>Verification · Communication"])
-    REVIEW{"ResolutionReviewAgent<br/>resolved?"}
-    DONE(["Resolved ✔"])
-
-    START --> PLAN
-    PLAN --> EXEC
-    EXEC --> REVIEW
-    REVIEW -->|no — feedback| PLAN
-    REVIEW -->|yes| DONE
-
-    style START fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
-    style PLAN fill:#FFE4CC,stroke:#B87333,color:#1F1F1F,stroke-width:2px
-    style EXEC fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
-    style REVIEW fill:#FFF8DC,stroke:#C4A000,color:#1F1F1F,stroke-width:2px
-    style DONE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
+flowchart LR
+    MCP[Required MCP evidence] --> VALID{Evidence valid?}
+    VALID -->|No| STOP[EVIDENCE_UNAVAILABLE]
+    VALID -->|Yes| PLAN[Plan]
+    PLAN --> CHECK[Java prerequisite check]
+    CHECK --> EXEC[Specialist recommendations]
+    EXEC --> REVIEW[Review]
+    REVIEW -->|Feedback, at most 3 iterations| PLAN
+    REVIEW -->|Ready| HUMAN[Operator verification still required]
 ```
 
-!!! note "Why not the `@PlannerAgent` annotation?"
-    `quarkus-langchain4j-agentic` *does* ship a `@PlannerAgent` annotation — but unlike `@SupervisorAgent`, it is **not turnkey**. It requires you to supply your own `Planner` implementation through a `@PlannerSupplier` method; there is no built-in LLM DAG planner behind it (the built-in planners are bound to `@SequenceAgent`, `@ParallelAgent`, `@LoopAgent`, and friends). So the clearest way to *learn* Plan & Execute is to build it explicitly on the same `AgenticServices` loop you used in Exercise 8 — and as a bonus, the whole plan is visible from a single `curl`, no Dev UI required.
-
----
-
-## Step 0 — Start the lab (2 min)
+## Step 0 — Start green (2 min)
 
 ```bash
 cd solutions/09-plan-execute/lab
-export OPENAI_API_KEY=sk-your-key-here
+export OPENAI_API_KEY=your-key
 ./mvnw quarkus:dev
 ```
 
-Wait for PostgreSQL Dev Services to start. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — the incident dashboard from Part 1, with the same 8 seeded incidents.
+Open [the dashboard](http://localhost:8080). The supplied fixture MCP server runs in this same application at `/mcp`; no second process is needed. The client still uses real MCP over Streamable HTTP. `EVIDENCE_MCP_URL` can point to a separately deployed compatible server.
 
-!!! warning "Expect a red screen first — that's the point"
-    The lab ships with two TODO files. Until `PlannerAgent` has its prompts, Quarkus can't build the AI service and dev mode shows a build error (*"each parameter must be annotated…"*). You'll clear it in Step 1; the app boots green there, and then works end-to-end after Step 2. The four specialists and `ResolutionReviewAgent` are already written — read them as your template.
+The starter intentionally returns `EVIDENCE_UNAVAILABLE` until you connect the lookup. It boots successfully and makes no model call when required evidence is absent.
 
----
+## Step 1 — Teach the planner its boundaries (6 min)
 
-## Step 1 — Give the planner its brain (7 min)
-
-Open `PlannerAgent.java`. It's an ordinary `@RegisterAiService` — the difference from a chatbot is its **return type**: a structured `ExecutionPlan` record, not a `String`. That's how the "Plan" phase hands a machine-readable plan to the executor.
-
-Read the provided models first (`model/ExecutionPlan.java`, `model/ResolutionStep.java`) so you know what the planner must produce:
+Open `PlannerAgent.java`. It is a declarative interface: `@Agent(outputKey = "plan")` returns an `ExecutionPlan` record. Keep its existing `@UserMessage`, including `{evidence}` and `{feedback}`, and replace the short `@SystemMessage` with:
 
 ```java
-public enum ResolutionStep { DIAGNOSE, MITIGATE, VERIFY, COMMUNICATE }
+@SystemMessage("""
+        You plan IT incident response; you do not execute production changes.
+        Available specialist steps:
+        DIAGNOSE: identify the likely cause using supplied facts and deployment evidence.
+        MITIGATE: recommend a mitigation; requires a diagnosis.
+        VERIFY: assess the recommendation and name checks an operator must perform;
+                requires mitigation. Do not claim these checks have actually run.
+        COMMUNICATE: write a stakeholder update; include this for P1/P2 incidents.
 
-public record ExecutionPlan(List<ResolutionStep> steps, String rationale) {}
+        Order DIAGNOSE before MITIGATE before VERIFY.
+        On replanning, use feedback and prior results; schedule only unfinished work.
+        Never invent deployments, metrics, tool results, or completed actions.
+        Return the ordered steps and a one-sentence rationale.
+        """)
 ```
 
-Now replace the `// TODO` on `plan(...)` with the two annotations:
+The supplied Java `PlanValidator` checks prerequisites **before any specialist executes**. A rejected plan returns feedback to the planner; it cannot bypass the check by producing valid JSON. Prior accepted work can satisfy prerequisites on a replan.
+
+## Step 2 — Connect required MCP evidence (5 min)
+
+In `PlanExecuteFlow.resolve(...)`, replace the unavailable placeholder with:
 
 ```java
-    @SystemMessage("""
-            You are the planning agent for an IT incident-management system.
-            You do NOT resolve the incident yourself. You decide which specialist steps to
-            run, and in what order, then hand that plan off to an executor.
-
-            The available steps are:
-              - DIAGNOSE:    investigate and identify the most likely root cause
-              - MITIGATE:    take a concrete action to reduce or remove impact (needs a diagnosis first)
-              - VERIFY:      confirm whether the incident now appears resolved (needs mitigation first)
-              - COMMUNICATE: write a stakeholder status update
-
-            Rules:
-              - Order steps so each has what it needs: DIAGNOSE before MITIGATE before VERIFY.
-              - Include COMMUNICATE for high-priority incidents (P1/P2); it is optional for low ones.
-              - Do not repeat a step that the feedback shows is already done and adequate.
-              - If feedback is provided, plan ONLY the additional steps still needed to resolve it.
-              - Keep the rationale to a single sentence.
-            """)
-    @UserMessage("""
-            Incident: {system}/{service} (priority {priority}, #{incidentNumber})
-            Description: {description}
-            Operator report: {report}
-
-            Work done so far / reviewer feedback (empty on the first plan):
-            {feedback}
-            """)
-    ExecutionPlan plan(String system, String service, String priority, String description,
-                       Integer incidentNumber, String report, String feedback);
+var evidence = evidenceClient.fetch(incident.system);
 ```
 
-Add the imports the annotations need:
+Read the supplied `DeploymentEvidenceClient`: it calls `getRecentDeployments` through an injected named `McpClient`, parses the tool result, and validates its service and required fields. Transport errors, tool errors, and invalid evidence all stop the run before planning.
 
-```java
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-```
+This lookup is mandatory, so workflow code calls it explicitly. There is no extra LLM call to decide whether evidence should be fetched. `@McpToolBox` instead offers tools for a model to select. Neither approach is remote agent delegation: that was A2A in Exercise 7.
 
-Save. The build error clears and dev mode boots **green**.
+The fixture returns `workshop-release-42` and a memory-limit change for `auth-service`. These are **fixed teaching data**, not live infrastructure observations or proof of causation. The tool is an MCP server tool, using `io.quarkiverse.mcp.server.Tool`; the incident agents remain declarative `@Agent` interfaces.
 
-!!! tip "The `{feedback}` placeholder is what makes re-planning possible"
-    On the first pass `feedback` is empty and the planner builds a plan from scratch. On a re-plan it carries the reviewer's verdict plus what's been done — so the planner appends only the steps still needed instead of starting over. One prompt, two behaviours.
+## Step 3 — Inspect success and missing evidence (7 min)
 
----
-
-## Step 2 — Wire the Plan → Execute → Review loop (8 min)
-
-Open `PlanExecuteFlow.java`. The six agents are already injected for you; your job is the `resolve(...)` method. It's the **same `AgenticServices.loopBuilder()`** from Exercise 8, but with three actions sharing one `AgenticScope`. Replace the `throw new UnsupportedOperationException(...)` with:
-
-```java
-        var planAction = AgenticServices.agentAction(scope -> {
-            String feedback = scope.readState("feedback", "");
-            int iteration = scope.readState("iteration", 0) + 1;
-            scope.writeState("iteration", iteration);
-
-            ExecutionPlan plan = plannerAgent.plan(
-                    incident.system, incident.service, incident.priority,
-                    incident.description != null ? incident.description : "",
-                    incidentNumber, report != null ? report : "", feedback);
-            scope.writeState("plan", plan);
-            Log.infof("Plan (iteration %d): %s — %s", iteration, plan.steps(), plan.rationale());
-        });
-
-        var executeAction = AgenticServices.agentAction(scope -> {
-            ExecutionPlan plan = scope.readState("plan", null);
-            if (plan == null || plan.steps() == null) {
-                return;
-            }
-            for (ResolutionStep step : new LinkedHashSet<>(plan.steps())) {
-                Log.infof("Execute: %s", step);
-                switch (step) {
-                    case DIAGNOSE -> scope.writeState("diagnosis",
-                            diagnosisAgent.diagnose(incident, incidentNumber, report != null ? report : ""));
-                    case MITIGATE -> scope.writeState("mitigation",
-                            mitigationAgent.mitigate(incident, incidentNumber, scope.readState("diagnosis", "")));
-                    case VERIFY -> scope.writeState("verification",
-                            verificationAgent.verify(incident, incidentNumber,
-                                    scope.readState("diagnosis", ""), scope.readState("mitigation", "")));
-                    case COMMUNICATE -> scope.writeState("communication",
-                            communicationAgent.communicate(incident, incidentNumber,
-                                    scope.readState("diagnosis", ""), scope.readState("mitigation", ""),
-                                    scope.readState("verification", "")));
-                }
-            }
-        });
-
-        var reviewAction = AgenticServices.agentAction(scope -> {
-            ResolutionReview review = reviewAgent.review(
-                    incident.system, incident.service, incident.priority, incidentNumber,
-                    scope.readState("diagnosis", ""), scope.readState("mitigation", ""),
-                    scope.readState("verification", ""), scope.readState("communication", ""));
-            scope.writeState("resolved", review.resolved());
-            scope.writeState("feedback", "Reviewer: " + review.feedback());
-            Log.infof("Review: resolved=%b — %s", review.resolved(), review.feedback());
-        });
-
-        UntypedAgent workflow = AgenticServices.loopBuilder()
-                .name("incident-plan-execute-loop")
-                .maxIterations(3)
-                .exitCondition((scope, iteration) -> scope.readState("resolved", false))
-                .subAgents(planAction, executeAction, reviewAction)
-                .build();
-
-        return workflow.invokeWithAgenticScope(Map.of()).agenticScope().state();
-```
-
-Add the imports:
-
-```java
-import java.util.LinkedHashSet;
-import dev.langchain4j.agentic.AgenticServices;
-import dev.langchain4j.agentic.UntypedAgent;
-import com.incidentmanagement.model.ExecutionPlan;
-import com.incidentmanagement.model.ResolutionReview;
-import com.incidentmanagement.model.ResolutionStep;
-import io.quarkus.logging.Log;
-```
-
-Save. Dev mode hot-reloads.
-
-!!! note "Execute what the *current* plan says"
-    Notice `executeAction` runs whatever is in the latest plan — it doesn't skip a step just because an earlier iteration ran it. That's deliberate: when the reviewer sends VERIFY back for another round, you *want* it to actually run again. Trusting the planner to schedule only what's needed (via the `{feedback}` rule) is what keeps the loop from redoing finished work.
-
----
-
-## Step 3 — Test it in the web UI (3 min)
-
-Hot reload should have picked up your changes. Open [http://localhost:8080](http://localhost:8080){:target="_blank"} and start with the P1 incident:
-
-1. Click **incident #2** — the `auth-service / user-login` failure.
-2. Enter this report in the **Process Incident** panel:
-
-    ```text
-    Total login failure since 14:00; auth pods OOMKilled
-    ```
-
-3. Click **Process Incident** and watch the terminal logs for the plan, specialist steps, and reviewer verdict.
-
-For this P1, expect a plan containing **DIAGNOSE → MITIGATE → VERIFY → COMMUNICATE**. When processing finishes, the dashboard refreshes. If the reviewer reports `resolved=true`, incident #2 changes to **Resolved**. Reopen the incident to read the saved plan and specialist summaries in **Description**. If the loop reaches its limit with `resolved=false`, the status remains **In Progress**; inspect the reviewer's feedback in the logs.
-
-Now compare a low-severity incident:
-
-1. Click **incident #4** — the P4 `cdn-edge / static-assets` issue.
-2. Enter this report:
-
-    ```text
-    EU users see ~2s asset load; US unaffected
-    ```
-
-3. Click **Process Incident** and compare its plan with the P1's. **COMMUNICATE** is optional for P4 incidents.
-
-Watch the **terminal logs** for re-planning. A run that needs a second round might look like this:
-
-```text
-Plan (iteration 1): [DIAGNOSE] — P4 incident with no prior steps; start by diagnosing.
-Execute: DIAGNOSE
-Review: resolved=false — Mitigation and verification steps are needed.
-Plan (iteration 2): [MITIGATE, VERIFY] — diagnosis points to network latency; mitigate then verify.
-Execute: MITIGATE
-Execute: VERIFY
-Review: resolved=true — diagnosis, mitigation, and a RESOLVED verification are all present.
-```
-
-The exact plan and iteration count can vary. The reviewer may accept the first round; when it doesn't, its feedback drives another plan, up to the three-iteration limit.
-
-??? info "Advanced — Run again and inspect JSON"
-
-    The web UI tests above are sufficient to complete this exercise. **Keep Quarkus running; no restart is required.** These POST requests start new workflow runs and return their JSON results; they do not retrieve the earlier UI runs. Because the UI saved summaries into the incidents' descriptions, the new plans may differ from the examples.
-
-    For a JSON view of the plan, iteration count, and specialist outputs, use the diagnostic endpoint:
+1. Open incident **#2**, enter `Auth pods are OOMKilled every five minutes`, and click **Process Incident**.
+2. Reopen the incident. Its saved Description contains deployment evidence, the selected plan, iteration history, and an outcome. It stays **In Progress** because no production change or recovery check was executed.
+3. Inspect the iteration history: an invalid plan is rejected before execution; reviewer feedback can drive another plan. After three iterations, an unaccepted recommendation becomes `NEEDS_OPERATOR_REVIEW`. An accepted recommendation becomes `RECOMMENDATION_READY`.
+4. Stop dev mode and start the supplied unavailable-evidence scenario:
 
     ```bash
-    curl -s -X POST "http://localhost:8080/incident-plan/2" \
-      -H "Content-Type: text/plain" \
-      --data "Total login failure since 14:00; auth pods OOMKilled" | jq
+    ./mvnw quarkus:dev -Dquarkus.profile=dev,unavailable
     ```
 
-    An example response:
+5. Process #2 again. Expect `EVIDENCE_UNAVAILABLE`, zero iterations, and no fabricated deployment-based diagnosis. This profile changes the MCP fixture response; the request still crosses the MCP boundary.
 
-    ```json
-    {
-      "incidentId": 2,
-      "plan": ["DIAGNOSE", "MITIGATE", "VERIFY", "COMMUNICATE"],
-      "planRationale": "High-priority incident with no prior steps — diagnose, mitigate, verify, and communicate.",
-      "iterations": 1,
-      "resolved": true,
-      "diagnosis": "...", "mitigation": "...", "verification": "RESOLVED ...", "communication": "..."
-    }
-    ```
+!!! tip "Inspect structured output without another UI run"
+    The dashboard persists the summary. `POST /incident-plan/2` runs a **new** diagnostic workflow and returns `evidence`, `history`, `outcome`, and `iterations` without saving it. It does not retrieve the previous run.
 
-    Now a low-severity incident:
+## Done when
 
-    ```bash
-    curl -s -X POST "http://localhost:8080/incident-plan/4" \
-      -H "Content-Type: text/plain" \
-      --data "EU users see ~2s asset load; US unaffected" | jq
-    ```
+- [ ] The planner receives evidence returned by MCP and an inspectable structured plan.
+- [ ] You can explain why required evidence is fetched by code rather than left to model choice.
+- [ ] Missing evidence stops the run before any LLM call.
+- [ ] You distinguish an accepted recommendation from a resolved production incident.
 
-    !!! note "JSON inspection and saving the result"
-        `/incident-plan/{id}` runs the workflow and returns its state without saving the summary or changing the incident's status. The web UI uses `/incident-management/process/{id}`, which runs the workflow and saves both. If you run these curl commands after the UI tests, the planner sees the summaries already saved in the incidents' descriptions, so the plans may differ from a fresh run.
+## Supplied verification and optional challenges
 
----
+`./mvnw test` uses a local scripted model and the bundled MCP server, with PostgreSQL Dev Services; no paid model calls are made. The solution tests reject an invalid plan, verify evidence reaches the planner, and inspect history. The starter tests check the supplied MCP and validation infrastructure.
 
-<div class="done-when" markdown>
+Outside the core timebox: compare a P4 plan, add another evidence tool, or deliberately supply `VERIFY → MITIGATE` and inspect validator feedback. Dynamic model selection and durable workflow recovery are later topics.
 
-## :material-check-circle: Done when
-
-- [ ] Processed incidents #2 and #4 in the web UI; terminal logs show the plan, specialist steps, and reviewer verdict
-- [ ] Saved summaries remain readable after refreshing the dashboard; each incident's status matches its reviewer verdict
-- [ ] You can explain from memory: how reviewer feedback drives re-planning and how the three-iteration limit bounds the loop
-- [ ] You can explain from memory: how the planner selects work and how specialists share results through `AgenticScope`
-
-</div>
-
-## What you learned
-
-- **Plan & Execute** separates *deciding the work* (`PlannerAgent` → `ExecutionPlan`) from *doing the work* (the specialist `@Agent`s) — so the plan adapts per incident instead of running a fixed shape.
-- **Structured output** (a record return type) turns an LLM into a planner your code can act on programmatically.
-- **Dynamic re-planning** falls out of a loop: a reviewer writes `feedback`, the planner reads it and schedules only what's still needed, and an `exitCondition` ends the loop as soon as the incident is resolved.
-- Specialists share data through `AgenticScope` (`outputKey` → `{placeholder}`), exactly as in Exercise 4 — and the same `loopBuilder` from Exercise 8 drives the whole thing.
-
-??? tip "Stretch goals"
-    - Raise `maxIterations` and feed a vague report — how many rounds until the reviewer is satisfied, or does it give up?
-    - Add a fifth `ResolutionStep` (e.g. `POSTMORTEM`) plus a specialist, and mention it in the planner's system prompt — watch it fold into plans with no loop change.
-    - Tighten the planner's rules so a P4 never runs COMMUNICATE, and confirm it in the log.
-
-Next: **Exercise 10 — Memory Tiering**, where agents stop being amnesiac. *(coming next in Part 2)*
+**Full solution:** copy the two edited files from the parent `solutions/09-plan-execute/` project if needed. Stop this application before starting [Exercise 10](../10-memory-tiering/START_HERE.md).

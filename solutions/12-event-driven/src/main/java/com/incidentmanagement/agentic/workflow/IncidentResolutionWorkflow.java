@@ -35,6 +35,7 @@ public interface IncidentResolutionWorkflow {
         IncidentEvent event = scope.readState("incidentEvent", (IncidentEvent) null);
         String triage = scope.readState("triage", "");
         String resolution = scope.readState("resolution", "");
-        return new ResolutionEvent(event != null ? event.incidentId() : null, triage, resolution);
+        if (event == null || resolution.isBlank()) throw new IllegalStateException("Missing pipeline output");
+        return new ResolutionEvent(event.requestId(), event.incidentId(), "AWAITING_REVIEW", triage, resolution);
     }
 }
