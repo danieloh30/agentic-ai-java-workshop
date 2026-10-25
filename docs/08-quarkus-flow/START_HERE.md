@@ -37,6 +37,8 @@ Both agent methods are plain `@Agent` interfaces. The drafter writes `report`; t
 
 The programmatic builder can express the same loop. It is retained as an **optional comparison** at the end of this guide.
 
+<div class="quality-loop-diagram" markdown="1">
+
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
@@ -60,6 +62,8 @@ flowchart TD
     style DONE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
     style LAST fill:#F8D7DA,stroke:#A94442,color:#1F1F1F,stroke-width:2px
 ```
+
+</div>
 
 ## Step 0 — Start the project (2 min)
 
@@ -217,7 +221,7 @@ The framework enforces the maximum of three iterations even if this condition ne
 
 The screenshot below shows a first-pass result: **Score: 9** and **Iterations: 1**. The critic scored the first draft above the threshold, so no revision was needed. Review the report's factual accuracy yourself; the score is the model critic's assessment.
 
-![Generated post-incident report for incident 1, showing score 9 and one iteration](../images/ex8-quality-loop-report.png){ width="320" loading="lazy" }
+![Generated post-incident report for incident 1, showing score 9 and one iteration](../images/ex8-quality-loop-report.png){ .quality-loop-report width="320" loading="lazy" }
 
 In the **Quarkus dev-mode terminal**, look for the application log lines below. This example is from a separate local scripted-model run that needed a revision; timestamps and worker names vary:
 

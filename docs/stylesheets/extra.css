@@ -231,3 +231,14 @@
   font-size: 0.65rem;
   text-align: center;
 }
+
+/* Exercise 8 keeps the tall loop diagram compact; its dialog retains full sizing. */
+.quality-loop-diagram .workshop-diagram .workshop-mermaid svg {
+  width: auto;
+  max-height: 800px;
+}
+
+.md-typeset img.quality-loop-report {
+  display: block;
+  margin: 1rem auto;
+}
