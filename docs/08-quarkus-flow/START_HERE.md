@@ -217,7 +217,7 @@ The framework enforces the maximum of three iterations even if this condition ne
 
 The screenshot below shows a first-pass result: **Score: 9** and **Iterations: 1**. The critic scored the first draft above the threshold, so no revision was needed. Review the report's factual accuracy yourself; the score is the model critic's assessment.
 
-![Generated post-incident report for incident 1, showing score 9 and one iteration](../images/ex8-quality-loop-report.png){ width="480" loading="lazy" }
+![Generated post-incident report for incident 1, showing score 9 and one iteration](../images/ex8-quality-loop-report.png){ width="320" loading="lazy" }
 
 In the **Quarkus dev-mode terminal**, look for the application log lines below. This example is from a separate local scripted-model run that needed a revision; timestamps and worker names vary:
 
