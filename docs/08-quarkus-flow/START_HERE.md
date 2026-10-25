@@ -215,6 +215,23 @@ The framework enforces the maximum of three iterations even if this condition ne
 3. Inspect the report, score, and iteration count. A first-pass score of 7 or higher ends the loop after one iteration.
 4. A lower score causes a revision using the previous critique, up to three iterations. A run that reaches the limit may still have a score below 7; inspect and revise that report rather than treating the budget as proof of quality.
 
+The screenshot below shows a first-pass result: **Score: 9** and **Iterations: 1**. The critic scored the first draft above the threshold, so no revision was needed. Review the report's factual accuracy yourself; the score is the model critic's assessment.
+
+![Generated post-incident report for incident 1, showing score 9 and one iteration](../images/ex8-quality-loop-report.png){ width="480" loading="lazy" }
+
+In the **Quarkus dev-mode terminal**, look for the application log lines below. This example is from a separate local scripted-model run that needed a revision; timestamps and worker names vary:
+
+```text
+17:13:55 INFO  [co.in.re.ReportResource] (executor-thread-1) Starting report quality loop for incident #1 (payment-gateway/checkout-api P2)
+17:13:55 INFO  [co.in.ag.wo.IncidentReportWorkflow] (ForkJoinPool.commonPool-worker-12) Report Critique -- iteration 1: score=5
+17:13:56 INFO  [co.in.ag.wo.IncidentReportWorkflow] (ForkJoinPool.commonPool-worker-12) Report Critique -- iteration 2: score=8
+17:13:56 INFO  [co.in.re.ReportResource] (executor-thread-1) Report quality loop completed for incident #1 — final score: 8
+```
+
+Read these lines as one request: the first critique scores **5**, so the next draft receives the typed critique and runs again. The second critique scores **8**, satisfying `score >= 7`; the loop stops after **two complete draft-and-critique pairs**. The dashboard therefore shows score 8 and two iterations for this run. For the screenshot's first-pass result, expect one critique line with score 9, followed by the completion line.
+
+If all three critiques score below 7, the loop stops at its iteration limit and returns the final low score. A completion log means processing finished; it does not mean the quality target was met. These summary logs omit the report body and reviewer feedback.
+
 The exact score and number of revisions can vary with the model response. The supplied scripted tests cover repeatable first-pass success, feedback propagation, and exhausted iteration budgets without paid model calls.
 
 ## Done when
