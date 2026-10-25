@@ -28,12 +28,9 @@ Build a draft–critique loop that passes reviewer feedback into each revision a
 
 ## Why programmatic orchestration?
 
-In Exercises 1–4 you used **declarative annotations** — `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` — to wire agents. These are powerful but have a hard limitation:
+In Exercises 1–4 you used **declarative annotations** — `@SequenceAgent`, `@ParallelMapperAgent`, and `@SupervisorAgent` — to compose agents. This bonus introduces another way to express orchestration: LangChain4j's programmatic builder API, backed here by [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/langchain4j.html){:target="_blank"}.
 
-!!! failure "Declarative annotations can't loop"
-    A `@SequenceAgent` runs its sub-agents **once** and stops. A `@SupervisorAgent` routes via LLM reasoning, but there's no deterministic **"retry until quality passes."**
-
-This exercise introduces **programmatic orchestration** using LangChain4j's builder API backed by [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/index.html){:target="_blank"} — a CNCF Serverless Workflow engine. The builder pattern lets you express **loops, conditions, and exit criteria** in plain Java:
+**Both declarative and programmatic APIs can express bounded quality loops.** We use the builder in this exercise to make per-iteration state updates, feedback adaptation, and Java orchestration visible alongside the agent calls:
 
 ```java
 AgenticServices.loopBuilder()
@@ -71,18 +68,20 @@ flowchart TD
     style DONE fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
 ```
 
-**This loop needs explicit control, so we use the programmatic `loopBuilder()` API.** A declarative `@LoopAgent` *does* exist in core `quarkus-langchain4j` (with an `@ExitCondition` method and `maxIterations`), so a score-based exit on its own is expressible with annotations. The reason this exercise drops to the builder is everything *around* the loop.
+**The builder is a teaching and design choice.** The same draft-and-critique process could be implemented with `@LoopAgent` after refactoring the agent wiring and state adaptation.
 
-!!! note "Why not just `@LoopAgent`?"
-    **The decisive constraint:** `@LoopAgent` only accepts declarative AI-service **classes** as its steps — `subAgents = { StyleScorer.class, StyleEditor.class }`. This exercise's loop steps are `AgenticServices.agentAction(scope -> { ... })` **lambdas**, and you cannot hand a lambda to `@LoopAgent`. That alone forces the programmatic builder.
+!!! note "Why use the builder here instead of `@LoopAgent`?"
+    This bonus makes three orchestration tasks explicit in Java:
 
-    Those steps *have* to be lambdas because each iteration does real non-LLM work that `@LoopAgent` gives you no seam for:
+    - **Feedback and iteration state** — initialize feedback for the first draft, count iterations, and pass reviewer feedback into the next draft.
+    - **Result adaptation** — unpack the `ReportCritique` record into the `score` and `feedback` scope entries used by the next step and exit predicate.
+    - **Result inspection** — return the final scope state so the caller can inspect the report, score, feedback, and iteration count.
 
-    - **Runtime-injected domain input** — the `incident` is fetched from the DB per request and its fields are passed explicitly to the drafter. A declarative sub-agent only gets inputs from `AgenticScope` keys / matched parameter names; there's no place to feed in a per-request object resolved at invocation time.
-    - **Imperative glue per iteration** — seed default feedback on the first pass, increment/track an iteration counter, null-guard the description, log structured progress, and unpack the `ReportCritique` record into separate `score`/`feedback` scope keys. `@LoopAgent` only chains AI sub-agents, with no hook to run arbitrary Java between them.
-    - **Explicit exit + full-scope return** — the exit is a `(scope, iteration) -> score >= 7` lambda over arbitrary state, and the method returns the **entire** `scope.state()` map (report + score + iteration) for observability. Declarative `@LoopAgent` returns only its single `outputKey`.
+    The current implementation wraps these operations and agent calls in `AgenticServices.agentAction(...)` lambdas. The annotation's `subAgents` list names types rather than accepting inline lambdas, so switching to `@LoopAgent` would require refactoring rather than replacing one annotation. A declarative alternative would wire the drafter and critic as `@Agent` interfaces with output keys and arrange their inputs and feedback through the shared scope.
 
-    **The strategic payoff:** `loopBuilder()` here comes from `quarkus-flow-langchain4j`, which runs the loop on the CNCF Serverless Workflow engine. That's what lets the same builder later compose loops with non-agent steps — HTTP calls, event triggers, human-in-the-loop pauses — with durable, resumable, observable execution. Annotations top out at "chain these AI agents"; the workflow runtime is the door this opens. (This exercise doesn't yet exercise durability or event steps — it demonstrates the imperative-glue, explicit-state, and full-scope-return capabilities.)
+    **These are not limitations of declarative workflows.** `@LoopAgent` supports an iteration limit and an `@ExitCondition`; workflow arguments can supply per-request incident data. Declarative configuration also includes `@BeforeCall` for initialization, `@AgentListenerSupplier` for invocation callbacks, and `@Output` for assembling a composite result from scope values. The [LangChain4j declarative API](https://docs.langchain4j.dev/tutorials/agents/#declarative-api){:target="_blank"} describes these options.
+
+    **The runtime is a separate choice.** `AgenticServices.loopBuilder()` is part of LangChain4j's API. This project includes `quarkus-flow-langchain4j` to provide Flow-backed execution; the extension also supports declarative workflow annotations such as `@LoopAgent`. Choosing the builder is not a prerequisite for using Quarkus Flow. This exercise demonstrates explicit state and Java adaptation, not durable restart recovery.
 
 ---
 
@@ -101,7 +100,7 @@ cd solutions/08-quarkus-flow/lab
 Wait for `Listening on: http://localhost:8080`.
 
 !!! info "New dependency"
-    Check `pom.xml` — this project adds `quarkus-flow-langchain4j`, which provides the `AgenticServices.loopBuilder()` runtime backed by the CNCF Serverless Workflow engine.
+    Check `pom.xml` — this project adds `quarkus-flow-langchain4j`, which supplies Flow-backed execution for supported LangChain4j agentic workflows. The `AgenticServices.loopBuilder()` API itself belongs to LangChain4j.
 
 ---
 
@@ -311,15 +310,15 @@ Try several incidents to see how the loop adapts — P1 incidents with more comp
 
 | | Declarative annotations | Programmatic builders |
 |--|---|---|
-| **Loops** | `@LoopAgent` + `@ExitCondition` (core `quarkus-langchain4j`; sub-agents must be `@Agent` classes) | `loopBuilder().exitCondition(...)` (via [Quarkus Flow](https://docs.quarkiverse.io/quarkus-flow/dev/langchain4j.html){:target="_blank"}; accepts `agentAction` lambdas + imperative glue) |
-| **Conditionals** | `@ConditionalAgent` (single gate) | `conditionalBuilder()` (multi-branch) |
-| **Data flow** | Automatic via `AgenticScope` keys | Explicit `scope.readState/writeState` |
-| **Orchestration** | `@SequenceAgent`, `@ParallelMapperAgent`, `@SupervisorAgent` | `sequenceBuilder()`, `parallelBuilder()`, `loopBuilder()` |
-| **Best for** | Standard agent pipelines | Complex control flow, retry logic |
-| **Observability** | Full topology in Dev UI | Loop progress visible in terminal logs |
+| **Loops** | `@LoopAgent(maxIterations = ...)` + `@ExitCondition` | `loopBuilder().maxIterations(...).exitCondition(...)` |
+| **Conditionals** | `@ConditionalAgent` + `@ActivationCondition` | `conditionalBuilder()` with explicit branch configuration |
+| **Steps** | Sub-agent types declared in annotations | Supplied sub-agent instances and `agentAction` lambdas |
+| **Data flow** | Named inputs and scope keys; initialization and output hooks | Explicit `scope.readState/writeState` and Java adaptation |
+| **Results** | `@Output` can assemble a record or map from multiple scope values | An output mapper or explicit inspection of the returned scope |
+| **Best for** | Fixed workflows expressed clearly as interfaces | Runtime composition and orchestration with inline Java steps |
 
-!!! tip "Start declarative, go programmatic when you need loops or complex branching"
-    Annotations handle 80% of use cases. Switch to builders when you need deterministic loops, multi-branch conditionals, or mixed orchestration (agents + HTTP calls + events in one workflow).
+!!! tip "Choose the API that makes the workflow clearest"
+    Use annotations when a fixed workflow reads clearly as declarative interfaces. Use builders when runtime composition or inline Java adaptation makes the orchestration easier to follow. Both approaches support bounded loops, and [Quarkus Flow supports both styles](https://docs.quarkiverse.io/quarkus-flow/dev/langchain4j.html){:target="_blank"}. Persistent restart recovery requires its own runtime and storage configuration.
 
 ---
 
@@ -329,7 +328,7 @@ Try several incidents to see how the loop adapts — P1 incidents with more comp
 
 - [ ] Report quality loop completed at least 1 iteration (logs show "Report Draft" and "Report Critique")
 - [ ] Final report has score >= 7
-- [ ] You can explain why `@SequenceAgent` cannot loop
+- [ ] You can explain why this bonus uses the builder and how `@LoopAgent` could express an alternative
 - [ ] You can describe the `AgenticScope` read/write pattern for inter-agent communication
 
 </div>
