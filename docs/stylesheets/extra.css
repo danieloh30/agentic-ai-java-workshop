@@ -232,8 +232,8 @@
   text-align: center;
 }
 
-/* Exercise 8 keeps the tall loop diagram compact; its dialog retains full sizing. */
-.quality-loop-diagram > :is(.workshop-diagram, .lab-diagram) svg {
+/* Keep selected tall diagrams compact; their dialogs retain full sizing. */
+:is(.quality-loop-diagram, .compact-diagram) > :is(.workshop-diagram, .lab-diagram) svg {
   width: auto;
   max-height: 800px;
 }
