@@ -263,6 +263,26 @@ The builder receives agent instances, so the comparison unwraps their Quarkus CD
 
 The builder supplies incident fields through an input map; the declarative method declares those inputs as parameters. Builders are useful when constructing workflows at runtime or adding inline `agentAction(...)` Java steps. For this fixed two-agent process, the annotation keeps the main orchestration concise.
 
+### `@LoopAgent` vs. builder at a glance
+
+| Design question | Declarative `@LoopAgent` | Programmatic builder |
+|-----------------|--------------------------|----------------------|
+| Where is the process defined? | A workflow interface names the sub-agent types and their order. | Java code assembles agent instances and configures the loop. |
+| How are incident inputs supplied? | Named method parameters declare the workflow's input contract. | An input map supplies the same incident fields at invocation time. |
+| How does the next draft receive feedback? | The critic writes typed `critique` state; the drafter declares it as an input. | This comparison uses the same agents and typed `critique` state. |
+| How is initial state set? | `@BeforeCall` initializes the empty critique. | `.beforeCall(...)` reuses the same initialization method. |
+| How does the loop stop? | `maxIterations = 3` and `@ExitCondition(testExitAtLoopEnd = true)`. | `.maxIterations(3)`, `.testExitAtLoopEnd(true)`, and `.exitCondition(...)`. |
+| How is the dashboard response assembled? | `@Output` returns the report, score, feedback, and iteration count. | `.output(...)` reuses that same mapper. |
+| How are agents wired in this Quarkus example? | `subAgents = {...}` names interfaces; the framework resolves them. | `.subAgents(...)` receives instances; this example unwraps CDI client proxies. |
+| When is it a good fit? | A fixed workflow whose structure should be easy to read beside its Java method contract. | Runtime workflow assembly or inline `agentAction(...)` steps for custom Java adaptation. |
+
+!!! note "Choose the API for the design, not for extra loop capabilities"
+    **Both APIs express this same bounded draft-and-critique loop.** Initialization, feedback propagation, end-of-iteration checks, and response mapping are available in both forms. We use `@LoopAgent` as the main exercise because the fixed two-agent structure is concise and consistent with the earlier declarative exercises. The builder makes assembly and Java adaptation explicit when those are the learning goal or application requirement.
+
+    **The earlier builder implementation needed a refactor, not an annotation swap.** It wrapped agent calls and state adaptation in inline actions. The current version declares both agents with `@Agent` and output keys, passes the typed critique through shared scope, and separates initialization and output hooks. That is why the annotation version can now remain small without changing the demo behavior. Shared-state key names and agent inputs must still agree in either API.
+
+    **API style and execution runtime are separate choices.** `AgenticServices.loopBuilder()` belongs to LangChain4j; this project's `quarkus-flow-langchain4j` extension supplies Flow-backed execution for both the builder and declarative workflows. Using the builder is not a requirement for using Quarkus Flow, and choosing either API does not by itself demonstrate durable restart recovery.
+
 In a second terminal in this same folder, run the supplied comparison test:
 
 ```bash
