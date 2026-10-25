@@ -27,7 +27,7 @@ import dev.langchain4j.agentic.UntypedAgent;
 import io.quarkus.logging.Log;
 
 /**
- * Plan &amp; Execute, built by hand on the {@code AgenticServices} loop you met in Exercise 8.
+ * Plan &amp; Execute, built with the programmatic loop compared in the optional section of Exercise 8.
  *
  * <p>Three actions share one {@code AgenticScope} and repeat until the reviewer is satisfied:
  * <ol>

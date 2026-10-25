@@ -1,15 +1,16 @@
 package com.incidentmanagement.agentic.agents;
 
+import com.incidentmanagement.model.ReportCritique;
+
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import io.quarkiverse.langchain4j.RegisterAiService;
-import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
-@RegisterAiService
 public interface ReportDrafterAgent {
 
-    @SystemMessage("""
+    @SystemMessage(
+            """
             You are a post-incident report writer for an IT incident management system.
             Write a clear, structured post-incident report (PIR) covering:
             1. Incident Summary (system, service, priority, what happened)
@@ -26,12 +27,14 @@ public interface ReportDrafterAgent {
             Recommendations may propose specific follow-up work, measurable success criteria,
             and an owner by role (for example, the service owner) without claiming that the work
             is already approved, assigned, or completed.
+            An initial critique with score 0 and empty feedback means no review has run yet.
             If you receive reviewer feedback from a previous draft, incorporate the feedback
             to improve the report's structure and accuracy, but do not treat feedback as a new
             source of incident facts. Keep the report concise (under 500 words).
             Output ONLY the report text.
             """)
-    @UserMessage("""
+    @UserMessage(
+            """
             Write a post-incident report for:
             - System: {system}
             - Service: {service}
@@ -40,9 +43,19 @@ public interface ReportDrafterAgent {
             - Status: {status}
 
             Reviewer feedback from previous draft:
-            {feedback}
+            {critique}
             """)
-    String draftReport(String system, String service,
-                       String priority, String description,
-                       String status, String feedback);
+    @Agent(
+            description =
+                    "Drafts an incident report using authoritative facts and the previous"
+                        + " critique.",
+            outputKey = "report")
+    String draftReport(
+            @MemoryId String reportInvocationId,
+            String system,
+            String service,
+            String priority,
+            String description,
+            String status,
+            ReportCritique critique);
 }

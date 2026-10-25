@@ -181,7 +181,7 @@ Each exercise adds a capability that a specific Apex Systems role needs. The per
 | [**5 — AI governance**](../05-ai-governance/START_HERE.md) | **Jordan** — Java platform engineer | Keep AI-assisted contributions grounded in project conventions and source | `AGENTS.md` + OpenCode CLI |
 | [**6 — Human gate + tracing**](../06-hitl-observability/START_HERE.md) | **Alex** — Compliance officer | Enforce human approval for sensitive P1/P2 escalations and inspect the decision trace | `@HumanInTheLoop` + OpenTelemetry |
 | [**7 — Remote agents (A2A)**](../07-a2a/START_HERE.md) | **Riley** — SRE lead | Share impact assessment through an independently operated service | A2A discovery + `@A2AClientAgent` |
-| [**8 — Quality loop (bonus)**](../08-quarkus-flow/START_HERE.md) | **Jordan** — Java platform engineer | Refine post-incident reports against quality criteria within an execution limit | `AgenticServices.loopBuilder()` + Quarkus Flow |
+| [**8 — Quality loop (bonus)**](../08-quarkus-flow/START_HERE.md) | **Jordan** — Java platform engineer | Refine post-incident reports against quality criteria within an execution limit | `@LoopAgent` + Quarkus Flow; optional builder comparison |
 
 ### Part 2 — From Patterns to Production
 
@@ -219,7 +219,7 @@ Start with [Exercise 15](../15-runtime-skills/START_HERE.md) and preflight depen
 **Exercise 5** uses OpenCode CLI to govern and validate the system you built.  
 **Exercise 6** runs and reads the completed HITL solution, tests approval decisions, and inspects OpenTelemetry traces.<br>
 **Exercise 7** runs a pre-built A2A solution to explore remote agent patterns.  
-**Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a programmatic quality loop with Quarkus Flow.<br>
+**Exercise 8 (bonus)** is a self-paced code-along in a standalone project — builds a declarative quality loop with `@LoopAgent`, with an optional builder comparison.<br>
 **Exercises 9–14** are cumulative code-along labs in the same `part2/lab/` project. Each adds one focused behavior; later exercises reuse prior code and records. The completed route uses the same `part2/solution/` folder throughout. Supporting infrastructure is supplied and optional challenges are outside the core timebox.
 
 ---
@@ -247,7 +247,7 @@ After this lab you will be able to:
 - Author an `AGENTS.md` to make OpenCode CLI cost-efficient on agentic projects
 - Distribute agents across services with **A2A** (`@A2AClientAgent`)
 - Add **human-in-the-loop** gates and read **OpenTelemetry** spans for compliance and FinOps
-- Use **programmatic orchestration** (`AgenticServices.loopBuilder()`) to combine agent calls with explicit state, feedback, and bounded iteration
+- Define a **declarative quality loop** with `@LoopAgent`, pass typed reviewer feedback through scope, and optionally compare the programmatic builder
 - Fetch required evidence through **MCP**, validate specialist plans in Java, and re-plan from reviewer feedback within an iteration limit
 - Give an incident assistant **bounded, database-backed conversation memory** isolated by `@MemoryId`, and verify that evicted messages leave storage
 - Run **parallel voters**, validate their ballots, and distinguish a strict majority from disagreement requiring operator review
@@ -291,7 +291,7 @@ Goal: adaptive multi-agent          → @SupervisorAgent                  (Ex 4)
 Goal: AI governance                 → AGENTS.md + OpenCode CLI          (Ex 5)
 Goal: human approval                → @HumanInTheLoop                   (Ex 6)
 Goal: delegate to remote agent      → A2A + @A2AClientAgent             (Ex 7)
-Goal: programmatic quality loop     → AgenticServices.loopBuilder()     (Ex 8)
+Goal: bounded quality loop          → @LoopAgent + @ExitCondition       (Ex 8)
 Goal: plan, execute, review         → ExecutionPlan + reviewed loop     (Ex 9)
 Goal: required external evidence    → deterministic MCP lookup          (Ex 10)
 Goal: incident conversation         → @MemoryId + ChatMemoryStore       (Ex 11)

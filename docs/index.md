@@ -159,7 +159,7 @@ Designed for a **90-minute session**, with 80 minutes of hands-on work and a 10-
 | [**5. AI governance**](05-ai-governance/START_HERE.md) | 10 min | `AGENTS.md` + OpenCode CLI |
 | [**6. Human gate + tracing**](06-hitl-observability/START_HERE.md) | 10 min | Human-in-the-loop + OpenTelemetry |
 | [**7. Remote agents (A2A)**](07-a2a/START_HERE.md) | 10 min | Distributed impact assessment agent |
-| [**8. Quality loop (bonus)**](08-quarkus-flow/START_HERE.md) | 15 min | Programmatic loop with `AgenticServices.loopBuilder()` |
+| [**8. Quality loop (bonus)**](08-quarkus-flow/START_HERE.md) | 15 min | Declarative `@LoopAgent` + optional builder comparison |
 
 ### Part 2 — From Patterns to Production (Advanced & Enterprise)
 

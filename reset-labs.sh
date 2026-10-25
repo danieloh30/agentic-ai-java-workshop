@@ -28,10 +28,11 @@ EX08_FILES=(
     "$EX08_BASE/agents/ReportDrafterAgent.java"
     "$EX08_BASE/agents/ReportCriticAgent.java"
     "$EX08_BASE/workflow/IncidentReportFlow.java"
+    "$EX08_BASE/workflow/IncidentReportWorkflow.java"
 )
 
 EX09_FILES=(
-    "$EX09_BASE/agents/PlannerAgent.java"
+    "$EX09_BASE/agents/PlanGenerationAgent.java"
     "$EX09_BASE/workflow/PlanExecuteFlow.java"
 )
 

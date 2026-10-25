@@ -104,7 +104,7 @@ solutions/
 │   ├── multi-agent-system            A2A client + supervisor             [port 8080]
 │   └── remote-a2a-agent              A2A impact assessment service       [port 8888]
 └── 08-quarkus-flow/
-    ├── (root)                        Programmatic loop solution           [port 8080]
+    ├── (root)                        Declarative quality-loop solution           [port 8080]
     └── lab/                          Bonus exercise starter (TODO stubs)  [port 8080]
 ```
 

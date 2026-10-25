@@ -1,16 +1,16 @@
 package com.incidentmanagement.agentic.agents;
 
 import com.incidentmanagement.model.ReportCritique;
+
+import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import io.quarkiverse.langchain4j.RegisterAiService;
-import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
-@RegisterAiService
 public interface ReportCriticAgent {
 
-    @SystemMessage("""
+    @SystemMessage(
+            """
             You are a quality reviewer for post-incident reports (PIRs).
             Evaluate the report on these criteria:
             - Completeness: Does it cover summary, timeline, root cause, impact, resolution, and action items?
@@ -37,7 +37,8 @@ public interface ReportCriticAgent {
             - 7-8: Solid report with minor improvements possible
             - 9-10: Exemplary, ready for stakeholder distribution
             """)
-    @UserMessage("""
+    @UserMessage(
+            """
             Evaluate this post-incident report against the authoritative incident fields:
             - System: {system}
             - Service: {service}
@@ -49,7 +50,17 @@ public interface ReportCriticAgent {
             {report}
             --- REPORT END ---
             """)
-    ReportCritique critiqueReport(String system, String service,
-                                  String priority, String description,
-                                  String status, String report);
+    @Agent(
+            description =
+                    "Reviews an incident report for accuracy, completeness, and actionable"
+                        + " recommendations.",
+            outputKey = "critique")
+    ReportCritique critiqueReport(
+            @MemoryId String reportInvocationId,
+            String system,
+            String service,
+            String priority,
+            String description,
+            String status,
+            String report);
 }

@@ -1,6 +1,9 @@
 package com.incidentmanagement.resource;
 
-import java.util.Map;
+import com.incidentmanagement.agentic.workflow.IncidentReportFlow;
+import com.incidentmanagement.model.IncidentInfo;
+
+import io.quarkus.logging.Log;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -10,19 +13,16 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import com.incidentmanagement.agentic.workflow.IncidentReportFlow;
-import com.incidentmanagement.model.IncidentInfo;
-
-import io.quarkus.logging.Log;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+
+import java.util.Map;
 
 @Path("/incident-report")
 @Produces(MediaType.APPLICATION_JSON)
 public class ReportResource {
 
-    @Inject
-    IncidentReportFlow reportFlow;
+    @Inject IncidentReportFlow reportFlow;
 
     @POST
     @Path("/{incidentId}")
@@ -32,19 +32,25 @@ public class ReportResource {
             throw new NotFoundException("Incident not found: " + incidentId);
         }
 
-        Log.infof("Starting report quality loop for incident #%d (%s/%s %s)",
+        Log.infof(
+                "Starting report quality loop for incident #%d (%s/%s %s)",
                 incidentId, incident.system, incident.service, incident.priority);
 
         Map<String, Object> result = reportFlow.generateReport(incident);
-        Log.infof("Report quality loop completed for incident #%d — final score: %s",
+        Log.infof(
+                "Report quality loop completed for incident #%d — final score: %s",
                 incidentId, result.get("score"));
         return result;
     }
 
     @ServerExceptionMapper
     public RestResponse<Map<String, String>> mapGeneral(Exception e) {
+        if (e instanceof NotFoundException) {
+            return RestResponse.status(Response.Status.NOT_FOUND, Map.of("error", e.getMessage()));
+        }
         Log.error("Report generation failed", e);
-        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR,
+        return RestResponse.status(
+                Response.Status.INTERNAL_SERVER_ERROR,
                 Map.of("error", "Report generation failed: " + e.getMessage()));
     }
 }
