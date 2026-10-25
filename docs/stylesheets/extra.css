@@ -233,7 +233,7 @@
 }
 
 /* Exercise 8 keeps the tall loop diagram compact; its dialog retains full sizing. */
-.quality-loop-diagram .workshop-diagram .workshop-mermaid svg {
+.quality-loop-diagram > :is(.workshop-diagram, .lab-diagram) svg {
   width: auto;
   max-height: 800px;
 }
