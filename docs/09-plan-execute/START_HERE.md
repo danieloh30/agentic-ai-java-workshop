@@ -4,7 +4,7 @@
 
 **Persona:** Riley — SRE lead<br>
 **Working project for all six exercises:** `part2/lab/`<br>
-**File to edit:** `src/main/java/com/incidentmanagement/agentic/agents/PlannerAgent.java`.
+**File to edit:** `src/main/java/com/incidentmanagement/agentic/agents/PlanGenerationAgent.java`.
 
 ## One application for Part 2
 
@@ -56,11 +56,18 @@ Open [the dashboard](http://localhost:8080) and select **9–10 · Planning / MC
 
 The supplied models define a record `ExecutionPlan(List<ResolutionStep> steps, String rationale)` and four steps: `DIAGNOSE`, `MITIGATE`, `VERIFY`, `COMMUNICATE`. The supplied executor checks prerequisite ordering before running any specialist. On a replan, earlier accepted results can satisfy prerequisites.
 
-The planner is a declarative `@Agent(outputKey = "plan")`. Its prompt determines the work; Java checks whether the plan can be executed. Structured output alone does not guarantee a valid plan.
+`PlanGenerationAgent` is a declarative `@Agent(outputKey = "plan")`. Its prompt determines the work; Java checks whether the plan can be executed. Structured output alone does not guarantee a valid plan.
+
+!!! note "Why use this executor instead of `@PlannerAgent`?"
+    **The names describe different roles.** Our `PlanGenerationAgent` is an LLM-powered `@Agent` that returns an `ExecutionPlan`. LangChain4j's `@PlannerAgent` is a workflow annotation that connects sub-agents to a custom Java `Planner` through `@PlannerSupplier`; it does not generate an LLM plan automatically.
+
+    **The explicit executor is a teaching and design choice.** `PlanExecuteFlow` keeps plan generation, Java prerequisite validation, specialist dispatch, and reviewer feedback visible as separate stages. It also exposes the three-iteration budget and history. Exercise 10 adds a required MCP lookup before planning.
+
+    A declarative alternative could keep `PlanGenerationAgent` and move the orchestration into a custom `Planner` supplied to `@PlannerAgent`. That planner would still need the validation, dispatch, review, and execution-limit policies. This would be a refactoring of the orchestration, not a replacement annotation on the plan generator. See the [LangChain4j planner API](https://docs.langchain4j.dev/tutorials/agents/){:target="_blank"}.
 
 ## Step 3 — Give the planner its rules (5 min)
 
-Replace the short `@SystemMessage` in `PlannerAgent.java` with the following. Keep its `@Agent` and existing `@UserMessage`, including the evidence and feedback placeholders.
+Replace the short `@SystemMessage` in `PlanGenerationAgent.java` with the following. Keep its `@Agent` and existing `@UserMessage`, including the evidence and feedback placeholders.
 
 ```java
 @SystemMessage("""
@@ -92,6 +99,7 @@ Save. Dev mode picks up the change when you next make a request. All the special
 
 - [ ] You can identify the plan, prerequisite check, specialist results, and review outcome.
 - [ ] You can explain how feedback and the three-iteration budget bound replanning.
+- [ ] You can distinguish `PlanGenerationAgent` from the framework’s `@PlannerAgent` workflow annotation.
 - [ ] You distinguish incident facts from evidence that has not been retrieved.
 
-**Keep the same application running.** Continue to [Exercise 10 — Required MCP Evidence](../10-mcp-evidence/START_HERE.md); there is no reset or folder change. If stuck, compare only `PlannerAgent.java` with its counterpart in `part2/solution/`.
+**Keep the same application running.** Continue to [Exercise 10 — Required MCP Evidence](../10-mcp-evidence/START_HERE.md); there is no reset or folder change. If stuck, compare only `PlanGenerationAgent.java` with its counterpart in `part2/solution/`.

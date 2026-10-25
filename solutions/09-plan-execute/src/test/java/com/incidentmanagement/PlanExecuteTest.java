@@ -1,5 +1,7 @@
 package com.incidentmanagement;
 
+import com.incidentmanagement.agentic.agents.PlanGenerationAgent;
+
 import com.incidentmanagement.agentic.workflow.*;
 import com.incidentmanagement.evidence.*;
 import com.incidentmanagement.model.*;
@@ -14,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @QuarkusTestResource(ScriptedModel.class)
 class PlanExecuteTest {
     @Inject DeploymentEvidenceClient evidence;
+    @Inject PlanGenerationAgent planGenerationAgent;
     @Inject PlanExecuteFlow flow;
     @BeforeEach void reset() { ScriptedModel.replies.clear(); ScriptedModel.requests.clear(); }
 
@@ -59,5 +62,22 @@ class PlanExecuteTest {
         IncidentInfo incident = new IncidentInfo(); incident.system="";
         assertEquals("EVIDENCE_UNAVAILABLE", flow.resolve(incident, 2, "report").get("outcome"));
         assertTrue(ScriptedModel.requests.isEmpty());
+    }
+
+    @Test void planGeneratorReturnsAValidatedStructuredPlan() {
+        ScriptedModel.replies.clear();
+        ScriptedModel.requests.clear();
+        ScriptedModel.replies.add("""
+                {"steps":["DIAGNOSE","MITIGATE","VERIFY"],"rationale":"Investigate the restarts"}
+                """);
+        var plan = planGenerationAgent.plan(
+                "auth-service", "user-login", "P1", "Pods are restarting", 2,
+                "OOMKilled every five minutes", "fixture-deployment-evidence", "");
+        assertEquals(List.of(ResolutionStep.DIAGNOSE, ResolutionStep.MITIGATE, ResolutionStep.VERIFY), plan.steps());
+        assertEquals("Investigate the restarts", plan.rationale());
+        assertDoesNotThrow(() -> PlanValidator.validate(plan, false, false));
+        assertTrue(ScriptedModel.requests.getLast().contains("OOMKilled every five minutes"));
+        assertTrue(ScriptedModel.requests.getLast().contains("fixture-deployment-evidence"));
+        assertTrue(ScriptedModel.replies.isEmpty());
     }
 }

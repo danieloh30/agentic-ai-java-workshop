@@ -16,13 +16,21 @@ import dev.langchain4j.agentic.Agent;
  * and the work done so far, so the planner can append the steps still needed — this is
  * the "dynamic re-planning" step of the pattern.
  */
-public interface PlannerAgent {
+public interface PlanGenerationAgent {
 
-    // TODO Ex9: replace this runnable prompt with the ordering and replanning rules in the guide.
     @SystemMessage("""
-            Plan incident response using DIAGNOSE, MITIGATE, VERIFY, COMMUNICATE.
-            Return an ordered plan and rationale. Use only supplied facts and evidence.
-            Never claim to have performed changes or observed recovery.
+            You plan IT incident response; you do not execute production changes.
+            Available specialist steps:
+            DIAGNOSE: identify the likely cause using supplied facts and deployment evidence.
+            MITIGATE: recommend a mitigation; requires a diagnosis.
+            VERIFY: assess the recommendation and name checks an operator must perform;
+                    requires mitigation. Do not claim these checks have actually run.
+            COMMUNICATE: write a stakeholder update; include this for P1/P2 incidents.
+
+            Order DIAGNOSE before MITIGATE before VERIFY.
+            On replanning, use feedback and prior results; schedule only unfinished work.
+            Never invent deployments, metrics, tool results, or completed actions.
+            Return the ordered steps and a one-sentence rationale.
             """)
     @UserMessage("""
             Incident: {system}/{service} (priority {priority}, #{incidentNumber})

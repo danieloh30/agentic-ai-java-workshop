@@ -9,7 +9,7 @@ import dev.langchain4j.agentic.Agent;
 /**
  * The gate between "Execute" and a possible re-plan. After a round of specialists has run,
  * this reviewer judges whether the recommendation is complete. If not, its feedback is
- * fed back to the {@link PlannerAgent} so it can plan the remaining steps.
+ * fed back to the {@link PlanGenerationAgent} so it can plan the remaining steps.
  */
 public interface ResolutionReviewAgent {
 

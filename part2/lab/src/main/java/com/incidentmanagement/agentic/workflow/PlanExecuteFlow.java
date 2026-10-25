@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 import com.incidentmanagement.agentic.agents.CommunicationAgent;
 import com.incidentmanagement.agentic.agents.DiagnosisAgent;
 import com.incidentmanagement.agentic.agents.MitigationAgent;
-import com.incidentmanagement.agentic.agents.PlannerAgent;
+import com.incidentmanagement.agentic.agents.PlanGenerationAgent;
 import com.incidentmanagement.agentic.agents.ResolutionReviewAgent;
 import com.incidentmanagement.agentic.agents.VerificationAgent;
 import com.incidentmanagement.model.ExecutionPlan;
@@ -31,7 +31,7 @@ import io.quarkus.logging.Log;
  *
  * <p>Three actions share one {@code AgenticScope} and repeat until the reviewer is satisfied:
  * <ol>
- *   <li><b>Plan</b> — {@link PlannerAgent} turns the incident (plus any reviewer feedback)
+ *   <li><b>Plan</b> — {@link PlanGenerationAgent} turns the incident (plus any reviewer feedback)
  *       into an ordered {@link ExecutionPlan} of specialist steps.</li>
  *   <li><b>Execute</b> — each step requested by the current plan calls its specialist and
  *       writes the result into the scope.</li>
@@ -47,7 +47,7 @@ public class PlanExecuteFlow {
     private static final int MAX_ITERATIONS = 3;
 
     @Inject DeploymentEvidenceClient evidenceClient;
-    @Inject PlannerAgent plannerAgent;
+    @Inject PlanGenerationAgent planGenerationAgent;
     @Inject ResolutionReviewAgent reviewAgent;
     @Inject DiagnosisAgent diagnosisAgent;
     @Inject MitigationAgent mitigationAgent;
@@ -69,7 +69,7 @@ public class PlanExecuteFlow {
             int iteration = scope.readState("iteration", 0) + 1;
             scope.writeState("iteration", iteration);
 
-            ExecutionPlan plan = plannerAgent.plan(
+            ExecutionPlan plan = planGenerationAgent.plan(
                     incident.system, incident.service, incident.priority,
                     incident.description != null ? incident.description : "",
                     incidentNumber, report != null ? report : "", evidence.toString(), feedback);
