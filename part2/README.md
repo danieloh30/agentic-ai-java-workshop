@@ -19,4 +19,4 @@ export OPENAI_API_KEY=your-key
 ./mvnw quarkus:dev
 ```
 
-[Exercise 9 guide](../docs/09-plan-execute/START_HERE.md). Older `solutions/09-*` through `solutions/12-*` folders remain isolated reference snapshots; the current event path uses this shared project.
+Start with the [Exercise 9 guide](../docs/09-plan-execute/START_HERE.md) and keep the same shared project through Exercise 14.

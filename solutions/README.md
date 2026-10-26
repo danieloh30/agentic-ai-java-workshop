@@ -25,7 +25,7 @@ The current event path uses [`../part2/lab/`](../part2/lab/) or [`../part2/solut
 - Ex 13: event-driven processing.
 - Ex 14: persistent outcomes and completed replay.
 
-The older `09-plan-execute/`, `10-memory-tiering/`, `11-consensus-voting/`, and `12-event-driven/` folders remain isolated historical snapshots. Their numbering predates the six-exercise path. Use the shared application for the current guides.
+Part 2 source is maintained in the shared application above. This `solutions/` directory contains the Part 1 reference projects.
 
 ### Additional reference project
 

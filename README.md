@@ -81,7 +81,7 @@ Start with [Exercise 15](docs/15-runtime-skills/START_HERE.md) and preflight dep
 | [`part3/lab/`](part3/lab/) | Shared starter for Exercises 15–20 |
 | [`part3/solution/`](part3/solution/) | Completed Part 3 application |
 
-For Part 2, edit only the files listed in each guide inside your chosen shared project. The older isolated `solutions/09-*` through `solutions/12-*` folders are retained as historical references, not the current event path.
+For Part 2, use `part2/lab/` or `part2/solution/` for all Exercises 9–14 and edit only the files listed in each guide.
 
 Start here:
 
@@ -120,7 +120,7 @@ For Part 1, stop the current application before switching projects. For Part 2, 
 
 The **Part 2 event path never requires a reset**. Continue editing the same `part2/lab/` project while dev mode runs.
 
-For separate Part 1 practice sessions, `./reset-labs.sh lab` restores the root starter and `./reset-labs.sh ex08` restores the bonus starter. These optional commands discard edits to their listed files. The script's legacy `ex09`–`ex12` options affect only the old isolated reference folders; they do not reset the shared Part 2 application.
+For separate Part 1 practice sessions, `./reset-labs.sh lab` restores the root starter and `./reset-labs.sh ex08` restores the bonus starter. These optional commands discard edits to their listed files. Part 2 uses one cumulative application and does not require resets between exercises.
 
 For **Part 3**, start from the repository root:
 
