@@ -93,9 +93,21 @@ Save. Dev mode picks up the change when you next make a request. All the special
 ## Step 4 — Inspect one recommendation (5 min)
 
 1. Open incident **#2** and submit `Auth pods are OOMKilled every five minutes`.
-2. Read the planning result and expand **Saved planning result** to inspect the persisted summary, selected steps, iteration feedback, and outcome.
-3. The evidence section says `not_requested` and `Not fetched`. This is an honest baseline, not a fabricated tool result. The planner must work from incident facts alone.
-4. Confirm the incident remains **In Progress**. A complete recommendation is not production recovery.
+2. Read the **Planning result** outcome card and iteration count. Expand each round in **Review timeline** to inspect its selected steps, rationale, and reviewer feedback.
+3. Expand **Specialist recommendations** to read the diagnosis, mitigation, verification, and communication. **Latest specialist plan** shows only the latest round, so a replan may contain just `COMMUNICATE` while earlier specialist recommendations remain available.
+4. The **Deployment evidence** card shows **Not fetched** (`not_requested` in the original saved result). This is an honest baseline, not a fabricated tool result. The planner must work from incident facts alone.
+5. Confirm the incident remains **In Progress**. A complete recommendation is not production recovery.
+
+The example below uses local fixture data to illustrate a two-round result. Round 1 requests a stakeholder update; Round 2 schedules only `COMMUNICATE`. **Plan accepted** means the Java prerequisite check passed; the reviewer can still request another round. The final **Recommendation ready** card does not mean production recovery has been observed. Your generated text and iteration count may differ.
+
+<figure class="planning-screenshot" markdown="1">
+
+[![Planning result for incident 2, with an outcome card, evidence status, expandable review rounds, and specialist recommendations](../images/ex9-planning-result.png){ width="400" loading="lazy" }](../images/ex9-planning-result.png)
+
+<figcaption>Expand a review round or specialist to inspect the details. Click the image for a larger view.</figcaption>
+</figure>
+
+The categorized result is saved with the incident and remains available after reloading the dashboard. Use **View original saved result** when you need the complete text.
 
 ## Done when
 

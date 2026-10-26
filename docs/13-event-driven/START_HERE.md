@@ -10,6 +10,8 @@
 
 Accept an alert without making its producer wait for the model. Connect the supplied agent sequence between two Kafka topics and distinguish submission from completion. Kafka and PostgreSQL have been running since Exercise 9; no dependency, folder, profile, or terminal change is needed.
 
+<div class="compact-diagram" markdown="1">
+
 ```mermaid
 %%{init: {'look':'handDrawn','theme':'base','themeVariables': {'darkMode':false,'background':'#FFFCF5','primaryTextColor':'#1F1F1F','secondaryTextColor':'#1F1F1F','tertiaryTextColor':'#1F1F1F','textColor':'#1F1F1F','lineColor':'#4A4035','edgeLabelBackground':'#FFFCF5','clusterBkg':'#F5F5F0','clusterBorder':'#6B5B45','fontSize':'16px'},'flowchart': {'nodeSpacing':35,'rankSpacing':55,'padding':18}}}%%
 flowchart TD
@@ -38,6 +40,8 @@ flowchart TD
     style DB fill:#E8DCC4,stroke:#6B5B45,color:#1F1F1F,stroke-width:2px
     style UI fill:#D8F0D8,stroke:#3D7A3D,color:#1F1F1F,stroke-width:2px
 ```
+
+</div>
 
 ## Step 1 — Select Events (1 min)
 
