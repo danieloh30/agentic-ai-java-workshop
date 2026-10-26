@@ -16,6 +16,10 @@ public class DeploymentEvidenceClient {
 
     public DeploymentEvidence fetch(String service) {
         try {
+            // Discover metadata before calling a tool directly (including MCP parameter headers).
+            if (client.listTools().stream().noneMatch(tool -> "getRecentDeployments".equals(tool.name()))) {
+                throw new IllegalStateException("Required deployment tool is not advertised");
+            }
             var result = client.executeTool(ToolExecutionRequest.builder()
                     .name("getRecentDeployments")
                     .arguments(mapper.writeValueAsString(Map.of("service", service))).build());
