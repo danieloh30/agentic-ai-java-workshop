@@ -92,7 +92,12 @@ Save. Dev mode picks up the change when you next make a request. All the special
 
 ## Step 4 — Inspect one recommendation (5 min)
 
-1. Open incident **#2** and submit `Auth pods are OOMKilled every five minutes`.
+1. Open incident **#2**. Copy the following text into the report field, then click **Process Incident**:
+
+    ```text
+    Auth pods are OOMKilled every five minutes
+    ```
+
 2. Read the **Planning result** outcome card and iteration count. Expand each round in **Review timeline** to inspect its selected steps, rationale, and reviewer feedback.
 3. Expand **Specialist recommendations** to read the diagnosis, mitigation, verification, and communication. **Latest specialist plan** shows only the latest round, so a replan may contain just `COMMUNICATE` while earlier specialist recommendations remain available.
 4. The **Deployment evidence** card shows **Not fetched** (`not_requested` in the original saved result). This is an honest baseline, not a fabricated tool result. The planner must work from incident facts alone.
