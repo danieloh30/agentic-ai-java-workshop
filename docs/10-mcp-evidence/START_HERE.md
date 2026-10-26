@@ -59,7 +59,18 @@ This lookup is mandatory, so workflow code calls it before the planner. `@McpToo
 
 ## Step 2 — Compare with the baseline (3 min)
 
-Process incident **#2** again with the same operator report. The evidence section now contains `workshop-release-42` and the fixture observation about a reduced memory limit. Inspect the plan and diagnosis for their use of that evidence.
+1. Open [the dashboard](http://localhost:8080) in your running Part 2 application and select **9–10 · Planning / MCP**.
+2. Open incident **#2** — **auth-service / user-login**. In the **Process Incident** report field, paste:
+
+    ```text
+    Auth pods are OOMKilled every five minutes
+    ```
+
+3. Click **Process Incident** and wait for the planning run to finish. Reopen incident **#2** if its detail panel closes.
+4. In **Planning result**, check the **Deployment evidence** card. It should show `available`, release `workshop-release-42`, and the fixture observation about a reduced memory limit.
+5. Expand **Diagnosis** under **Specialist recommendations** and the rounds under **Review timeline**. Inspect how the diagnosis and plan use the deployment evidence.
+
+This is the same operator report used in Exercise 9. Its evidence-free baseline showed **Not fetched** (`not_requested`); this run should include the MCP evidence. If you skipped that baseline, you can still complete this step: check the evidence card and recommendations described above.
 
 These are **fixed workshop data**, not live infrastructure observations or proof of causation. You are making a new planning run; earlier runs are not replayed automatically. `/incident-plan/2` also starts a new diagnostic run if called with POST.
 
