@@ -63,11 +63,9 @@ The supplied models define a record `ExecutionPlan(List<ResolutionStep> steps, S
 `PlanGenerationAgent` is a declarative `@Agent(outputKey = "plan")`. Its prompt determines the work; Java checks whether the plan can be executed. Structured output alone does not guarantee a valid plan.
 
 !!! note "Why use this executor instead of `@PlannerAgent`?"
-    **The names describe different roles.** Our `PlanGenerationAgent` is an LLM-powered `@Agent` that returns an `ExecutionPlan`. LangChain4j's `@PlannerAgent` is a workflow annotation that connects sub-agents to a custom Java `Planner` through `@PlannerSupplier`; it does not generate an LLM plan automatically.
+    **These have different jobs.** `PlanGenerationAgent` is an LLM-powered `@Agent` that proposes an `ExecutionPlan`. `@PlannerAgent` is a workflow annotation that connects sub-agents to a custom Java `Planner` through `@PlannerSupplier`. A refactor to that workflow could still use `PlanGenerationAgent` to generate the plan.
 
-    **The explicit executor is a teaching and design choice.** `PlanExecuteFlow` keeps plan generation, Java prerequisite validation, specialist dispatch, and reviewer feedback visible as separate stages. It also exposes the three-iteration budget and history. Exercise 10 adds a required MCP lookup before planning.
-
-    A declarative alternative could keep `PlanGenerationAgent` and move the orchestration into a custom `Planner` supplied to `@PlannerAgent`. That planner would still need the validation, dispatch, review, and execution-limit policies. This would be a refactoring of the orchestration, not a replacement annotation on the plan generator. See the [LangChain4j planner API](https://docs.langchain4j.dev/tutorials/agents/){:target="_blank"}.
+    We keep the supplied executor so the 15-minute exercise makes **plan generation → Java validation → specialist dispatch → review** easy to inspect. You edit one prompt; the executor supplies the policies. The [optional architecture comparison](#optional-comparison-custom-planner-workflow) explains the alternative without adding work to the core timebox.
 
 ## Step 3 — Give the planner its rules (5 min)
 
@@ -105,5 +103,45 @@ Save. Dev mode picks up the change when you next make a request. All the special
 - [ ] You can explain how feedback and the three-iteration budget bound replanning.
 - [ ] You can distinguish `PlanGenerationAgent` from the framework’s `@PlannerAgent` workflow annotation.
 - [ ] You distinguish incident facts from evidence that has not been retrieved.
+
+## Optional comparison — Custom planner workflow
+
+This is an architectural comparison outside the 15-minute core. Keep the existing application and dev-mode session; no code changes are required. The alternative below is a design outline, not a supplied runnable implementation.
+
+### Plan generation and workflow planning are separate responsibilities
+
+`PlanGenerationAgent` answers **“What specialist work should this incident need?”** with structured data. The executor answers **“Which proposed steps may run, with which inputs, and what happens after review?”** A framework `Planner` can take over that orchestration role. It does not remove the need to generate or validate the incident plan.
+
+| Design question | Current `PlanGenerationAgent` + executor | Alternative `@PlannerAgent` workflow |
+|-----------------|-----------------------------------------|-------------------------------------|
+| Who proposes the specialist steps? | `PlanGenerationAgent` returns `ExecutionPlan`. | Keep `PlanGenerationAgent` as a sub-agent for the same LLM-generated plan. |
+| Where is orchestration defined? | `PlanExecuteFlow` assembles plan, execute, and review actions in a bounded loop. | A workflow interface declares sub-agents; `@PlannerSupplier` supplies the custom Java `Planner` that chooses the next action. |
+| Who enforces prerequisites? | `PlanValidator` rejects invalid ordering before specialist dispatch. | Reuse that validation before the custom planner schedules specialists. |
+| Who carries results and reviewer feedback? | Explicit scope updates carry specialist results and feedback into replanning. | The custom planner and agent input/output contracts must arrange equivalent scope state. |
+| Who bounds replanning? | The supplied loop allows at most three iterations and stops when the recommendation is ready. | Custom orchestration must preserve an equivalent review policy and iteration budget; `@PlannerAgent` alone does not supply those domain rules. |
+| Where does required MCP evidence fit? | Exercise 10 wires the supplied evidence lookup before planning and blocks unusable evidence. | Preserve that gate before the plan-generation sub-agent is scheduled. |
+| What does the participant implement? | One agent prompt; the executor is supplied. | Building the alternative also requires a custom `Planner`, workflow wiring, and behavioral checks. |
+| When is it useful? | Teaching structured planning and deterministic checks in a short lab. | Teaching custom framework orchestration or integrating a reusable scheduling policy. |
+
+### Where the framework pieces would fit
+
+A refactor would introduce three pieces:
+
+1. A **workflow interface** with a method annotated `@PlannerAgent`, naming `PlanGenerationAgent`, the specialist agents, and `ResolutionReviewAgent` as sub-agents.
+2. A **static `@PlannerSupplier` method** in that interface returning a custom Java `Planner`. The planner is orchestration infrastructure; the LLM agents remain plain `@Agent` interfaces.
+3. The **custom planner's action-selection logic**, using the framework's `firstAction(...)` / `nextAction(...)` lifecycle to schedule plan generation, validate the result, dispatch the requested specialists, and schedule review. It would carry forward accepted results, invalidate dependent results when earlier work changes, feed review feedback into another plan, and enforce the three-iteration limit.
+
+The existing REST adapter could then invoke that workflow and retain the dashboard response fields and history. The evidence gate, scope inputs/outputs, and result mapping would need deliberate wiring; placing `@PlannerAgent` on `PlanGenerationAgent` would not perform this refactor.
+
+!!! note "Why this differs from the Ex8 refactor"
+    **Ex8 has a fixed pair of steps:** draft, critique, then repeat. `@LoopAgent` directly expresses that shape and its bounded repetition. Ex9 chooses specialist work from an LLM-generated plan and applies domain-specific prerequisite and review policies. `@PlannerAgent` provides a place to integrate those policies through a custom planner; it does not make the policies disappear.
+
+    The choice here is about the learning goal. Keep the current executor when teaching inspectable plans and deterministic validation. Explore the custom planner when teaching how to build a new orchestration pattern. Both approaches should retain the distinction between a ready recommendation and verified production recovery.
+
+Before treating a custom planner as equivalent, verify that invalid plans invoke no specialists, changed diagnoses invalidate dependent results, reviewer feedback drives replanning, and the third failed review returns `NEEDS_OPERATOR_REVIEW`. After Exercise 10, also verify that unusable required evidence stops the run before plan generation. These behaviors define equivalence more meaningfully than a shorter workflow declaration.
+
+Reference: [LangChain4j custom planners and declarative API](https://docs.langchain4j.dev/tutorials/agents/){:target="_blank"}. The `Planner`, `@PlannerAgent`, and `@PlannerSupplier` roles above also match this workshop's pinned LangChain4j API.
+
+---
 
 **Keep the same application running.** Continue to [Exercise 10 — Required MCP Evidence](../10-mcp-evidence/START_HERE.md); there is no reset or folder change. If stuck, compare only `PlanGenerationAgent.java` with its counterpart in `part2/solution/`.
