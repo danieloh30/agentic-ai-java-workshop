@@ -8,7 +8,9 @@
 
 ## Enterprise context and goal
 
-Extend the plan you just built with a required deployment lookup. Fetch evidence through real MCP over Streamable HTTP, validate its service and fields, and stop before planning if it is unavailable. Keep all earlier edits and results.
+Riley, the SRE lead, needs deployment context before recommending how to handle the authentication incident. An incident report alone cannot establish what changed in the latest release, and a failed lookup must not become an invented deployment history. Riley wants the team to see which evidence informed the plan and when the required evidence could not be obtained.
+
+Extend the plan you just built with a required deployment lookup. Fetch evidence through real MCP over Streamable HTTP, validate its service and fields, and stop before planning if it is unavailable. Keep all earlier edits and results. The supplied workshop evidence informs recommendations; it does not prove a cause or confirm production recovery.
 
 <div class="compact-diagram" markdown="1">
 

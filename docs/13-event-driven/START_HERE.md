@@ -8,7 +8,9 @@
 
 ## Enterprise context and goal
 
-Accept an alert without making its producer wait for the model. Connect the supplied agent sequence between two Kafka topics and distinguish submission from completion. Kafka and PostgreSQL have been running since Exercise 9; no dependency, folder, profile, or terminal change is needed.
+Jordan, the Java platform engineer, needs monitoring systems to submit incident alerts without waiting for model calls to finish. Operators still need to find the eventual result for the right request and distinguish work that was submitted from a recommendation that is ready for review. A quick submission response must not imply that the incident has been resolved.
+
+Accept an alert without making its producer wait for the model. Connect the supplied agent sequence between two Kafka topics and follow its correlated outcome to the dashboard. Kafka and PostgreSQL have been running since Exercise 9; no dependency, folder, profile, or terminal change is needed.
 
 <div class="compact-diagram" markdown="1">
 

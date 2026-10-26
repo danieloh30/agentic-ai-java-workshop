@@ -6,9 +6,11 @@
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Skills & guardrails** workspace.<br>
 **File to edit:** `src/main/resources/skills/incident-response/SKILL.md`.
 
-## Why this exercise
+## Enterprise context and goal
 
-Riley, the SRE lead, needs reusable response guidance without making the main agent prompt a growing collection of runbooks. A runtime skill advertises a name and description, then provides its instructions when the model calls `activate_skill`.
+Riley, the SRE lead, needs consistent response guidance for checkout errors and authentication failures without making the main agent prompt a growing collection of runbooks. Operators need recommendations that reflect the incident priority and name the checks they must perform, while keeping proposed work distinct from actions already completed. Riley wants that domain guidance maintained as a reusable runtime skill.
+
+Extend the supplied incident-response skill with escalation rules and service-specific operator checks, then compare checkout and authentication recommendations in the same running application. A runtime skill advertises a name and description, then provides its instructions when the model calls `activate_skill`. Java approval and evidence checks remain separate from that model-selected guidance.
 
 This is application guidance consumed by the running agent. Part 1's `AGENTS.md` governs your coding assistant. MCP supplies tools/data; A2A delegates to a remote agent. Skills provide reusable instructions.
 
