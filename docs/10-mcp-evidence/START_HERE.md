@@ -45,6 +45,9 @@ flowchart TD
 
 </div>
 
+!!! tip "Choose the route for your working project"
+    **`part2/lab/`:** make the one-line change in Step 1, then run Steps 2–3. **`part2/solution/`:** inspect the already-connected lookup in Step 1, then run the same Steps 2–3. In both projects, Step 2 should show available evidence; Step 3 should stop planning when evidence is unavailable and resume after you restore it.
+
 ## Step 1 — Connect the lookup (3 min)
 
 The MCP client and fixture server are already supplied. Your change decides **when evidence becomes mandatory**, rather than asking the model whether it wants to fetch it.
@@ -67,7 +70,7 @@ Read the supplied `DeploymentEvidenceClient.fetch(...)` to follow the boundary:
 The fixture server lives in the same application to simplify event setup, but the lookup still crosses the MCP HTTP boundary. It supplies data for our agents, while A2A in Exercise 7 delegated work to another agent.
 
 !!! tip "Keep dev mode running; submit a new request"
-    The visible recommendation is the **saved Ex9 result**. Saving code does not rerun it. Do not restart dev mode or press `s` for this transition. Follow Step 2 to submit the report again; the next request triggers hot reload and a new MCP-backed planning run.
+    The visible recommendation is a **saved result from the previous run**. Saving code does not rerun it. Do not restart dev mode or press `s` for this transition. Follow Step 2 to submit the report again; the next request triggers hot reload and a new MCP-backed planning run.
 
 ## Step 2 — Compare with the baseline (3 min)
 
@@ -82,7 +85,7 @@ The fixture server lives in the same application to simplify event setup, but th
 4. In **Planning result**, check the **Deployment evidence** card. It should show `available`, release `workshop-release-42`, and the fixture observation about a reduced memory limit.
 5. Expand **Diagnosis** under **Specialist recommendations** and the rounds under **Review timeline**. Inspect how the diagnosis and plan use the deployment evidence.
 
-This is the same operator report used in Exercise 9. Its evidence-free baseline showed **Not fetched** (`not_requested`); this run should include the MCP evidence. If you skipped that baseline, you can still complete this step: check the evidence card and recommendations described above.
+This is the same operator report used in Exercise 9. In the **starter route**, the earlier evidence-free baseline showed **Not fetched** (`not_requested`); this new run should include MCP evidence. In the **completed solution**, the lookup was already wired during Exercise 9, so evidence may already have been available. Do not expect a no-lookup baseline there: verify the available evidence now, then test its failure behavior in Step 3. If you skipped Exercise 9, the checks above still apply.
 
 These are **fixed workshop data**, not live infrastructure observations or proof of causation. You are making a new planning run; earlier runs are not replayed automatically. `/incident-plan/2` also starts a new diagnostic run if called with POST.
 
@@ -97,7 +100,7 @@ workshop.evidence.scenario=unavailable
 Leave dev mode running. Save, open incident **#2**, paste the report from Step 2 into **Process Incident**, and submit it again. Expect:
 
 - **Evidence unavailable** in the outcome card and `unavailable` in the evidence card.
-- No review rounds or specialist recommendations for this run. The original saved result reports `EVIDENCE_UNAVAILABLE` and zero planning iterations.
+- No review rounds or specialist recommendations for this run. The original saved result reports `EVIDENCE_UNAVAILABLE`; the run performs zero planning iterations.
 - No planning-model call: the MCP request returned fixture data, but those data did not meet the evidence requirement. This is a controlled unavailable-evidence scenario, not a simulated network outage.
 
 Restore the property:
@@ -110,9 +113,32 @@ Save and submit the same report once more. Confirm that the release and planning
 
 ## Done when
 
-- [ ] You observed real MCP evidence replacing the explicit no-lookup baseline.
+- [ ] An available-evidence run shows `workshop-release-42` and specialist recommendations. In the starter, this replaces the no-lookup baseline.
 - [ ] Unavailable evidence stopped the run before any model call.
 - [ ] You restored `available` by editing the property while keeping dev mode running.
+
+## Optional verification — Run the supplied tests
+
+The dashboard checks in Steps 2–3 are the core verification for **both** routes. For repeatable automated checks, open a **second terminal in the same project folder** (`part2/lab/` or `part2/solution/`) after restoring `workshop.evidence.scenario=available`. Keep your dev-mode terminal running.
+
+```bash
+./mvnw -Dtest=DeploymentEvidenceClientTest,PlanExecuteTest,EvidenceUnavailableTest test
+```
+
+These tests use local MCP fixtures and a local scripted model, without paid model calls. The unavailable-evidence test selects its own scenario through a test profile; you do not need to edit the property again. Maven runs a separate test application; it does not submit reports through your open dashboard.
+
+Expected result in the **completed solution**:
+
+```text
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+```
+
+The **starter** reports **6 tests** with zero failures and errors. It has fewer planning-workflow checks because its Exercise 9–10 edits are learner tasks; both routes include the same three discovery-boundary checks and the unavailable-evidence check.
+
+The checks cover discovering before calling, repeated successful lookups, failed discovery, an absent required tool, and unavailable evidence. The completed solution additionally verifies evidence reaching the planner, invalid-plan handling, and stopping before model calls when evidence is unusable. Automated checks complement the dashboard run; they do not prove a live model will produce identical wording.
+
+This test run is outside the 10-minute core timebox. Continue with the same project and dev-mode session when it finishes.
 
 ## Optional insight — Why this MCP API?
 
