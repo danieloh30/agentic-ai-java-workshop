@@ -74,14 +74,14 @@ The fixture server lives in the same application to simplify event setup, but th
 
 ## Step 2 — Compare with the baseline (3 min)
 
-1. Open [the dashboard](http://localhost:8080) in your running Part 2 application and select **9–10 · Planning / MCP**.
-2. Open incident **#2** — **auth-service / user-login**. In the **Process Incident** report field, paste:
+1. Open [the dashboard](http://localhost:8080) in your running Part 2 application and select **Planning / MCP (Ex9–10)**.
+2. Open incident **#2** — **auth-service / user-login**. In the **Generate recommendation** report field, paste:
 
     ```text
     Auth pods are OOMKilled every five minutes
     ```
 
-3. Click **Process Incident** and wait for the planning run to finish. Reopen incident **#2** if its detail panel closes.
+3. Click **Generate recommendation** and wait for the planning run to finish. Reopen incident **#2** if its detail panel closes.
 4. In **Planning result**, check the **Deployment evidence** card. It should show `available`, release `workshop-release-42`, and the fixture observation about a reduced memory limit.
 5. Expand **Diagnosis** under **Specialist recommendations** and the rounds under **Review timeline**. Inspect how the diagnosis and plan use the deployment evidence.
 
@@ -97,7 +97,7 @@ In `application.properties`, change:
 workshop.evidence.scenario=unavailable
 ```
 
-Leave dev mode running. Save, open incident **#2**, paste the report from Step 2 into **Process Incident**, and submit it again. Expect:
+Leave dev mode running. Save, open incident **#2**, paste the report from Step 2 into **Generate recommendation**, and submit it again. Expect:
 
 - **Evidence unavailable** in the outcome card and `unavailable` in the evidence card.
 - No review rounds or specialist recommendations for this run. The original saved result reports `EVIDENCE_UNAVAILABLE`; the run performs zero planning iterations.

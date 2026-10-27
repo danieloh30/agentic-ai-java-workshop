@@ -9,6 +9,17 @@ let selectedIncidentId = null;
 let workshopMode = localStorage.getItem('part2-mode') || 'PLAN';
 const incidentResults = new Map();
 const pendingIncidents = new Set();
+const WORKFLOWS = {
+    PLAN: { action: 'Generate recommendation', title: 'Generate recommendation', busy: 'Generating recommendation...',
+        placeholder: 'Describe the incident and what the operator has observed...' },
+    MEMORY: { action: 'Send message', title: 'Incident conversation', busy: 'Sending message...',
+        placeholder: 'Ask a question or add a follow-up for this incident...' },
+    VOTING: { action: 'Run vote', title: 'Compare specialist votes', busy: 'Collecting votes...',
+        placeholder: 'Describe the incident for the specialist voters...' },
+    EVENTS: { action: 'Submit event', title: 'Submit incident event', busy: 'Submitting event...',
+        placeholder: 'Describe the alert to submit for asynchronous processing...' }
+};
+
 
 document.addEventListener('DOMContentLoaded', function () {
     initTheme();
@@ -356,14 +367,15 @@ function openDetailPanel(incidentId) {
     const statusClass = getStatusClass(incident.status);
     const priority = getPriorityPresentation(incident.priority);
     const canProcess = ['OPEN', 'TRIAGING', 'IN_PROGRESS'].includes(incident.status);
+    const workflow = WORKFLOWS[workshopMode];
 
     let formHtml = '';
     if (canProcess) {
         formHtml = `
             <div class="detail-divider"></div>
-            <div class="detail-form-title">Process Incident</div>
-            <textarea id="detail-report" class="detail-textarea" placeholder="Enter incident report details..."></textarea>
-            <button class="btn-process" id="detail-process-btn" onclick="processFromPanel(${incident.id}, '${incident.status}')">Process Incident</button>
+            <div class="detail-form-title">${workflow.title}</div>
+            <textarea id="detail-report" class="detail-textarea" placeholder="${workflow.placeholder}"></textarea>
+            <button class="btn-process" id="detail-process-btn" onclick="processFromPanel(${incident.id}, '${incident.status}')">${workflow.action}</button>
         `;
     } else {
         formHtml = `
@@ -412,11 +424,6 @@ function openDetailPanel(incidentId) {
     const key = `${workshopMode}:${incidentId}`;
     document.getElementById('detail-result-label').textContent = labels[workshopMode];
     if (incidentResults.has(key)) showWorkshopResult(incidentResults.get(key));
-    if (workshopMode === 'MEMORY') {
-        document.querySelector('.detail-form-title')?.replaceChildren('Conversation');
-        const button = document.getElementById('detail-process-btn');
-        if (button) button.textContent = 'Send Message';
-    }
     if (workshopMode === 'EVENTS') loadProcessingOutcome(incidentId);
     document.getElementById('detail-panel').classList.add('open');
     document.getElementById('detail-overlay').classList.add('open');
@@ -450,7 +457,7 @@ function updateWorkshopHelp() {
         VOTING:'Compare specialist ballots. A recommendation requires sufficient agreement.',
         EVENTS:'Submit work asynchronously. Reopen the incident to inspect its persisted outcome and request ID.'
     };
-    help.textContent=descriptions[workshopMode];
+    help.textContent=descriptions[workshopMode] + ' Switching workflows changes your next submission; it does not run a request or reset your work.';
     if(workshopMode==='VOTING') {
         const links=document.createElement('span');links.className='workshop-fixtures';
         for(const scenario of ['agreement','disagreement']) {
@@ -496,7 +503,7 @@ async function processFromPanel(incidentId) {
     const mode=workshopMode;
     pendingIncidents.add(incidentId);
     const button=document.getElementById('detail-process-btn');
-    button.disabled=true;button.textContent='Processing...';
+    button.disabled=true;button.textContent=WORKFLOWS[mode].busy;
     try {
         const response=await fetch(`/incident-management/process/${incidentId}?mode=${mode}&report=${encodeURIComponent(report)}`,{method:'POST'});
         if(!response.ok) throw new Error('Processing failed');
@@ -512,7 +519,7 @@ async function processFromPanel(incidentId) {
         showToast('Request failed. Your report is retained; try again.','error');
     } finally {
         pendingIncidents.delete(incidentId);
-        if(button.isConnected) { button.disabled=false;button.textContent=mode==='MEMORY'?'Send Message':'Process Incident'; }
+        if(button.isConnected) { button.disabled=false;button.textContent=WORKFLOWS[mode].action; }
     }
 }
 

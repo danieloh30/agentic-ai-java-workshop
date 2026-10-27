@@ -14,6 +14,8 @@ Start Quarkus **once**, keep this folder and terminal for the entire part, and s
 
 Choose `part2/lab/` for code-along, or `part2/solution/` for a completed run-and-read route. Stay with that choice for all six exercises. Optional challenges and test-suite runs are outside the core timebox; preflight dependency and container downloads before the event.
 
+The dashboard’s **Workflow** selector chooses what your next submission does: **Generate recommendation**, **Send message**, **Run vote**, or **Submit event**. Switching workflows preserves your earlier work and does not run a request; keep **Planning / MCP (Ex9–10)** selected for this exercise.
+
 ## Enterprise context and goal
 
 Riley needs different specialist work for different incidents, with an inspectable plan and a bounded review loop. Build **Plan → Execute → Review** using the incident facts already provided. Deployment evidence is explicitly **not fetched yet**; connecting it is Exercise 10.
@@ -54,7 +56,7 @@ export OPENAI_API_KEY=your-key
 ./mvnw quarkus:dev
 ```
 
-Open [the dashboard](http://localhost:8080) and select **9–10 · Planning / MCP**. Leave this terminal running through Exercise 14. In the completed solution, the MCP lookup is already wired; inspect that code now and follow its behavior in Exercise 10.
+Open [the dashboard](http://localhost:8080) and select **Planning / MCP (Ex9–10)**. Leave this terminal running through Exercise 14. In the completed solution, the MCP lookup is already wired; inspect that code now and follow its behavior in Exercise 10.
 
 ## Step 2 — Read the plan contract (3 min)
 
@@ -92,7 +94,7 @@ Save. Dev mode picks up the change when you next make a request. All the special
 
 ## Step 4 — Inspect one recommendation (5 min)
 
-1. Open incident **#2**. Copy the following text into the report field, then click **Process Incident**:
+1. Open incident **#2**. Copy the following text into the report field, then click **Generate recommendation**:
 
     ```text
     Auth pods are OOMKilled every five minutes

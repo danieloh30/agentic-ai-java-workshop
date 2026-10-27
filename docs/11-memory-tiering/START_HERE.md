@@ -12,7 +12,7 @@ Sam needs follow-up recall without mixing incident conversations or sending an u
 
 ## Step 1 — Switch capability, not project (1 min)
 
-Select **11 · Memory** in the dashboard. Keep Quarkus running and keep the planner/MCP edits you already made. This mode sends your messages directly to the incident assistant; it does not replay saved planning descriptions into the conversation.
+Select **Memory (Ex11)** in the dashboard. Keep Quarkus running and keep the planner/MCP edits you already made. This mode sends your messages directly to the incident assistant; it does not replay saved planning descriptions into the conversation.
 
 ## Step 2 — Inspect and shrink the window (2 min)
 
@@ -34,7 +34,7 @@ Save before starting the conversation. The system message remains, leaving room 
 
 ## Step 3 — Observe recall and eviction (5 min)
 
-1. Open incident **#2** and send `The pods are OOMKilled every five minutes. Acknowledge briefly.`
+1. Open incident **#2**, enter `The pods are OOMKilled every five minutes. Acknowledge briefly.`, and click **Send message**. Use the same action for each follow-up below.
 2. Send `I am checking the dashboard now. Acknowledge briefly.`
 3. Inspect [#2's history](http://localhost:8080/incident-assistant/2/history) and the `chatmemoryentity` row in the [Dev UI database view](http://localhost:8080/q/dev-ui/quarkus-agroal/database-view). The original user message has left the three-message window and the database.
 4. Ask `What symptom did I first report?`. A reply might still repeat a detail from a retained assistant message. Judge eviction from stored messages, not model wording alone.

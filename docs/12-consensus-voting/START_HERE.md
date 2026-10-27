@@ -12,7 +12,7 @@ Compare reliability, customer-impact, and operational-risk judgments. Three pers
 
 ## Step 1 — Select Voting (2 min)
 
-Choose **12 · Voting** in the same dashboard. The mode offers links to fixed agreement/disagreement fixtures. The initial conservative policy requires unanimity. Earlier incident descriptions, conversations, and application state remain in the same database.
+Choose **Voting (Ex12)** in the same dashboard. The incident action is **Run vote**, which requests specialist ballots. This workflow also offers links to fixed agreement/disagreement fixtures. The initial conservative policy requires unanimity. Earlier incident descriptions, conversations, and application state remain in the same database.
 
 ## Step 2 — Strengthen the cost perspective (5 min)
 

@@ -47,7 +47,7 @@ flowchart TD
 
 ## Step 1 — Select Events (1 min)
 
-Choose **13–14 · Events / Replay** in the dashboard. Complete the consumer edit below before submitting. The starter returns an explicit failure until it is connected; a terminal outcome is retained, so submitting a new request is how you try again after correcting the starter.
+Choose **Events / Replay (Ex13–14)** in the dashboard. Complete the consumer edit below before submitting. The starter returns an explicit failure until it is connected; a terminal outcome is retained, so submitting a new request is how you try again after correcting the starter.
 
 ## Step 2 — Read the supplied sequence (3 min)
 
@@ -67,7 +67,7 @@ Save and submit a request to trigger hot reload. The publisher returns before th
 
 ## Step 4 — Follow the handoff (3 min)
 
-1. Open incident **#2**, enter `Auth pods are OOMKilled every five minutes`, and click **Process Incident**.
+1. Open incident **#2**, enter `Auth pods are OOMKilled every five minutes`, and click **Submit event**.
 2. Read the submission acknowledgement and request ID. Submission is not completion.
 3. Close and reopen #2 after processing. Its result changes from pending to `AWAITING_REVIEW` or `FAILED`. The incident remains In Progress.
 4. Leave this request in place. Its persisted outcome is the starting point for Exercise 14.

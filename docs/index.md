@@ -132,7 +132,7 @@ Open [http://localhost:8080](http://localhost:8080){:target="_blank"} — Incide
 No agent behavior yet: that's Exercise 1.
 
 !!! tip "Starting Part 2 instead?"
-    From the repository root, run `cd part2/lab` and `./mvnw quarkus:dev` once. Keep that folder and terminal for all six exercises, selecting Planning / MCP, Memory, Voting, or Events / Replay in the dashboard. The completed route uses `part2/solution/`. PostgreSQL, Kafka, and the MCP fixture start up front; normal hot reload preserves existing exercise records. No manual reset or restart is needed between Part 2 exercises.
+    From the repository root, run `cd part2/lab` and `./mvnw quarkus:dev` once. Keep that folder and terminal for all six exercises, using the **Workflow** selector for Planning / MCP, Memory, Voting, or Events / Replay. The incident action changes to **Generate recommendation**, **Send message**, **Run vote**, or **Submit event**; switching workflows does not start work or reset data. The completed route uses `part2/solution/`. PostgreSQL, Kafka, and the MCP fixture start up front; normal hot reload preserves existing exercise records. No manual reset or restart is needed between Part 2 exercises.
 
 <img src="images/incident-dashboard.png" alt="Incident Command Center dashboard" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
 

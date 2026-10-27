@@ -12,7 +12,7 @@ Continue from the completed request in Exercise 13. Persisting duplicate outcome
 
 ## Step 1 — Inspect the saved record (2 min)
 
-Refresh the dashboard, reopen incident **#2**, and inspect its persisted processing outcome. Open [#2's result](http://localhost:8080/incident-events/resolutions/2) and copy the `requestId`. Keep this exact value; clicking Process Incident again creates a different request.
+Refresh the dashboard, reopen incident **#2**, and inspect its persisted processing outcome. Open [#2's result](http://localhost:8080/incident-events/resolutions/2) and copy the `requestId`. Keep this exact value; clicking **Submit event** again creates a different request.
 
 The supplied `ResolutionStore` uses one `ProcessingRequest` row per request ID. Its transaction commits before the sink returns and messaging acknowledges the outcome. The first terminal outcome is retained, and the latest-request lookup protects the UI from older results.
 
