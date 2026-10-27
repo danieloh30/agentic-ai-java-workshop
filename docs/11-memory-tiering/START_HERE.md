@@ -12,7 +12,7 @@ Sam needs follow-up recall without mixing incident conversations or sending an u
 
 ## Step 1 — Switch capability, not project (1 min)
 
-Select **Memory (Ex11)** in the dashboard. Keep Quarkus running and keep the planner/MCP edits you already made. This mode sends your messages directly to the incident assistant; it does not replay saved planning descriptions into the conversation.
+At the top of [the dashboard](http://localhost:8080), open the **Workflow** dropdown and choose **Memory (Ex11)**. Keep Quarkus running and keep the planner/MCP edits you already made. This mode sends your messages directly to the incident assistant; it does not replay saved planning descriptions into the conversation.
 
 ## Step 2 — Inspect and shrink the window (2 min)
 
@@ -52,4 +52,4 @@ This setup demonstrates continuity during dev-mode reloads. Recovery after a ful
 - [ ] You verified separate conversations for #2 and #4.
 - [ ] You can explain why increasing the window is not historical retrieval.
 
-**Keep Quarkus running.** Select Voting for [Exercise 12](../12-consensus-voting/START_HERE.md). No reset or project switch is needed.
+**Keep Quarkus running.** In the dashboard’s **Workflow** dropdown, choose **Voting (Ex12)** for [Exercise 12](../12-consensus-voting/START_HERE.md). No reset or project switch is needed.

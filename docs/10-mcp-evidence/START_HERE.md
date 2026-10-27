@@ -74,7 +74,7 @@ The fixture server lives in the same application to simplify event setup, but th
 
 ## Step 2 — Compare with the baseline (3 min)
 
-1. Open [the dashboard](http://localhost:8080) in your running Part 2 application and select **Planning / MCP (Ex9–10)**.
+1. Open [the dashboard](http://localhost:8080) in your running Part 2 application. At the top of the page, open the **Workflow** dropdown and choose **Planning / MCP (Ex9–10)**.
 2. Open incident **#2** — **auth-service / user-login**. In the **Generate recommendation** report field, paste:
 
     ```text
@@ -165,4 +165,4 @@ The supplied adapter now calls `listTools()` and confirms the required tool is a
 
 References: [Quarkus programmatic MCP access](https://docs.quarkiverse.io/quarkus-langchain4j/dev/mcp.html#_programmatic_access_to_mcp_clients) and [LangChain4j `@McpClientAgent`](https://docs.langchain4j.dev/apidocs/dev/langchain4j/agentic/declarative/McpClientAgent.html).
 
-**Keep the same folder and terminal.** Switch the dashboard mode for [Exercise 11 — Memory Boundaries](../11-memory-tiering/START_HERE.md). If stuck, compare `PlanExecuteFlow.java` with the shared solution; do not overwrite the whole project.
+**Keep the same folder and terminal.** In the dashboard’s **Workflow** dropdown, choose **Memory (Ex11)** for [Exercise 11 — Memory Boundaries](../11-memory-tiering/START_HERE.md). If stuck, compare `PlanExecuteFlow.java` with the shared solution; do not overwrite the whole project.

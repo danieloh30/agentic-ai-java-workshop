@@ -12,7 +12,7 @@ Compare reliability, customer-impact, and operational-risk judgments. Three pers
 
 ## Step 1 — Select Voting (2 min)
 
-Choose **Voting (Ex12)** in the same dashboard. The incident action is **Run vote**, which requests specialist ballots. This workflow also offers links to fixed agreement/disagreement fixtures. The initial conservative policy requires unanimity. Earlier incident descriptions, conversations, and application state remain in the same database.
+At the top of [the dashboard](http://localhost:8080), open the **Workflow** dropdown and choose **Voting (Ex12)**. The incident action is **Run vote**, which requests specialist ballots. This workflow also offers links to fixed agreement/disagreement fixtures. The initial conservative policy requires unanimity. Earlier incident descriptions, conversations, and application state remain in the same database.
 
 ## Step 2 — Strengthen the cost perspective (5 min)
 
@@ -68,4 +68,4 @@ Open incident **#2**, submit `Login failures began immediately after a deploymen
 - [ ] A three-way split requests review and preserves all rationales.
 - [ ] You distinguish a deterministic policy from model-generated ballots.
 
-**Keep the same application running.** Select Events for [Exercise 13](../13-event-driven/START_HERE.md). No reset, build command, or new broker startup is required.
+**Keep the same application running.** In the dashboard’s **Workflow** dropdown, choose **Events / Replay (Ex13–14)** for [Exercise 13](../13-event-driven/START_HERE.md). No reset, build command, or new broker startup is required.

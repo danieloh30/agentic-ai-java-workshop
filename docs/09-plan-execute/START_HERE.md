@@ -10,7 +10,7 @@
 
 Part 2 is six short exercises: **9 Planning (15 min), 10 MCP evidence (10 min), 11 Memory (10 min), 12 Voting (15 min), 13 Events (10 min), and 14 Persistent outcomes/replay (15 min)**. That is **75 minutes of labs**, leaving 15 minutes for introduction, transitions, and troubleshooting in a 90-minute event slot.
 
-Start Quarkus **once**, keep this folder and terminal for the entire part, and save edits to trigger hot reload on the next request. Select the relevant mode in the dashboard. Do not reset files, replace projects, switch Git branches, or restart dev mode between exercises. PostgreSQL and Kafka start up front; the MCP fixture server is bundled in the same application. The dev schema uses `update`, and the idempotent startup seed preserves existing records across hot reload.
+Start Quarkus **once**, keep this folder and terminal for the entire part, and save edits to trigger hot reload on the next request. Use the **Workflow** dropdown at the top of the dashboard to select the workflow named in each exercise. Do not reset files, replace projects, switch Git branches, or restart dev mode between exercises. PostgreSQL and Kafka start up front; the MCP fixture server is bundled in the same application. The dev schema uses `update`, and the idempotent startup seed preserves existing records across hot reload.
 
 Choose `part2/lab/` for code-along, or `part2/solution/` for a completed run-and-read route. Stay with that choice for all six exercises. Optional challenges and test-suite runs are outside the core timebox; preflight dependency and container downloads before the event.
 
@@ -56,7 +56,7 @@ export OPENAI_API_KEY=your-key
 ./mvnw quarkus:dev
 ```
 
-Open [the dashboard](http://localhost:8080) and select **Planning / MCP (Ex9–10)**. Leave this terminal running through Exercise 14. In the completed solution, the MCP lookup is already wired; inspect that code now and follow its behavior in Exercise 10.
+Open [the dashboard](http://localhost:8080). At the top of the page, open the **Workflow** dropdown and choose **Planning / MCP (Ex9–10)**. Leave this terminal running through Exercise 14. In the completed solution, the MCP lookup is already wired; inspect that code now and follow its behavior in Exercise 10.
 
 ## Step 2 — Read the plan contract (3 min)
 

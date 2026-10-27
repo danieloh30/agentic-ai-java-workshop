@@ -47,7 +47,7 @@ flowchart TD
 
 ## Step 1 — Select Events (1 min)
 
-Choose **Events / Replay (Ex13–14)** in the dashboard. Complete the consumer edit below before submitting. The starter returns an explicit failure until it is connected; a terminal outcome is retained, so submitting a new request is how you try again after correcting the starter.
+At the top of [the dashboard](http://localhost:8080), open the **Workflow** dropdown and choose **Events / Replay (Ex13–14)**. Complete the consumer edit below before submitting. The starter returns an explicit failure until it is connected; a terminal outcome is retained, so submitting a new request is how you try again after correcting the starter.
 
 ## Step 2 — Read the supplied sequence (3 min)
 
