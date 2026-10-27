@@ -34,11 +34,34 @@ Save before starting the conversation. The system message remains, leaving room 
 
 ## Step 3 — Observe recall and eviction (5 min)
 
-1. Open incident **#2**, enter `The pods are OOMKilled every five minutes. Acknowledge briefly.`, and click **Send message**. Use the same action for each follow-up below.
-2. Send `I am checking the dashboard now. Acknowledge briefly.`
-3. Inspect [#2's history](http://localhost:8080/incident-assistant/2/history) and the `chatmemoryentity` row in the [Dev UI database view](http://localhost:8080/q/dev-ui/quarkus-agroal/database-view). The original user message has left the three-message window and the database.
-4. Ask `What symptom did I first report?`. A reply might still repeat a detail from a retained assistant message. Judge eviction from stored messages, not model wording alone.
-5. Open incident **#4** and ask `What symptom did I report earlier in this conversation?`. Its stored conversation must not contain #2's messages. Each incident ID has its own `@MemoryId`.
+1. Open incident **#2**. Copy this text into the message field and click **Send message**. Wait for the reply before continuing.
+
+    ```text
+    The pods are OOMKilled every five minutes. Acknowledge briefly.
+    ```
+
+2. In the same incident, send this follow-up using **Send message** and wait for the reply:
+
+    ```text
+    I am checking the dashboard now. Acknowledge briefly.
+    ```
+
+3. Inspect [#2’s history](http://localhost:8080/incident-assistant/2/history) and the `chatmemoryentity` row in the [Dev UI database view](http://localhost:8080/q/dev-ui/quarkus-agroal/database-view). The original user message has left the three-message window and the database.
+4. Still in incident **#2**, send:
+
+    ```text
+    What symptom did I first report?
+    ```
+
+    A reply might still repeat a detail from a retained assistant message. Judge eviction from stored messages, not model wording alone.
+
+5. Open incident **#4**, paste the following text, and click **Send message**:
+
+    ```text
+    What symptom did I report earlier in this conversation?
+    ```
+
+    Its stored conversation must not contain #2’s messages. Each incident ID has its own `@MemoryId`.
 
 ## Step 4 — Explain what survives (2 min)
 
