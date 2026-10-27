@@ -61,7 +61,13 @@ Save before starting the conversation. The system message remains, leaving room 
     What symptom did I report earlier in this conversation?
     ```
 
-    Its stored conversation must not contain #2’s messages. Each incident ID has its own `@MemoryId`.
+    If incident **#4** has no earlier conversation, an illustrative **Assistant reply** is:
+
+    > I'm sorry, but you haven't reported any symptoms yet in this conversation. Could you please provide more details about the issue you're experiencing?
+
+    The exact wording may differ. The important point is that the assistant should not recall incident #2’s OOMKilled report as something you told it in #4’s conversation. If you have already chatted about #4, it may refer to that incident’s own retained messages.
+
+    Verify isolation in [#4’s stored history](http://localhost:8080/incident-assistant/4/history): it must not contain #2’s messages. Each incident ID has its own `@MemoryId`; a plausible reply alone does not prove isolation.
 
 ## Step 4 — Explain what survives (2 min)
 
