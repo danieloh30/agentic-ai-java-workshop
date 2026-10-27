@@ -4,7 +4,10 @@
 
 **Persona:** Riley — SRE lead<br>
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Skills & guardrails** workspace.<br>
-**File to edit:** `src/main/java/com/incidentmanagement/policy/ResponseGuardrail.java`. Tests are added in `ResponseTest.java` as shown below.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/policy/ResponseGuardrail.java`
+- `src/test/java/com/incidentmanagement/ResponseTest.java`
 
 ## Why this exercise
 

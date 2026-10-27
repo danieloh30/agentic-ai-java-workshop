@@ -4,7 +4,10 @@
 
 **Persona:** Jordan — Java platform engineer<br>
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Approval & recovery** workspace.<br>
-**File to edit:** `src/main/java/com/incidentmanagement/policy/RecoveryPolicy.java`. Tests are added in `ResponseTest.java` as shown below.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/policy/RecoveryPolicy.java`
+- `src/test/java/com/incidentmanagement/ResponseTest.java`
 
 ## Why this exercise
 

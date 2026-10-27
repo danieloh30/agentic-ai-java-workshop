@@ -4,7 +4,9 @@
 
 **Persona:** Jordan — Java platform engineer<br>
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Tests & evaluation** workspace.<br>
-**File to edit:** `src/test/java/com/incidentmanagement/ResponseTest.java`.
+**Files to edit:**
+
+- `src/test/java/com/incidentmanagement/ResponseTest.java`
 
 ## Why this exercise
 

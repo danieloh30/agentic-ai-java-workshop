@@ -4,7 +4,9 @@
 
 **Persona:** Riley — SRE lead<br>
 **Working project for all six exercises:** `part2/lab/`<br>
-**File to edit:** `src/main/java/com/incidentmanagement/agentic/agents/PlanGenerationAgent.java`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/agentic/agents/PlanGenerationAgent.java`
 
 ## One application for Part 2
 

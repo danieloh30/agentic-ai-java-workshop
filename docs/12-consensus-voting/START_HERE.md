@@ -4,7 +4,10 @@
 
 **Persona:** Priya — IT service manager<br>
 **Continue in:** the running `part2/lab/` application.<br>
-**Files to edit:** `agentic/agents/CostVoter.java` and `agentic/workflow/ConsensusPolicy.java`, under `src/main/java/com/incidentmanagement/`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/agentic/agents/CostVoter.java`
+- `src/main/java/com/incidentmanagement/agentic/workflow/ConsensusPolicy.java`
 
 ## Enterprise context and goal
 

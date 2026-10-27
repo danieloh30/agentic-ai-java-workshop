@@ -4,7 +4,9 @@
 
 **Persona:** Priya — IT service manager<br>
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Approval & recovery** workspace.<br>
-**File to edit:** `src/main/java/com/incidentmanagement/service/ResponseWorker.java`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/service/ResponseWorker.java`
 
 ## Why this exercise
 

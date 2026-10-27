@@ -4,7 +4,9 @@
 
 **Persona:** Sam — NOC analyst<br>
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Tests & evaluation** workspace.<br>
-**File to edit:** `src/main/resources/skills/incident-response/SKILL.md`.
+**Files to edit:**
+
+- `src/main/resources/skills/incident-response/SKILL.md`
 
 ## Why this exercise
 

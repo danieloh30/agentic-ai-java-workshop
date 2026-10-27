@@ -4,7 +4,10 @@
 
 **Persona:** Riley — SRE lead<br>
 **Continue in:** the running `part2/lab/` application, **Planning / MCP** mode.<br>
-**Files to edit:** `src/main/java/com/incidentmanagement/agentic/workflow/PlanExecuteFlow.java` and `src/main/resources/application.properties`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/agentic/workflow/PlanExecuteFlow.java`
+- `src/main/resources/application.properties`
 
 ## Enterprise context and goal
 

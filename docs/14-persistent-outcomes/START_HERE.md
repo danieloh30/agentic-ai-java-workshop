@@ -4,7 +4,9 @@
 
 **Persona:** Jordan — Java platform engineer<br>
 **Continue in:** the running `part2/lab/` application, **Events / Replay** mode.<br>
-**File to edit:** `src/main/java/com/incidentmanagement/messaging/ReplayPolicy.java`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/messaging/ReplayPolicy.java`
 
 ## Enterprise context and goal
 

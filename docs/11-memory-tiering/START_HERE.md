@@ -4,7 +4,9 @@
 
 **Persona:** Sam — NOC analyst<br>
 **Continue in:** the running `part2/lab/` application.<br>
-**File to edit:** `src/main/java/com/incidentmanagement/agentic/agents/IncidentAssistant.java`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/agentic/agents/IncidentAssistant.java`
 
 ## Enterprise context and goal
 

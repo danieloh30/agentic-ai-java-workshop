@@ -4,7 +4,9 @@
 
 **Persona:** Jordan — Java platform engineer<br>
 **Continue in:** the running `part2/lab/` application.<br>
-**File to edit:** `src/main/java/com/incidentmanagement/messaging/IncidentEventConsumer.java`.
+**Files to edit:**
+
+- `src/main/java/com/incidentmanagement/messaging/IncidentEventConsumer.java`
 
 ## Enterprise context and goal
 

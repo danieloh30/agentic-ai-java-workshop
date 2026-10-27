@@ -4,7 +4,9 @@
 
 **Persona:** Riley — SRE lead<br>
 **Continue in:** `part3/lab/` (or the completed `part3/solution/`), **Skills & guardrails** workspace.<br>
-**File to edit:** `src/main/resources/skills/incident-response/SKILL.md`.
+**Files to edit:**
+
+- `src/main/resources/skills/incident-response/SKILL.md`
 
 ## Enterprise context and goal
 
