@@ -16,11 +16,13 @@ public interface IncidentSupervisorAgent {
                     TriageAgent.class
             })
     String superviseIncidentProcessing(IncidentInfo incidentInfo, Integer incidentNumber,
-                                        IncidentAnalysisResults incidentAnalysisResults);
+                                        IncidentAnalysisResults incidentAnalysisResults,
+                                        String report);
 
     @SupervisorRequest
     static String request(IncidentInfo incidentInfo, Integer incidentNumber,
-                          IncidentAnalysisResults incidentAnalysisResults) {
+                          IncidentAnalysisResults incidentAnalysisResults,
+                          String report) {
 
         boolean escalationRequired = incidentAnalysisResults.resolutionAnalysis() != null &&
                 incidentAnalysisResults.resolutionAnalysis().toUpperCase().contains("ESCALATION_REQUIRED");
@@ -33,6 +35,7 @@ public interface IncidentSupervisorAgent {
                 - DO NOT invoke EscalationAgent
                 - Only invoke DiagnosticAgent if root cause analysis needed
                 - Only invoke TriageAgent if re-triage needed
+                - When invoking DiagnosticAgent, use the incident report below
                 """;
 
         String escalationMessage = """
@@ -43,6 +46,7 @@ public interface IncidentSupervisorAgent {
                 STEP 3: If EscalationAgent decides CLOSE:
                         - Invoke DiagnosticAgent if root cause analysis needed
                         - Invoke TriageAgent if re-triage needed
+                - When invoking DiagnosticAgent, use the incident report below
 
                 IMPORTANT: When invoking EscalationAgent:
                 - Pass businessImpact as a STRING with the full assessment
@@ -64,6 +68,7 @@ public interface IncidentSupervisorAgent {
                 Incident: P""" + incidentInfo.priority + " " + incidentInfo.system + "/" + incidentInfo.service
                 + " (#" + incidentNumber + ")\n"
                 + "Current Description: " + incidentInfo.description + "\n\n"
+                + "Incident Report: " + report + "\n\n"
                 + "Severity Analysis: " + incidentAnalysisResults.severityAnalysis() + "\n"
                 + "Impact Analysis: " + incidentAnalysisResults.impactAnalysis() + "\n\n"
                 + "In particular, you have to follow these steps:\n\n"

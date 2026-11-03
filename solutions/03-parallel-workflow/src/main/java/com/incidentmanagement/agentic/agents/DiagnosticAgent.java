@@ -33,12 +33,12 @@ public interface DiagnosticAgent {
         Priority: P{incidentInfo.priority}
         Incident Number: {incidentNumber}
 
-        Diagnostic Request:
-        {diagnosticRequest}
+        Incident Report:
+        {report}
         """)
-    @Agent(description = "Incident diagnostic specialist. Using incident information and request, determines what diagnostic actions are needed.",
+    @Agent(description = "Incident diagnostic specialist. Using incident information and report, determines what diagnostic actions are needed.",
            outputKey = "analysisResult")
     String processDiagnostic(IncidentInfo incidentInfo,
                               Integer incidentNumber,
-                              String diagnosticRequest);
+                              String report);
 }
