@@ -36,6 +36,8 @@ return reprompt("Invalid recommendation JSON", "Invalid recommendation JSON");
 
 The guardrail supplies diagnostic feedback. The supplied `ResponseAgent` system message tells the model to repair contract errors, keeping task instructions in prompt annotations. Its method already declares `maxRetries = 2`: one initial response plus at most two guardrail repairs. Ordinary transport retries are a separate model-client concern.
 
+Preview requests also check that evidence is copied exactly from the original report. If that separate check fails, `ModelInvocations.preview(...)` allows one additional workflow invocation with explicit evidence-repair feedback. Each invocation retains the structural guardrail budget above; the final exact-evidence check still rejects invalid excerpts with HTTP 422.
+
 Save and trigger hot reload with another recommendation. Keep all work from Exercise 15.
 
 ## Step 3 — Exercise the boundary (4 min)

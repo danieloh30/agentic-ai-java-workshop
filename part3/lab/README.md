@@ -8,4 +8,4 @@ The starter is runnable with conservative defaults: invalid recommendations fail
 
 Run `./mvnw test` in a second terminal in this same folder. The scripted model and isolated test database make tests independent of paid model availability.
 
-Preview requests reject evidence that is not quoted exactly from the operator report with a readable HTTP 422 message. The dashboard clears the previous recommendation when generating again. Run `node --test ../test/preview.test.cjs` to check the dashboard failure and retry behavior for both projects (Node.js required).
+Preview requests allow one extra workflow invocation with explicit correction feedback when evidence is not quoted exactly from the operator report. The final evidence check still rejects invalid excerpts with a readable HTTP 422 message. The dashboard clears the previous recommendation when generating again. Run `node --test ../test/preview.test.cjs` to check the dashboard failure and retry behavior for both projects (Node.js required).

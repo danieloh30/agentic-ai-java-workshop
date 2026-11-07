@@ -21,12 +21,23 @@ public interface ResponseAgent {
             If validation reports contract errors, correct them and return valid recommendation JSON.
             Return a rationale, evidence copied verbatim from the report, and concrete checks
             an operator should perform. If facts are insufficient, investigate and name missing facts.
+            Evidence must contain only exact excerpts of the operator report, with matching case
+            and punctuation. Do not add quotation marks or cite priority metadata as report evidence.
+            If evidenceRepairRequired is true, a previous attempt failed the exact-evidence check.
+            Regenerate the recommendation using complete sentences copied directly from the
+            operator report as evidence. Do not paraphrase, summarize, or add labels to these excerpts.
             """)
-    @UserMessage("Incident priority: {priority}. Operator report: {report}")
+    @UserMessage("""
+            Incident priority: {priority}
+            Evidence repair required: {evidenceRepairRequired}
+            Operator report:
+            {report}
+            """)
     @Skills("incident-response")
     @OutputGuardrails(value = ResponseGuardrail.class, maxRetries = 2)
     @Agent(
             description = "Recommends an evidence-grounded response requiring human approval.",
             outputKey = "recommendation")
-    Recommendation recommend(@MemoryId String invocationId, String priority, String report);
+    Recommendation recommend(
+            @MemoryId String invocationId, String priority, String report, boolean evidenceRepairRequired);
 }

@@ -46,13 +46,13 @@ public class WorkshopResource {
                 || !List.of("P1", "P2", "P3", "P4")
                         .contains(p.priority() == null ? "" : p.priority()))
             throw new WebApplicationException(400);
-        var r = agent.recommend(p.priority(), p.report());
+        var r = agent.preview(p.priority(), p.report());
         if (!RecommendationChecks.grounded(r, p.report()))
             throw new WebApplicationException(
                     Response.status(422)
                             .type(MediaType.TEXT_PLAIN)
                             .entity("Recommendation rejected: evidence must be copied exactly from the operator report. "
-                                    + "No recommendation was accepted. Try generating again.")
+                                    + "No recommendation was accepted after one evidence repair attempt.")
                             .build());
         return r;
     }

@@ -54,10 +54,11 @@ Open `src/main/java/com/incidentmanagement/agents/ResponseAgent.java` in your ch
 @OutputGuardrails(value = ResponseGuardrail.class, maxRetries = 2)
 @Agent(description = "Recommends an evidence-grounded response requiring human approval.",
        outputKey = "recommendation")
-Recommendation recommend(@MemoryId String invocationId, String priority, String report);
+Recommendation recommend(
+        @MemoryId String invocationId, String priority, String report, boolean evidenceRepairRequired);
 ```
 
-The supplied invocation service assigns a new memory ID for every recommendation and judge call, keeping unrelated incidents out of the same conversation. This temporary model context is separate from the durable response record used later.
+The supplied invocation service assigns a new memory ID for every recommendation and judge call, keeping unrelated incidents out of the same conversation. Preview requests start with `evidenceRepairRequired = false`. If the exact-evidence check fails, the service invokes the workflow once more with the original report and `evidenceRepairRequired = true`; the agent's prompt explains how to correct the evidence. This temporary model context is separate from the durable response record used later.
 
 The extension exposes the native skill tool. There is no shell execution or external skill download in this lab.
 
@@ -96,7 +97,7 @@ The dashboard has an input panel on the left and a **Recommendation contract** p
 5. Compare the two recommendations: the P2 checkout case should focus on investigation, deployment timing, and error rates; the P1 authentication case should escalate to the on-call team and name authentication checks. Neither recommendation means remediation or recovery has occurred.
 
 !!! tip "If you see HTTP 422"
-    The model returned an evidence item that was not copied exactly from your **Operator report**. The request was rejected, and no recommendation was accepted. Click **Generate recommendation** to try again. The previous result is cleared when a new request starts, so a failed P1 request cannot leave the earlier P2 recommendation displayed as its result. Do not weaken the evidence check to accept paraphrases.
+    The model still returned evidence that was not copied exactly from your **Operator report**, even after one automatic repair attempt with explicit correction feedback. The request was rejected, and no recommendation was accepted. Repeating an unchanged request may produce the same failure at temperature 0. The previous result is cleared when a new request starts, so a failed P1 request cannot leave the earlier P2 recommendation displayed as its result. Do not weaken the evidence check to accept paraphrases.
 
 A model response may vary; a plausible answer alone does not prove tool activation. Exercise 19's `nativeSkillToolRoundTrip` verifies that the real skill instructions are returned to the model after its tool call. Runtime activation remains a model choice, while the approval and evidence checks are enforced in Java.
 

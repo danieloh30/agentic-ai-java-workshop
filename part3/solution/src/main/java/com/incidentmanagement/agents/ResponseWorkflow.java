@@ -10,7 +10,8 @@ import dev.langchain4j.service.MemoryId;
 /** An agentic entry point gives each recommendation a fresh scope. */
 public interface ResponseWorkflow {
     @SequenceAgent(outputKey = "responseResult", subAgents = ResponseAgent.class)
-    Recommendation recommend(@MemoryId String invocationId, String priority, String report);
+    Recommendation recommend(
+            @MemoryId String invocationId, String priority, String report, boolean evidenceRepairRequired);
 
     @Output
     static Recommendation output(AgenticScope scope) {

@@ -98,6 +98,7 @@ class ResponseTest {
     @Test
     void apiRejectsInventedEvidence() {
         ScriptedModel.text(VALID.replace("Checkout 503 errors", "CPU is 99%"));
+        ScriptedModel.text(VALID.replace("Checkout 503 errors", "CPU is 99%"));
         given().contentType("application/json")
                 .body(Map.of("priority", "P2", "report", REPORT))
                 .post("/api/preview")
@@ -106,6 +107,8 @@ class ResponseTest {
                 .contentType("text/plain")
                 .body(containsString("evidence must be copied exactly from the operator report"))
                 .body(containsString("No recommendation was accepted"));
+        assertEquals(2, ScriptedModel.requests.size());
+        assertTrue(ScriptedModel.replies.isEmpty());
     }
 
     @Test
@@ -121,14 +124,51 @@ class ResponseTest {
                 .statusCode(200)
                 .body("action", equalTo("ESCALATE"))
                 .body("evidence[0]", equalTo("Synthetic logins fail for all users."));
+        assertEquals(1, ScriptedModel.requests.size());
 
+        ScriptedModel.text(recommendation.replace("Synthetic logins fail for all users.", "All users cannot log in."));
         ScriptedModel.text(recommendation.replace("Synthetic logins fail for all users.", "All users cannot log in."));
         given().contentType("application/json")
                 .body(Map.of("priority", "P1", "report", report))
                 .post("/api/preview")
                 .then()
                 .statusCode(422)
-                .body(containsString("evidence must be copied exactly from the operator report"));
+                .body(containsString("evidence must be copied exactly from the operator report"))
+                .body(containsString("after one evidence repair attempt"));
+        assertEquals(3, ScriptedModel.requests.size());
+        assertTrue(ScriptedModel.replies.isEmpty());
+    }
+
+    @Test
+    void p1PreviewRepairsEvidenceOnceWithOriginalReportAndExplicitFeedback() throws Exception {
+        String report = "Complete authentication failure. Synthetic logins fail for all users. No remediation has run.";
+        String recommendation = VALID.replace("INVESTIGATE", "ESCALATE")
+                .replace("Checkout 503 errors", "Synthetic logins fail for all users.");
+        ScriptedModel.text(recommendation.replace("Synthetic logins fail for all users.", "All users cannot log in."));
+        ScriptedModel.text(recommendation);
+        given().contentType("application/json")
+                .body(Map.of("priority", "P1", "report", report))
+                .post("/api/preview")
+                .then()
+                .statusCode(200)
+                .body("action", equalTo("ESCALATE"))
+                .body("evidence[0]", equalTo("Synthetic logins fail for all users."));
+        assertEquals(2, ScriptedModel.requests.size());
+        String firstPrompt = userPrompt(ScriptedModel.requests.getFirst());
+        String repairPrompt = userPrompt(ScriptedModel.requests.getLast());
+        assertTrue(firstPrompt.contains("Evidence repair required: false"));
+        assertTrue(repairPrompt.contains("Evidence repair required: true"));
+        assertTrue(repairPrompt.contains("Incident priority: P1"));
+        assertTrue(repairPrompt.contains(report));
+        assertTrue(ScriptedModel.requests.getLast().contains("previous attempt failed the exact-evidence check"));
+        assertTrue(ScriptedModel.replies.isEmpty());
+    }
+
+    private String userPrompt(String request) throws Exception {
+        for (var message : mapper.readTree(request).get("messages")) {
+            if ("user".equals(message.path("role").asText())) return message.path("content").asText();
+        }
+        throw new AssertionError("Expected a user message");
     }
 
     @Test
