@@ -69,7 +69,14 @@ Save and submit a request to trigger hot reload. The publisher returns before th
 
 ## Step 4 — Follow the handoff (3 min)
 
-1. Open incident **#2**, enter `Auth pods are OOMKilled every five minutes`, and click **Submit event**.
+1. Open incident **#2**. Copy this message into the report field:
+
+    ```text
+    Auth pods are OOMKilled every five minutes
+    ```
+
+    Click **Submit event**.
+
 2. Read the submission acknowledgement and request ID. Submission is not completion.
 3. Close and reopen #2 after processing. Its result changes from pending to `AWAITING_REVIEW` or `FAILED`. The incident remains In Progress.
 4. Leave this request in place. Its persisted outcome is the starting point for Exercise 14.
