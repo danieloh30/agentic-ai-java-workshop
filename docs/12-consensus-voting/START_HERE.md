@@ -63,7 +63,13 @@ The fixtures exercise the real policy without model calls or incident writes. Th
 
 ## Step 5 — Inspect one live vote (2 min)
 
-Open incident **#2**, submit `Login failures began immediately after a deployment`, and read the result and ballots. Actual actions can vary; use fixed fixtures to reliably demonstrate disagreement. This mode recommends an action, never executes it, and keeps the incident In Progress.
+Open incident **#2**. Copy this message into the report field:
+
+```text
+Login failures began immediately after a deployment
+```
+
+Submit the report, then read the result and ballots. Actual actions can vary; use fixed fixtures to reliably demonstrate disagreement. This mode recommends an action, never executes it, and keeps the incident In Progress.
 
 ## Done when
 
