@@ -80,9 +80,11 @@ The dashboard has an input panel on the left and a **Recommendation contract** p
 
 2. Click **Generate recommendation** and wait for the result in **Recommendation contract**. Read the action badge and rationale. Under **Report evidence**, confirm the excerpts match the report exactly. Under **Operator verification to perform**, look for checks of deployment timing and error rate against the baseline. These are checks for an operator to perform, not claims that verification has already run. Note the action and checks before generating the next result, which replaces this one.
 
-    [![Example P2 checkout recommendation showing the INVESTIGATE action, exact report evidence, and operator verification checks](../images/ex15-p2-investigate.png){ width="350" loading="lazy" }](../images/ex15-p2-investigate.png)
+    [![Example P2 checkout recommendation showing the INVESTIGATE action, exact report evidence, and operator verification checks](../images/ex15-p2-investigate.png){ width="450" loading="lazy" }](../images/ex15-p2-investigate.png)
+    {: .planning-screenshot }
 
     *Example P2 checkout result: **INVESTIGATE**, exact report evidence, and operator checks still to perform. Generated wording may vary. Click the image for a larger view.*
+    {: .planning-screenshot }
 
 3. Change **Priority** to **P1**. Replace the **Operator report** text with:
 
