@@ -55,7 +55,7 @@ flowchart TD
 
 The MCP client and fixture server are already supplied. Your change decides **when evidence becomes mandatory**, rather than asking the model whether it wants to fetch it.
 
-In `PlanExecuteFlow.resolve(...)`, replace the explicit `not_requested` baseline with:
+Open `src/main/java/com/incidentmanagement/agentic/workflow/PlanExecuteFlow.java` in `part2/lab/`. In `resolve(...)`, replace the explicit `not_requested` baseline with:
 
 ```java
 var evidence = evidenceClient.fetch(incident.system);
