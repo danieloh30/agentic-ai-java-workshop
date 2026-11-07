@@ -63,7 +63,7 @@ var evidence = evidenceClient.fetch(incident.system);
 
 Save the file. In the completed `part2/solution/` application this call is already connected; inspect it and continue to Step 2.
 
-Read the supplied `DeploymentEvidenceClient.fetch(...)` to follow the boundary:
+Open `src/main/java/com/incidentmanagement/evidence/DeploymentEvidenceClient.java` in your chosen `part2/lab/` or `part2/solution/` folder, then read `fetch(...)` to follow the boundary:
 
 1. **Discover:** `client.listTools()` obtains the tool metadata and checks that `getRecentDeployments` is advertised.
 2. **Call:** `client.executeTool(...)` sends that tool name and the incident's system as the `service` argument over MCP Streamable HTTP to the bundled `/mcp` endpoint.
