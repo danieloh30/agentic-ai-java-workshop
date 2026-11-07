@@ -47,7 +47,7 @@ Name checks for the operator to perform; never say these checks already passed.
 
 Save. The supplied `quarkus.live-reload.watched-resources` setting watches this skill. Wait about three seconds for the change scanner, then make a new request to trigger reload; keep the terminal running.
 
-Inspect the supplied `ResponseAgent` method:
+Open `src/main/java/com/incidentmanagement/agents/ResponseAgent.java` in your chosen `part3/lab/` or `part3/solution/` folder, then inspect the supplied method:
 
 ```java
 @Skills("incident-response")
