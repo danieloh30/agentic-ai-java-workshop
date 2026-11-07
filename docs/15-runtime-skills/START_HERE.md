@@ -94,6 +94,13 @@ The dashboard has an input panel on the left and a **Recommendation contract** p
     ```
 
 4. Click **Generate recommendation** again. Expect an **ESCALATE** action and authentication-specific operator checks, such as checking synthetic logins. Confirm **Report evidence** now quotes the authentication report rather than the checkout report.
+
+    [![Example P1 authentication report and accepted ESCALATE recommendation with exact evidence and authentication checks](../images/ex15-p1-escalate.png){ width="700" loading="lazy" }](../images/ex15-p1-escalate.png)
+    {: .planning-screenshot }
+
+    *Example P1 authentication result: **ESCALATE**, exact report evidence, and authentication checks for the operator. Generated wording may vary. Click the image for a larger view.*
+    {: .planning-screenshot }
+
 5. Compare the two recommendations: the P2 checkout case should focus on investigation, deployment timing, and error rates; the P1 authentication case should escalate to the on-call team and name authentication checks. Neither recommendation means remediation or recovery has occurred.
 
 !!! tip "If you see HTTP 422"
