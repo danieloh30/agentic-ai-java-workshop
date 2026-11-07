@@ -62,11 +62,23 @@ for (const button of document.querySelectorAll("[data-tab]"))
   };
 $("preview").onclick = () =>
   action($("preview"), async () => {
-    const p = await api("/preview", {
-      priority: $("priority").value,
-      report: $("report").value,
-    });
-    renderProposal($("preview-result"), p);
+    const result = $("preview-result");
+    result.replaceChildren();
+    result.className = "empty";
+    result.textContent = "Generating a new recommendation…";
+    notice("");
+    let p;
+    try {
+      p = await api("/preview", {
+        priority: $("priority").value,
+        report: $("report").value,
+      });
+    } catch (failure) {
+      result.textContent = "No recommendation accepted for this request. See the error above.";
+      throw failure;
+    }
+    result.className = "";
+    renderProposal(result, p);
     notice(
       "Recommendation passed the contract and exact-evidence checks. Review its meaning before approval.",
     );

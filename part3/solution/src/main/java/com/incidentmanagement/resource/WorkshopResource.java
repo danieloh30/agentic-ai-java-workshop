@@ -48,7 +48,12 @@ public class WorkshopResource {
             throw new WebApplicationException(400);
         var r = agent.recommend(p.priority(), p.report());
         if (!RecommendationChecks.grounded(r, p.report()))
-            throw new WebApplicationException("Evidence is not quoted from the report", 422);
+            throw new WebApplicationException(
+                    Response.status(422)
+                            .type(MediaType.TEXT_PLAIN)
+                            .entity("Recommendation rejected: evidence must be copied exactly from the operator report. "
+                                    + "No recommendation was accepted. Try generating again.")
+                            .build());
         return r;
     }
 

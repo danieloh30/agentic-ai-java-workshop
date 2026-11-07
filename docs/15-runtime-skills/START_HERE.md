@@ -88,6 +88,9 @@ The dashboard has an input panel on the left and a **Recommendation contract** p
 4. Click **Generate recommendation** again. Expect an **ESCALATE** action and authentication-specific operator checks, such as checking synthetic logins. Confirm **Report evidence** now quotes the authentication report rather than the checkout report.
 5. Compare the two recommendations: the P2 checkout case should focus on investigation, deployment timing, and error rates; the P1 authentication case should escalate to the on-call team and name authentication checks. Neither recommendation means remediation or recovery has occurred.
 
+!!! tip "If you see HTTP 422"
+    The model returned an evidence item that was not copied exactly from your **Operator report**. The request was rejected, and no recommendation was accepted. Click **Generate recommendation** to try again. The previous result is cleared when a new request starts, so a failed P1 request cannot leave the earlier P2 recommendation displayed as its result. Do not weaken the evidence check to accept paraphrases.
+
 A model response may vary; a plausible answer alone does not prove tool activation. Exercise 19's `nativeSkillToolRoundTrip` verifies that the real skill instructions are returned to the model after its tool call. Runtime activation remains a model choice, while the approval and evidence checks are enforced in Java.
 
 ## Done when

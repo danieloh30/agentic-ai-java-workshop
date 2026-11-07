@@ -102,7 +102,33 @@ class ResponseTest {
                 .body(Map.of("priority", "P2", "report", REPORT))
                 .post("/api/preview")
                 .then()
-                .statusCode(422);
+                .statusCode(422)
+                .contentType("text/plain")
+                .body(containsString("evidence must be copied exactly from the operator report"))
+                .body(containsString("No recommendation was accepted"));
+    }
+
+    @Test
+    void p1PreviewAcceptsExactEvidenceAndRejectsParaphrases() {
+        String report = "Complete authentication failure. Synthetic logins fail for all users. No remediation has run.";
+        String recommendation = VALID.replace("INVESTIGATE", "ESCALATE")
+                .replace("Checkout 503 errors", "Synthetic logins fail for all users.");
+        ScriptedModel.text(recommendation);
+        given().contentType("application/json")
+                .body(Map.of("priority", "P1", "report", report))
+                .post("/api/preview")
+                .then()
+                .statusCode(200)
+                .body("action", equalTo("ESCALATE"))
+                .body("evidence[0]", equalTo("Synthetic logins fail for all users."));
+
+        ScriptedModel.text(recommendation.replace("Synthetic logins fail for all users.", "All users cannot log in."));
+        given().contentType("application/json")
+                .body(Map.of("priority", "P1", "report", report))
+                .post("/api/preview")
+                .then()
+                .statusCode(422)
+                .body(containsString("evidence must be copied exactly from the operator report"));
     }
 
     @Test
