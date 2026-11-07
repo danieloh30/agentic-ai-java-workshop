@@ -9,11 +9,11 @@
 - `src/main/java/com/incidentmanagement/policy/ResponseGuardrail.java`
 - `src/test/java/com/incidentmanagement/ResponseTest.java`
 
-## Why this exercise
+## Enterprise context and goal
 
-A prompt can request valid output, but an application still needs an executable contract. The supplied `RecommendationChecks` requires an allowed action, rationale, evidence, nonblank operator checks, and `requiresApproval=true`. It does not establish that the recommendation is semantically correct.
+Riley, the SRE lead, needs operators to receive recommendations with an allowed action, supporting evidence, concrete verification checks, and an explicit approval requirement. A runbook prompt can request these fields, but malformed JSON or a disallowed action must not reach the operator as an accepted recommendation. Riley also wants recoverable formatting errors corrected within a fixed budget.
 
-The starter fails immediately on an invalid response. Add a bounded repair path without weakening the contract.
+Add a bounded repair path to the starter, which currently fails immediately on an invalid response, and verify it with scripted model responses. Keep the supplied `RecommendationChecks` contract: an allowed action, rationale, evidence, nonblank operator checks, and `requiresApproval=true`. Passing that contract does not establish semantic correctness; exact report evidence is checked separately.
 
 ## Step 1 — Inspect the contract (2 min)
 

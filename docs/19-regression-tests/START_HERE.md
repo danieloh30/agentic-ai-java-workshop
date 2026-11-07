@@ -8,9 +8,11 @@
 
 - `src/test/java/com/incidentmanagement/ResponseTest.java`
 
-## Why this exercise
+## Enterprise context and goal
 
-A live demo can look correct while missing rare failures. Jordan needs repeatable checks of skill wiring, bounded repairs, correlation and persisted state, independently of paid model availability.
+Jordan, the Java platform engineer, needs repeatable checks before changes to the response workflow are shared with operators. A successful live demonstration can miss broken skill wiring, exhausted repair budgets, unrelated evidence, or incorrect state transitions. His regression suite must exercise those cases independently of paid model availability and without altering the workshop's saved dev-mode records.
+
+Run the supplied Quarkus tests with the local scripted model and isolated test database, inspect the native skill tool round trip, and add a regression proving that well-formed output with unrelated evidence cannot reach approval. These tests verify runtime wiring and enforcement under controlled responses; they do not measure live-model recommendation quality.
 
 ## Step 1 — Run the existing checks (3 min)
 

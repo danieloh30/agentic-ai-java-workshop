@@ -8,9 +8,11 @@
 
 - `src/main/resources/skills/incident-response/SKILL.md`
 
-## Why this exercise
+## Enterprise context and goal
 
-Contract tests catch disallowed actions and broken state transitions. They cannot tell you whether operator guidance is useful. Sam, the NOC analyst, needs a small, repeatable quality comparison before adopting a new runbook.
+Sam, the NOC analyst, needs to decide whether a revised incident-response runbook gives operators more useful verification guidance. Contract tests catch disallowed actions and broken state transitions, but they cannot establish that the suggested checks are actionable. Sam needs to compare the current and revised skill on the same incidents before recommending adoption.
+
+Save a baseline evaluation, make one focused skill edit, and run a candidate evaluation with the same dataset, model configuration, and judge rubric. Compare deterministic checks, individual recommendations, judge reasons, and elapsed time, then decide whether to keep or revise the change. This small comparison supports a workshop adoption decision; it is not statistical proof of improvement, and judge scores remain fallible.
 
 ## Step 1 — Read the fixed experiment (3 min)
 

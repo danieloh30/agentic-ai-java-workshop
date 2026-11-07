@@ -8,9 +8,11 @@
 
 - `src/main/java/com/incidentmanagement/service/ResponseWorker.java`
 
-## Why this exercise
+## Enterprise context and goal
 
-Priya, the incident manager, may approve a response minutes after generation. Keeping the original HTTP request or model invocation open is unnecessary. Persist the proposal and let a later, independent request record the decision.
+Priya, the IT service manager, may review an incident response minutes after it is generated. She needs a saved proposal she can inspect and approve later, with a decision tied to that exact proposal. Operators also need duplicate submissions to reuse the existing request rather than start another planning attempt. Keeping the original HTTP request or model invocation open does not support this handoff.
+
+Connect the supplied asynchronous worker, submit a response request, and inspect its saved proposal and hash. Record one approval through a later, independent request, then leave a second proposal waiting for Exercise 18. Approval records a human decision; it does not execute remediation or resolve the incident.
 
 This workshop uses a supplied, explicit database-backed state machine. It is not a Quarkus Flow engine checkpoint, distributed execution platform, or exactly-once remediation system.
 
