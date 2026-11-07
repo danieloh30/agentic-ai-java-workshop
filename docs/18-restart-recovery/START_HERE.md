@@ -67,10 +67,14 @@ void abandonedPlanningRequiresExplicitRetry() {
 
 Run `./mvnw -Dtest=ResponseTest#abandonedPlanningRequiresExplicitRetry test` in the second terminal. The test advances the cutoff directly instead of spending two event minutes waiting for the lease. It verifies interruption policy; the actual JVM restart above proves persistence across process shutdown.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] A real JVM restart preserved a pending proposal, its hash, and attempt count.
 - [ ] The recovered request accepted a decision without replanning.
 - [ ] Abandoned planning requires an explicit retry rather than automatic duplicate work.
+
+</div>
 
 [Next: Exercise 19 — Deterministic Regression Tests](../19-regression-tests/START_HERE.md).

@@ -108,11 +108,15 @@ The dashboard has an input panel on the left and a **Recommendation contract** p
 
 A model response may vary; a plausible answer alone does not prove tool activation. Exercise 19's `nativeSkillToolRoundTrip` verifies that the real skill instructions are returned to the model after its tool call. Runtime activation remains a model choice, while the approval and evidence checks are enforced in Java.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] The skill file contains domain guidance for checkout and authentication incidents.
 - [ ] A new request after saving uses the updated skill without resetting the application.
 - [ ] You can distinguish the runtime skill from coding-assistant rules, MCP, and A2A.
+
+</div>
 
 [Next: Exercise 16 — Runtime Output Guardrails](../16-output-guardrails/START_HERE.md).
 

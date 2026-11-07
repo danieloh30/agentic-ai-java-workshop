@@ -60,10 +60,14 @@ If time permits, temporarily use a known report excerpt instead of `CPU is 99%`,
 
 The solution already includes the added regression; run it without adding a duplicate method. Additional optional cases include whitespace-only checks and late completions from previous attempts.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Tests pass without paid model calls or touching your dev-mode database.
 - [ ] You can explain what the skill round-trip test proves and what it cannot prove.
 - [ ] Unrelated evidence cannot reach human approval despite a valid response contract.
+
+</div>
 
 [Next: Exercise 20 — Quality Evaluation](../20-quality-evaluation/START_HERE.md).

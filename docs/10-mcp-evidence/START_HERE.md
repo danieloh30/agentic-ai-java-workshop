@@ -114,11 +114,15 @@ workshop.evidence.scenario=available
 
 Save and submit the same report once more. Confirm that the release and planning results return. Each submission starts a new run; existing incident records remain available throughout hot reload.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] An available-evidence run shows `workshop-release-42` and specialist recommendations. In the starter, this replaces the no-lookup baseline.
 - [ ] Unavailable evidence stopped the run before any model call.
 - [ ] You restored `available` by editing the property while keeping dev mode running.
+
+</div>
 
 ## Optional verification — Run the supplied tests
 

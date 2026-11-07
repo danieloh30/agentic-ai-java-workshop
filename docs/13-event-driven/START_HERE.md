@@ -81,10 +81,14 @@ Save and submit a request to trigger hot reload. The publisher returns before th
 3. Close and reopen #2 after processing. Its result changes from pending to `AWAITING_REVIEW` or `FAILED`. The incident remains In Progress.
 4. Leave this request in place. Its persisted outcome is the starting point for Exercise 14.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] You connected the sequential agents to the Kafka consumer.
 - [ ] You distinguished request acceptance, processing outcome, and incident status.
 - [ ] A request ID correlates the recommendation to the submitted work.
+
+</div>
 
 **Keep the same folder, terminal, and request.** Continue directly to [Exercise 14 — Persistent Outcomes and Replay](../14-persistent-outcomes/START_HERE.md).

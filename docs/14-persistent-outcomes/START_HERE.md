@@ -56,11 +56,15 @@ Processing status and incident status are separate: `PUBLISHED` means pending wo
 
 Completed replays reuse persisted outcomes, and duplicate outcome writes are idempotent. This is **not exactly-once model execution**: a crash before persistence may cause another model call. Registration and Kafka publication also have a crash gap; an outbox is a later extension. Retaining a waiting workflow across full application shutdown is a separate topic from this dev-mode continuity exercise.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] The request from Exercise 13 survived the replay-policy hot reload.
 - [ ] A completed replay reused its outcome without another model invocation.
 - [ ] New work received a different request ID without overwriting the old record.
 - [ ] You can distinguish duplicate-safe outcomes from exactly-once execution or workflow recovery.
+
+</div>
 
 This completes **75 minutes of Part 2 labs**. Stop dev mode when the session is finished. Optional challenges and automated test runs are outside the 75-minute core; `./mvnw test` in either shared project uses scripted responses rather than paid model calls.

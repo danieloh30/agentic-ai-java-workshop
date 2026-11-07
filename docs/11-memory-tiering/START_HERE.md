@@ -77,10 +77,14 @@ Change the cap back to six if desired. Increasing it does not recover evicted me
 
 This setup demonstrates continuity during dev-mode reloads. Recovery after a full application stop additionally needs a retained database and is a later topic.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] You inspected a message that was evicted from both working memory and storage.
 - [ ] You verified separate conversations for #2 and #4.
 - [ ] You can explain why increasing the window is not historical retrieval.
+
+</div>
 
 **Keep Quarkus running.** In the dashboard’s **Workflow** dropdown, choose **Voting (Ex12)** for [Exercise 12](../12-consensus-voting/START_HERE.md). No reset or project switch is needed.

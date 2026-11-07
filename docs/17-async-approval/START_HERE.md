@@ -65,11 +65,15 @@ The decision includes the displayed proposal hash. A stale or altered hash gets 
 
 Click **New request ID**, submit a second request, and **leave it in WAITING_APPROVAL**. Keep its ID and hash for Exercise 18. Do not submit another request in the next exercise merely to demonstrate recovery.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] HTTP 202 returns before model work and approval finish.
 - [ ] Duplicate submission reuses the request without increasing the attempt count.
 - [ ] One decision is saved, and a second proposal remains waiting for Exercise 18.
+
+</div>
 
 This is a local workshop with one running app and one operator, not an authenticated approval service. Production identity, authorization and multi-instance worker coordination are outside this timebox.
 

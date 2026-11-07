@@ -121,12 +121,16 @@ The example below uses local fixture data to illustrate a two-round result. Roun
 
 The categorized result is saved with the incident and remains available after reloading the dashboard. Use **View original saved result** when you need the complete text.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] You can identify the plan, prerequisite check, specialist results, and review outcome.
 - [ ] You can explain how feedback and the three-iteration budget bound replanning.
 - [ ] You can distinguish `PlanGenerationAgent` from the framework’s `@PlannerAgent` workflow annotation.
 - [ ] You distinguish incident facts from evidence that has not been retrieved.
+
+</div>
 
 ## Optional comparison — Custom planner workflow
 

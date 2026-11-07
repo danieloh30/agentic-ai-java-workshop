@@ -53,10 +53,14 @@ A three-case dataset and one judge run are a workshop-sized smoke evaluation, no
 
 The supplied test `fixedDatasetEvaluationPersistsSeparateChecksAndJudgeScores` checks evaluation plumbing with scripted outputs, including a failed expected action. It does not replace the live comparison.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Two completed runs share the same dataset hash, rubric and model but differ in skill hash.
 - [ ] You compared deterministic failures, individual outputs, and judge reasons separately.
 - [ ] You made an adoption decision without assuming the candidate must score higher.
+
+</div>
 
 The 75-minute core is complete. Keep the same folder and saved records for later practice. A broader dataset, repeated evaluation, independent judges, production authentication, and engine-based distributed durability are optional follow-up work outside this 90-minute event slot.

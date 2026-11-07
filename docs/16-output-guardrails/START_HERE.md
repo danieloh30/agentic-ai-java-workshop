@@ -69,10 +69,14 @@ void guardrailRepromptsInvalidContract() {
 
 Run commands in a **second terminal in the same folder**; leave dev mode running. The completed route already includes this test, so run it without adding a duplicate method.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Invalid output receives useful correction feedback within a fixed retry budget.
 - [ ] The scripted `CLOSE` response is repaired to an allowed action.
 - [ ] You can name a semantic problem the structural guardrail would not catch.
+
+</div>
 
 [Next: Exercise 17 — Asynchronous Approval](../17-async-approval/START_HERE.md).

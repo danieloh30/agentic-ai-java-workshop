@@ -71,10 +71,14 @@ Login failures began immediately after a deployment
 
 Submit the report, then read the result and ballots. Actual actions can vary; use fixed fixtures to reliably demonstrate disagreement. This mode recommends an action, never executes it, and keeps the incident In Progress.
 
-## Done when
+<div class="done-when" markdown>
+
+## :material-check-circle: Done when
 
 - [ ] Two of three valid ballots can produce a recommendation.
 - [ ] A three-way split requests review and preserves all rationales.
 - [ ] You distinguish a deterministic policy from model-generated ballots.
+
+</div>
 
 **Keep the same application running.** In the dashboard’s **Workflow** dropdown, choose **Events / Replay (Ex13–14)** for [Exercise 13](../13-event-driven/START_HERE.md). No reset, build command, or new broker startup is required.
