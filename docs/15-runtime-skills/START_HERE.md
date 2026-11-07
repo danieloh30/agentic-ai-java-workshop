@@ -30,6 +30,9 @@ Use `part3/solution` instead for the completed run-and-read route. Java 25 and a
 
 The supplied launcher creates a dedicated PostgreSQL container and named volume. Later code/resource edits use hot reload. Pre-download dependencies and the image with `./dev.sh --prepare` before the event; downloads are outside the core timebox. No real API key is needed for that preparation.
 
+!!! note "Why `./dev.sh` instead of `quarkus dev`?"
+    The launcher creates or restarts PostgreSQL with a persistent named volume, waits for it to be ready, and then runs `./mvnw quarkus:dev`. This preserves records across application restarts, which Exercise 18 uses to demonstrate recovery. Part 3 disables automatic database Dev Services in dev mode, so starting Quarkus directly does not create the required database.
+
 ## Step 2 — Add domain guidance (4 min)
 
 Open the skill file. Keep its YAML `name` and `description`. Extend the body with:
