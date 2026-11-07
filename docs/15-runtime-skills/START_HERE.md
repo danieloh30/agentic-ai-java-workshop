@@ -63,13 +63,32 @@ The extension exposes the native skill tool. There is no shell execution or exte
 
 ## Step 3 — Compare two recommendations (4 min)
 
-In **Skills & guardrails**, submit the default P2 checkout report. Inspect the exact report excerpts, suggested action, and operator checks. Then select P1 and use:
+The dashboard has an input panel on the left and a **Recommendation contract** panel on the right. The screenshot shows the starting view, before a recommendation has been generated.
 
-```text
-Complete authentication failure. Synthetic logins fail for all users. No remediation has run.
-```
+<figure class="planning-screenshot" markdown="1">
 
-Expect an escalation recommendation and authentication checks. A model response may vary; a plausible answer alone does not prove tool activation. Exercise 19's `nativeSkillToolRoundTrip` verifies that the real skill instructions are returned to the model after its tool call. Runtime activation remains a model choice, while the approval and evidence checks are enforced in Java.
+[![Skills and guardrails dashboard with Priority, Operator report, and Generate recommendation on the left, and Recommendation contract on the right](../images/ex15-skills-dashboard.png){ width="700" loading="lazy" }](../images/ex15-skills-dashboard.png)
+
+<figcaption>Enter each report on the left, then inspect its generated recommendation on the right. Click the image for a larger view.</figcaption>
+</figure>
+
+1. Select **15–16 · Skills & guardrails**. Leave **Priority** as **P2**. The **Operator report** field starts with the checkout example; if you changed it, copy this text into the field:
+
+    ```text
+    Intermittent checkout 503 errors started after release 2.4. Error rate is 8%. No rollback or verification has run.
+    ```
+
+2. Click **Generate recommendation** and wait for the result in **Recommendation contract**. Read the action badge and rationale. Under **Report evidence**, confirm the excerpts match the report exactly. Under **Operator verification to perform**, look for checks of deployment timing and error rate against the baseline. These are checks for an operator to perform, not claims that verification has already run. Note the action and checks before generating the next result, which replaces this one.
+3. Change **Priority** to **P1**. Replace the **Operator report** text with:
+
+    ```text
+    Complete authentication failure. Synthetic logins fail for all users. No remediation has run.
+    ```
+
+4. Click **Generate recommendation** again. Expect an **ESCALATE** action and authentication-specific operator checks, such as checking synthetic logins. Confirm **Report evidence** now quotes the authentication report rather than the checkout report.
+5. Compare the two recommendations: the P2 checkout case should focus on investigation, deployment timing, and error rates; the P1 authentication case should escalate to the on-call team and name authentication checks. Neither recommendation means remediation or recovery has occurred.
+
+A model response may vary; a plausible answer alone does not prove tool activation. Exercise 19's `nativeSkillToolRoundTrip` verifies that the real skill instructions are returned to the model after its tool call. Runtime activation remains a model choice, while the approval and evidence checks are enforced in Java.
 
 ## Done when
 
