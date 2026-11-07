@@ -17,7 +17,12 @@ Add a bounded repair path to the starter, which currently fails immediately on a
 
 ## Step 1 — Inspect the contract (2 min)
 
-Read `Recommendation` and `RecommendationChecks`. Allowed actions are **INVESTIGATE** and **ESCALATE**. Approval never means the incident is resolved. The application separately verifies that evidence strings are exact excerpts from the report; it rejects unsupported evidence even if the JSON schema is valid.
+In your chosen `part3/lab/` or `part3/solution/` folder, read these Java files:
+
+- `src/main/java/com/incidentmanagement/model/Recommendation.java` — the record defining the recommendation fields.
+- `src/main/java/com/incidentmanagement/policy/RecommendationChecks.java` — the class validating the response contract and exact evidence excerpts.
+
+Allowed actions are **INVESTIGATE** and **ESCALATE**. Approval never means the incident is resolved. The application separately verifies that evidence strings are exact excerpts from the report; it rejects unsupported evidence even if the JSON schema is valid.
 
 ## Step 2 — Request repairs (4 min)
 
