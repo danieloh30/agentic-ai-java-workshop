@@ -104,8 +104,11 @@ Save. Dev mode picks up the change when you next make a request. All the special
 
 2. Read the **Planning result** outcome card and iteration count. Expand each round in **Review timeline** to inspect its selected steps, rationale, and reviewer feedback.
 3. Expand **Specialist recommendations** to read the diagnosis, mitigation, verification, and communication. **Latest specialist plan** shows only the latest round, so a replan may contain just `COMMUNICATE` while earlier specialist recommendations remain available.
-4. The **Deployment evidence** card shows **Not fetched** (`not_requested` in the original saved result). This is an honest baseline, not a fabricated tool result. The planner must work from incident facts alone.
+4. When running from **`part2/lab/`** before Exercise 10, the **Deployment evidence** card shows **Not fetched** (`not_requested` in the original saved result). This is an honest baseline, not a fabricated tool result. The planner must work from incident facts alone.
 5. Confirm the incident remains **In Progress**. A complete recommendation is not production recovery.
+
+!!! note "Lab vs. completed solution"
+    In **`part2/solution/`**, the MCP evidence lookup is already wired. The **Deployment evidence** card should show **available**, release `workshop-release-42`, and the fixture observation about a reduced memory limit. You will also see this in `part2/lab/` after completing Exercise 10. **Not fetched** is the expected baseline only for the starter lab before that change.
 
 The example below uses local fixture data to illustrate a two-round result. Round 1 requests a stakeholder update; Round 2 schedules only `COMMUNICATE`. **Plan accepted** means the Java prerequisite check passed; the reviewer can still request another round. The final **Recommendation ready** card does not mean production recovery has been observed. Your generated text and iteration count may differ.
 
