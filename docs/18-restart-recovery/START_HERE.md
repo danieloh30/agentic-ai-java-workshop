@@ -56,7 +56,9 @@ This deliberate restart is the experiment. All other exercises use normal dev-mo
 
 ## Step 3 — Finish the saved response (3 min)
 
-Approve or reject the recovered proposal. Refresh again to confirm the terminal decision is saved. No new model call is required for this decision.
+Approve or reject the recovered proposal. Reload the browser, then select **17–18 · Approval & recovery** again. Find the **same request ID** and confirm its status remains **APPROVED** or **REJECTED**. Recording and viewing this decision requires no new model call.
+
+Browser reload resets the selected tab to **15–16 · Skills & guardrails**; it does not remove the saved response or decision.
 
 The persisted states are the workflow's recovery boundary. They do not resume a Java stack or an in-progress network request. This makes the limitations and retry policy visible.
 
