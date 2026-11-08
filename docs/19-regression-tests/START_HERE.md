@@ -80,6 +80,21 @@ If time permits, temporarily use a known report excerpt instead of `CPU is 99%`,
 
 The solution already includes the added regression; run it without adding a duplicate method. Additional optional cases include whitespace-only checks and late completions from previous attempts.
 
+To run only this regression in either folder once the test exists, use the second terminal:
+
+```bash
+./mvnw -Dtest=ResponseTest#wellFormedButUnrelatedEvidenceCannotReachApproval test
+```
+
+Example successful output from this targeted command (shortened):
+
+```text
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
+
+The passing test confirms that unrelated evidence produces **FAILED** with no proposal hash, even when the response passes the structural contract. The single-test count applies to both lab and solution when running the targeted command; the full `./mvnw test` suite runs more tests.
+
 <div class="done-when" markdown>
 
 ## :material-check-circle: Done when
