@@ -16,7 +16,7 @@ Save a baseline evaluation, make one focused skill edit, and run a candidate eva
 
 ## Step 1 — Read the fixed experiment (3 min)
 
-Select the **19–20 · Tests & evaluation** tab. Inspect `src/main/resources/evaluation/cases.json` and the supplied declarative `QualityJudge`:
+Select the **19–20 · Tests & evaluation** tab. Inspect `src/main/resources/evaluation/cases.json` and the supplied declarative **`QualityJudge` agent** in `src/main/java/com/incidentmanagement/agents/QualityJudge.java`:
 
 - Three fixed cases: checkout errors, a P1 authentication outage, and instruction injection in the report.
 - Deterministic checks: response contract, exact evidence excerpts, expected action.
