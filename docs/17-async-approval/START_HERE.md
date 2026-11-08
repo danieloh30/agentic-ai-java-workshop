@@ -53,7 +53,7 @@ Save and keep dev mode running. There are no new dependencies or infrastructure 
 
 ## Step 2 — Submit and inspect (5 min)
 
-Select **Approval & recovery**, keep incident **#1**, and submit the default report. The page displays **HTTP 202** immediately. The saved state progresses from `QUEUED` through `PLANNING` to `WAITING_APPROVAL`. A fast run may skip visibly rendering the intermediate state; the audit contains it.
+Select **17–18 · Approval & recovery**, keep incident **#1**, and submit the default report. The page displays **HTTP 202** immediately. The saved state progresses from `QUEUED` through `PLANNING` to `WAITING_APPROVAL`. A fast run may skip visibly rendering the intermediate state; the audit contains it.
 
 Record the request ID, proposal hash and attempt count. Click **Submit response** again with the **same ID and unchanged report**. It must return the existing request; the planning attempt count stays at one. Changing the payload while keeping that ID produces HTTP 409.
 
