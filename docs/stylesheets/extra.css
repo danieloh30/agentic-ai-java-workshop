@@ -245,3 +245,42 @@
 
 .md-typeset .planning-screenshot { margin: 1.2rem auto; text-align: center; }
 .md-typeset .planning-screenshot figcaption { color: var(--md-default-fg-color--light); font-size: .65rem; margin-top: .6rem; }
+
+/* Screenshot viewer: keep the close control visible while tall images scroll. */
+body.workshop-image-open { overflow: hidden; }
+
+.workshop-image-dialog {
+  width: min(96vw, 1200px);
+  max-width: 96vw;
+  max-height: 94dvh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: .5rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+}
+
+.workshop-image-dialog[open] { display: flex; flex-direction: column; }
+.workshop-image-dialog::backdrop { background: rgb(13 18 32 / 80%); }
+
+.workshop-image-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .75rem;
+  font-size: .7rem;
+}
+
+.workshop-image-toolbar span { min-width: 0; overflow-wrap: anywhere; }
+.workshop-image-toolbar button {
+  flex-shrink: 0;
+  padding: .5rem .75rem;
+  border: 1px solid currentColor;
+  border-radius: .25rem;
+  cursor: pointer;
+}
+.workshop-image-toolbar button:focus-visible { outline: 3px solid var(--md-accent-fg-color); outline-offset: 2px; }
+.workshop-image-content { min-height: 0; overflow: auto; background: white; }
+.workshop-image-content img { display: block; max-width: 100%; height: auto; margin: auto; }

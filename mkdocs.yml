@@ -109,6 +109,7 @@ extra_javascript:
   - assets/vendor/mermaid-12.1.0.min.js
   - javascripts/mermaid-solid-fills.js
   - javascripts/diagrams.js
+  - javascripts/images.js
 
 extra:
   social:
