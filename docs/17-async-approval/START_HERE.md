@@ -59,6 +59,12 @@ Record the request ID, proposal hash and attempt count. Click **Submit response*
 
 The browser polls saved state only. Polling cannot invoke a model, retry work, or approve a proposal.
 
+[![Example submitted response and saved WAITING_APPROVAL proposal showing matching request IDs, one planning attempt, the proposal hash, and approval controls](../images/ex17-waiting-approval.png){ width="700" loading="lazy" }](../images/ex17-waiting-approval.png)
+{: .planning-screenshot }
+
+*Example saved response awaiting approval: the request ID matches the submission, planning attempts remain at 1, and the proposal hash identifies the exact recommendation. Your ID, hash, and generated text will differ. Click the image for a larger view.*
+{: .planning-screenshot }
+
 ## Step 3 — Record a decision, then leave one waiting (6 min)
 
 Approve the first request. The saved record becomes `APPROVED`, with no new model call. The incident remains unchanged: approval records the proposed response decision and does not run production actions.
