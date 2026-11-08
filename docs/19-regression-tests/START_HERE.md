@@ -26,6 +26,24 @@ Keep dev mode running. `ScriptedModel` starts a local HTTP server that speaks th
 
 The tests never use your paid API key. The scripted model verifies behavior under chosen responses, not the quality of the live model.
 
+Example successful output from `part3/lab/` before adding the exercise regression tests (shortened):
+
+```text
+[INFO] Results:
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
+
+Example successful output from the completed `part3/solution/` (shortened):
+
+```text
+[INFO] Results:
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
+
+These counts come from verified starter and completed-solution runs. Your lab count increases as you add tests in Exercises 16, 18, and 19, and counts may change as the workshop evolves. Check for **0 failures, 0 errors, and BUILD SUCCESS** rather than an exact test count.
+
 ## Step 2 — Inspect the skill round trip (2 min)
 
 Open `nativeSkillToolRoundTrip` in `ResponseTest`:
