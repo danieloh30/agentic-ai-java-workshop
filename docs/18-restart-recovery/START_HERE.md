@@ -36,6 +36,12 @@ The supplied store also checks the planning attempt number before accepting a re
 
 In **Approval & recovery**, find the request left waiting in Exercise 17. Copy its ID, proposal hash and planning attempt count.
 
+[![Before-restart reference showing the second request from Exercise 17 in WAITING_APPROVAL with its request ID, one planning attempt, and proposal hash](../images/ex17-second-request-waiting.png){ width="450" loading="lazy" }](../images/ex17-second-request-waiting.png)
+{: .planning-screenshot }
+
+Before restarting, confirm **WAITING_APPROVAL** and record your **Request ID**, **Proposal SHA-256**, and **Planning attempts** (1 in this example). This is the second request from Exercise 17, still unapproved. Your ID and hash will differ; compare your own recorded values after restarting. Click the image for a larger view.
+{: .planning-screenshot }
+
 1. Stop Quarkus with **Ctrl+C** in its dev-mode terminal.
 2. In that **same project folder**, start it again:
 
