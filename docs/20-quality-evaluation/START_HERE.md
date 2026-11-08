@@ -59,6 +59,12 @@ Save, wait about three seconds for the dev-mode change scanner, then label the n
 
 For the completed run-and-read route, this is still an experiment you perform in your chosen `solution/` folder; do not replace the whole skill with a different project snapshot.
 
+[![Candidate and baseline evaluation runs showing the same dataset hash, apex-v1 rubric and gpt-4o model, with different skill revision hashes](../images/ex20-candidate-evaluation.png){ width="700" loading="lazy" }](../images/ex20-candidate-evaluation.png)
+{: .planning-screenshot }
+
+Example from the completed solution: **candidate** and **baseline** share the **dataset hash**, **model**, and **rubric**, while their **skill revision hashes differ**. Follow the same comparison in your chosen lab or solution folder; IDs, hashes, scores, timing, and generated results may vary. Passing all deterministic checks does not establish a quality improvement—inspect each case in Step 4. Click the image for a larger view.
+{: .planning-screenshot }
+
 ## Step 4 — Decide from the evidence (4 min)
 
 Compare baseline and candidate per case. Did the operator checks become more precise? Did the injected request remain constrained? Did any case lose correct escalation or exact evidence? Read the actual outputs alongside scores and elapsed time.
