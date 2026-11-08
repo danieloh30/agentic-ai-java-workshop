@@ -69,6 +69,14 @@ The browser polls saved state only. Polling cannot invoke a model, retry work, o
 
 Approve the first request. The saved record becomes `APPROVED`, with no new model call. The incident remains unchanged: approval records the proposed response decision and does not run production actions.
 
+Expand **Audit history** to inspect `QUEUED → PLANNING → WAITING_APPROVAL → APPROVED`.
+
+[![Expanded audit history showing timestamped QUEUED, PLANNING, WAITING_APPROVAL, and APPROVED transitions](../images/ex17-approved-audit-history.png){ width="600" loading="lazy" }](../images/ex17-approved-audit-history.png)
+{: .planning-screenshot }
+
+*Example audit history after approval. **APPROVED** records the human decision; it does not mean remediation ran. Your timestamps will differ. Click the image for a larger view.*
+{: .planning-screenshot }
+
 The decision includes the displayed proposal hash. A stale or altered hash gets HTTP 409. Repeating the same decision is idempotent; changing an accepted approval to rejection is a conflict. These checks are supplied in `ResponseStore` and covered by regression tests.
 
 Click **New request ID**, submit a second request, and **leave it in WAITING_APPROVAL**. Keep its ID and hash for Exercise 18. Do not submit another request in the next exercise merely to demonstrate recovery.
