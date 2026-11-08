@@ -11,9 +11,14 @@
 
 ## Enterprise context and goal
 
-Jordan, the Java platform engineer, needs pending approval requests to survive an application restart without losing the proposal Priya was reviewing or silently generating a replacement. He also needs to distinguish abandoned planning attempts from proposals that are safely waiting for a human decision. Exercise 14 reused completed processing outcomes through hot reload; here the decision is still pending when the JVM stops.
+Jordan, the Java platform engineer, needs pending approval requests to survive an application restart without losing the proposal Priya was reviewing or silently generating a replacement. He also needs to distinguish abandoned planning attempts from proposals that are safely waiting for a human decision.
 
-Implement the abandoned-planning policy, restart the JVM with the proposal left waiting in Exercise 17, and verify that its ID, proposal hash, and attempt count are preserved. Record a decision on that recovered proposal without replanning, and confirm that interrupted planning requires an explicit retry. This uses the supplied database-backed state machine, not a Quarkus Flow engine checkpoint or a guarantee of exactly-once remediation.
+Implement the abandoned-planning policy, restart the JVM with the proposal left waiting in Exercise 17, and verify that its ID, proposal hash, and attempt count are preserved. Record a decision on that recovered proposal without replanning, and confirm that interrupted planning requires an explicit retry.
+
+!!! note "How this differs from Exercise 14"
+    Exercise 14 reused **completed processing outcomes through hot reload**. Here, the human decision is **still pending when the JVM stops**. Restart the application and verify that the same proposal remains available for approval **without replanning**.
+
+    **Recovery mechanism:** This uses the supplied **database-backed state machine**, not a Quarkus Flow engine checkpoint or a guarantee of exactly-once remediation.
 
 ## Step 1 — Define interrupted work (4 min)
 
