@@ -86,7 +86,7 @@ Expected:
 !!! tip "Agentic Dev UI"
     Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). Notice `ImpactAgent` now shows as **A2AClientAgent** (red badge) instead of a local `Agent` — the framework transparently proxies calls to the remote service.
 
-    <img src="../../images/ImpactAgent.png" alt="ImpactAgent shown as A2AClientAgent in Dev UI" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+    <a href="../../images/ImpactAgent.png"><img src="../../images/ImpactAgent.png" alt="ImpactAgent shown as A2AClientAgent in Dev UI" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
     After processing an incident, open **Executions** and select **`IncidentProcessingWorkflow`** in the **Root Agent** dropdown. The [Try it](#try-it-3-min) section below walks through execution history and the app's own topology report. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
 
@@ -168,11 +168,11 @@ Complete service outage, all API endpoints returning 503, cascading failures acr
 
 Open **[http://localhost:8080/incident-management/report](http://localhost:8080/incident-management/report){:target="_blank"}** to view the app's own report, generated from the workflow's `agentMonitor()`. The **System Topology** view shows `processIncident` at the root, with parallel analysis, the supervisor and remote `impact-agent`, human approval, and resolution below it:
 
-<img src="../../images/agentic-devui-topology.png" alt="App system report showing IncidentProcessingWorkflow topology, the remote impact-agent, and human approval" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<a href="../../images/agentic-devui-topology.png"><img src="../../images/agentic-devui-topology.png" alt="App system report showing IncidentProcessingWorkflow topology, the remote impact-agent, and human approval" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
 Scroll below **System Topology** to **Execution History** in the same report, then expand a session and its agent rows:
 
-<img src="../../images/agentic-devui-execution.png" alt="App report Execution History showing the completed incident workflow and remote impact-agent call" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<a href="../../images/agentic-devui-execution.png"><img src="../../images/agentic-devui-execution.png" alt="App report Execution History showing the completed incident workflow and remote impact-agent call" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
 Notice the execution tree: `processIncident` (SEQUENCE) → `analyzeIncident` (PARALLEL, 3 analysis agents) → `superviseIncidentProcessing` (SEQUENCE with `impact-agent`, `processEscalation`) → `createEscalationProposal` → `analyzeForResolution`. Each row shows duration, token count, input, and output.
 
@@ -311,7 +311,7 @@ Save — Quarkus dev mode hot-reloads. (If you edited while stopped, restart Ter
 
 A ready-made sample screenshot ships with the project — a mock observability console for the checkout-api 503 incident (real, readable text so the model can actually parse it):
 
-<img src="../../images/checkout-api-503-incident.png" alt="Mock observability log console showing checkout-api 503 errors, HikariCP pool exhaustion, and payment-processor timeouts" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);">
+<a href="../../images/checkout-api-503-incident.png"><img src="../../images/checkout-api-503-incident.png" alt="Mock observability log console showing checkout-api 503 errors, HikariCP pool exhaustion, and payment-processor timeouts" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
 1. Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** and click **View** on Incident **#1** (payment-gateway / checkout-api).
 2. Click **Choose File** and select `solutions/07-a2a/multi-agent-system/sample-data/checkout-api-503-incident.png`.
