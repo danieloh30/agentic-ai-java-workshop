@@ -81,6 +81,12 @@ The decision includes the displayed proposal hash. A stale or altered hash gets 
 
 Click **New request ID**, submit a second request, and **leave it in WAITING_APPROVAL**. Keep its ID and hash for Exercise 18. Do not submit another request in the next exercise merely to demonstrate recovery.
 
+[![Second response with a new request ID, WAITING_APPROVAL status, one planning attempt, and a saved proposal hash](../images/ex17-second-request-waiting.png){ width="450" loading="lazy" }](../images/ex17-second-request-waiting.png)
+{: .planning-screenshot }
+
+Example second request: **new Request ID** `13f0a721-a6c1-4211-a873-0316b96939c5`, **WAITING_APPROVAL**, and **Planning attempts: 1**. Your ID and proposal hash will differ. **Leave this request unapproved for Exercise 18.** Click the image for a larger view.
+{: .planning-screenshot }
+
 <div class="done-when" markdown>
 
 ## :material-check-circle: Done when
