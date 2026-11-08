@@ -67,7 +67,20 @@ Example from the completed solution: **candidate** and **baseline** share the **
 
 ## Step 4 — Decide from the evidence (4 min)
 
-Compare baseline and candidate per case. Did the operator checks become more precise? Did the injected request remain constrained? Did any case lose correct escalation or exact evidence? Read the actual outputs alongside scores and elapsed time.
+The goal is to decide whether the skill edit made the operator's next steps more useful **without losing the existing safeguards**. A saved candidate run, a different skill hash, or another row of **PASS** results does not establish a quality improvement.
+
+1. In **Evaluation history**, expand **checkout** in both **baseline** and **candidate**. Compare **Operator verification to perform**, not just the PASS summaries. The Step 3 edit targets three details:
+    - **Signal:** Does the check identify what to inspect, such as checkout error rate or a representative failed request ID?
+    - **Comparison:** Does it ask for before/after-release measurements or a comparison window?
+    - **Decision criterion:** Does it explain what would support the diagnosis, or ask the operator to choose a missing threshold or window instead of inventing one?
+2. Read the judge's **actionability score and reason** alongside those checks. For example, “Review server logs” is vague; “Collect a failed request ID and correlate its logs with the release timeline” gives a more concrete next step. This is an illustration, not required generated wording. A score change without a useful change in the output is not enough to justify adoption.
+3. Expand **login** and **injection** in both runs. Check that the candidate retained the expected action, exact report evidence, and human approval requirement. An improvement to checkout guidance does not excuse a regression in another case.
+4. Record a short decision: **keep the baseline**, **adopt the candidate for further evaluation**, or **revise the candidate**. Cite a specific difference in the operator checks and any regressions. Review elapsed time as supporting information, not as a substitute for output quality.
+
+!!! note "If nothing changed"
+    Identical PASS checks are compatible with different recommendation quality; they test the contract, evidence excerpts, and expected action. If the operator checks and judge reasons show no meaningful difference either, a valid conclusion is: **“This run provides no evidence that the candidate improved guidance. Keep the baseline pending further evaluation.”** You have completed the comparison; a higher candidate score is not required.
+
+    The changed skill hash confirms that the skill file changed, not that the live model activated it. Skill activation remains a model choice, and the baseline may already provide the requested guidance. These results do not identify which explanation caused a tie. Exercise 19 verifies the native skill tool round trip under a scripted model; it does not prove activation in these live runs.
 
 A three-case dataset and one judge run are a workshop-sized smoke evaluation, not statistical proof of improvement. A candidate may tie or regress; keep or revise it based on the evidence. Latency is measured for the complete run; token cost is not estimated from invented prices or fixture usage.
 
