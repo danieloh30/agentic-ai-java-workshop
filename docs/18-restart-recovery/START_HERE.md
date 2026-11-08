@@ -82,6 +82,16 @@ void abandonedPlanningRequiresExplicitRetry() {
 
 Run `./mvnw -Dtest=ResponseTest#abandonedPlanningRequiresExplicitRetry test` in the second terminal. The test advances the cutoff directly instead of spending two event minutes waiting for the lease. It verifies interruption policy; the actual JVM restart above proves persistence across process shutdown.
 
+Example successful output from the targeted test command above (shortened):
+
+```text
+[INFO] Results:
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
+
+The passing test confirms that abandoned planning becomes **INTERRUPTED** and requires an explicit retry. It does not perform the JVM restart experiment; verify that separately in Steps 2–3. Timing varies, and running the full `./mvnw test` suite produces a larger test count.
+
 <div class="done-when" markdown>
 
 ## :material-check-circle: Done when
