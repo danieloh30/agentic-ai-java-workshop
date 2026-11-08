@@ -29,7 +29,19 @@ An evidence excerpt match proves the quote exists in the report, not that the re
 
 Keep the label **baseline**, then click **Run live evaluation · 3 cases**. This makes **at least six paid model calls**, plus skill tool turns and any guardrail repairs. Leave the page open while it runs.
 
+[![Completed baseline evaluation showing the baseline run label, saved run identity, dataset and skill hashes, and three case summaries](../images/ex20-baseline-evaluation.png){ width="700" loading="lazy" }](../images/ex20-baseline-evaluation.png)
+{: .planning-screenshot }
+
+Example completed **baseline** run in **Evaluation history**. Record the dataset and skill revision hashes for comparison with the candidate. Your run ID, hashes, timing, and case results may differ. Click the image for a larger view.
+{: .planning-screenshot }
+
 Inspect every case's output and judge reason, including a low score or failed expected action. Runs are saved only when all cases and valid rubric scores complete. A model outage is an error, not a fabricated score or a passing evaluation.
+
+[![Expanded baseline checkout case showing deterministic contract, evidence, and action PASS checks alongside judge groundedness 5 out of 5, actionability 4 out of 5, and the generated recommendation](../images/ex20-baseline-checkout-detail.png){ width="450" loading="lazy" }](../images/ex20-baseline-checkout-detail.png)
+{: .planning-screenshot }
+
+Expand a case such as **checkout** to inspect its recommendation and judge reason. In this example, the deterministic checks all **PASS**, while the judge scores **groundedness 5/5** and **actionability 4/5** and suggests more detailed operator checks. Deterministic checks and judge quality scores are separate; your scores and generated wording may vary. Click the image for a larger view.
+{: .planning-screenshot }
 
 ## Step 3 — Make one candidate change (4 min)
 
