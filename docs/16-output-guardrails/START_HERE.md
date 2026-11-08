@@ -82,6 +82,18 @@ void guardrailRepromptsInvalidContract() {
 
 Run commands in a **second terminal in the same folder**; leave dev mode running. The completed route already includes this test, so run it without adding a duplicate method.
 
+Example successful output from the targeted test command above (shortened):
+
+```text
+Loaded 1 skill(s) from directory: classpath:skills
+Simple scheduler is disabled by config property and will not be started
+Profile test activated.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+```
+
+The passing test confirms that the scripted `CLOSE` response was rejected, the model received correction feedback, and its next response used an allowed action. It does not prove that the live request above needed a repair. The test profile uses an isolated PostgreSQL Dev Services database and disables the scheduler. Timestamps, ports, and timing vary; running the full `./mvnw test` suite produces a larger test count.
+
 <div class="done-when" markdown>
 
 ## :material-check-circle: Done when
