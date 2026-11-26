@@ -2,8 +2,10 @@
 
 <span class="badge badge--run-read">Run + Read</span>
 
-**Timebox:** 15–20 additional minutes  
-**Persona:** Riley — Apex Systems' SRE team lead  
+**Timebox:** 15–20 additional minutes
+
+**Persona:** Riley — Apex Systems' SRE team lead
+
 **Prerequisite:** Complete Exercise 7 first. This extension is optional and does not change the core workshop timebox.
 
 ## Enterprise context
