@@ -306,6 +306,45 @@ Verify discovery from your host terminal:
 curl -fsS http://localhost:8888/.well-known/agent-card.json | jq
 ```
 
+Expected output:
+
+```json
+{
+  "name": "impact-agent",
+  "description": "Estimates business impact and SLA cost for incident escalation decisions",
+  "supportedInterfaces": [
+    {
+      "url": "http://localhost:8888/",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "impact-assessment",
+      "name": "Business impact assessment",
+      "description": "Estimates business impact and SLA cost for incident escalation decisions",
+      "tags": [
+        "impact-assessment",
+        "sla-analysis"
+      ]
+    }
+  ]
+}
+```
+
 Check the `impact-agent` name, `impact-assessment` skill, JSON-RPC interface, and the public URL `http://localhost:8888/`. The streaming capability is false (or omitted when the SDK serializes default values). That capability difference is deliberate: callers negotiate a blocking invocation.
 
 !!! tip "A container's port and its advertised URL are different"
