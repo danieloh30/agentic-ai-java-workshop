@@ -142,3 +142,21 @@ Choose `part3/solution` for completed code. Keep that folder through Exercises 1
 - **Docker or Podman running** for Quarkus Dev Services, including PostgreSQL, observability services, and Part 2's Kafka broker
 
 Quarkus and extension dependencies are declared in each project's `pom.xml`. See the [setup guide](docs/index.md#prerequisites) for Java and Maven installation instructions.
+
+## Quarkus 4 compatibility monitoring
+
+The workshop's current runtime remains **Quarkus 3.40.1.2 with the Quarkus MCP Server extension** (`io.quarkiverse.mcp:quarkus-mcp-server-http`). Quarkiverse maintains that extension; it is not a separate runtime.
+
+The [Quarkus 4 MCP compatibility workflow](https://github.com/danieloh30/agentic-ai-java-workshop/actions/workflows/quarkus4-readiness.yml) runs daily at **06:30 America/New_York**, after Dependabot's scheduled 06:00 check. It also supports **Run workflow** and runs for relevant dependency/monitor PRs.
+
+It checks out the exact head commit of [draft migration PR #418](https://github.com/danieloh30/agentic-ai-java-workshop/pull/418) in an isolated directory. It selects the latest stable Quarkus 4 and MCP Server releases, then prefers the latest stable LangChain4j extension whose declared Quarkus baseline is compatible; if only a compatible preview is available, the report explicitly identifies it. Both Part 2 lab and solution must run their full test suites, including successful MCP discovery/execution tests, before reporting `COMPATIBLE`.
+
+Open the run's **Summary** or download its artifact for the candidate versions, migration commit, candidate POMs, Maven logs, and JUnit results. `BLOCKED` identifies the known removed Jackson-customizer API; `REGRESSION` identifies a different test/build failure; `ERROR` identifies missing evidence or infrastructure/monitor failures. Daily/manual checks fail while blocked and turn green only when both suites pass. Relevant PR checks allow the known upstream blocker while validating the monitor; their summary still says `BLOCKED`, and unexpected regressions/errors still fail.
+
+The monitor does not change `main`, update PR #418, or auto-merge an upgrade. Clearing this MCP blocker still requires validation of the rest of the workshop, including A2A and Flow, and review of any preview dependencies. Retire or retarget the monitor after the full migration is merged.
+
+Run the monitor's safeguard tests locally without a model key, Maven, or containers:
+
+```bash
+python3 -m unittest discover -s scripts -p 'quarkus4_readiness_test.py' -v
+```
