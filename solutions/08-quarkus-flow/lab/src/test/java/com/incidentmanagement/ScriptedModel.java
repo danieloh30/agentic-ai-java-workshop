@@ -1,6 +1,6 @@
 package com.incidentmanagement;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.sun.net.httpserver.HttpServer;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
@@ -20,7 +20,7 @@ public class ScriptedModel implements QuarkusTestResourceLifecycleManager {
     @Override
     public Map<String, String> start() {
         try {
-            var mapper = new ObjectMapper();
+            var mapper = JsonMapper.builder().build();
             server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
             server.createContext(
                     "/v1/chat/completions",

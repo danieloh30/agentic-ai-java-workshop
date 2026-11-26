@@ -1,6 +1,6 @@
 package com.incidentmanagement.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.incidentmanagement.model.*;
 import com.incidentmanagement.policy.*;
 
@@ -18,7 +18,7 @@ import java.util.*;
 /** All transitions use short transactions; no model call holds a database lock. */
 @ApplicationScoped
 public class ResponseStore {
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
 
     @Transactional
     public ResponseRequest create(String id, Long incidentId, String report) {

@@ -1,6 +1,6 @@
 package com.incidentmanagement.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.incidentmanagement.agents.*;
 import com.incidentmanagement.model.*;
 import com.incidentmanagement.policy.RecommendationChecks;
@@ -30,7 +30,7 @@ public class EvaluationService {
 
     @Inject ModelInvocations agent;
     @Inject ModelInvocations judge;
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
     @Inject EvaluationRepository repository;
 
     @ConfigProperty(name = "quarkus.langchain4j.openai.chat-model.model-name")

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class ScriptedModel implements QuarkusTestResourceLifecycleManager {
     private HttpServer server;
@@ -16,7 +16,7 @@ public class ScriptedModel implements QuarkusTestResourceLifecycleManager {
     public static final List<String> requests = new CopyOnWriteArrayList<>();
     @Override public Map<String, String> start() {
         try {
-            var mapper = new ObjectMapper();
+            var mapper = JsonMapper.builder().build();
             server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
             server.createContext("/v1/chat/completions", exchange -> {
                 requests.add(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
