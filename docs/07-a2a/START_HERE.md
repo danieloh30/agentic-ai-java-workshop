@@ -391,6 +391,10 @@ Leave **Choose File** empty for this test; screenshot enrichment belongs to the 
 3. Review **Business Impact**, **Incident Report**, and **AI Recommendation**. Confirm that the report belongs to the outage you just submitted. The impact and recommendation wording are model-generated, so do not expect a fixed dollar amount.
 4. Click **Escalate to Management** to complete this walkthrough. **Resolve Incident** records a different human decision and leads to a different expected final status.
 
+Example approval dialog for incident #1 (model-generated wording may vary):
+
+<a href="../../images/wildfly-human-approval.png"><img src="../../images/wildfly-human-approval.png" alt="Human approval dialog for incident 1 showing payment-gateway / checkout-api, business impact, the submitted outage report, an AI escalation recommendation, and Resolve Incident and Escalate to Management buttons" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
+
 **Expected in the SPA:** a toast starts with **Decision: ESCALATE**, and the proposal disappears. The workflow then resumes. Make the decision within five minutes, before the demo approval timeout.
 
 !!! note "Where to verify the remote impact output"
