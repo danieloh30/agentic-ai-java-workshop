@@ -311,33 +311,94 @@ Check the `impact-agent` name, `impact-assessment` skill, JSON-RPC interface, an
 !!! tip "A container's port and its advertised URL are different"
     WildFly listens on port 8080 **inside** its container. The caller runs on the host and reaches it through port 8888. The card therefore advertises `http://localhost:8888/`, not the container's internal address. The supplied launcher sets `PUBLIC_AGENT_URL` to match its host-port mapping.
 
-### 3. Delegate the same Apex incident (5 min)
+### 3. Test the WildFly-backed flow in the SPA (5 min)
 
-If the Quarkus main application is stopped, start it in a second terminal from the repository root:
+Keep WildFly running on **8888**. If the Quarkus main application is stopped, start it in a second terminal from the repository root:
 
 ```bash
 cd solutions/07-a2a/multi-agent-system
 ./mvnw quarkus:dev
 ```
 
-Open [http://localhost:8080](http://localhost:8080), view incident **#1** (`payment-gateway` / `checkout-api`), and reuse the Exercise 7 report:
+Wait for `Listening on: http://localhost:8080`, then open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**. This is the same Apex incident-management SPA used in the core exercise. WildFly supplies the remote specialist; it does not replace the SPA or add a new dashboard.
+
+#### A. Choose an incident that can still be processed
+
+1. Find incident **#1**, system **payment-gateway**, service **checkout-api**. In the default sample data it is **P2 / Open**.
+2. Click **View** to open its detail panel. Confirm the **System**, **Service**, **Priority**, and **Status** fields.
+3. Locate the **Process Incident** form and its report text area, whose placeholder is **Enter incident report details...**.
+
+!!! tip "Already processed #1 in the core exercise?"
+    The form is available only for **Open**, **Triaging**, or **In Progress** incidents. An **Escalated** or **Resolved** incident shows a completion message instead. For a quick second run, use incident **#8**, **api-gateway / rate-limiter**, which starts at **P1 / In Progress**, and substitute its incident number throughout the checks below.
+
+    To compare the two remote runtimes on exactly the same seeded incident, use a fresh demo session for the main A2A application. With its default Dev Services setup, restarting that application reloads its sample data and clears its recorded execution history. This affects the Exercise 7 demo; it is separate from the persistent Part 2 and Part 3 applications.
+
+#### B. Submit the outage report once
+
+Paste the same report used in the core exercise:
 
 ```text
 Complete service outage, all API endpoints returning 503, cascading failures across dependent services
 ```
 
-Process the incident and complete the existing human escalation approval when prompted. Open the main application's [execution report](http://localhost:8080/incident-management/report). Find the remote `impact-agent` call and its **Estimated Impact / Justification** result, followed by the local escalation and resolution steps.
+Leave **Choose File** empty for this test; screenshot enrichment belongs to the separate multimodal bonus. Click **Process Incident** once.
 
-Inspect the server runtime in a third terminal:
+**Expected in the SPA:** the button changes to **Processing...** and is disabled while the request runs. For this severe outage, the analysis is expected to request escalation and the supervisor should invoke the remote impact specialist. Allow time for the model calls. A pending request while the workflow waits for human approval is expected; do not submit the incident a second time.
+
+#### C. Inspect and complete the human approval
+
+1. When the floating **Approval Needed** button appears, click it. The SPA polls for proposals every two seconds; browser notification permission is not required to use the in-page button.
+2. In the approval panel, find the card for your incident number and check its system/service and priority.
+3. Review **Business Impact**, **Incident Report**, and **AI Recommendation**. Confirm that the report belongs to the outage you just submitted. The impact and recommendation wording are model-generated, so do not expect a fixed dollar amount.
+4. Click **Escalate to Management** to complete this walkthrough. **Resolve Incident** records a different human decision and leads to a different expected final status.
+
+**Expected in the SPA:** a toast starts with **Decision: ESCALATE**, and the proposal disappears. The workflow then resumes. Make the decision within five minutes, before the demo approval timeout.
+
+!!! note "Where to verify the remote impact output"
+    The approval card's **Business Impact** field displays the parallel incident-analysis summary. Use the `impact-agent` execution output in the next step to verify the separate remote WildFly assessment. Seeing a cost in the approval card alone is not proof that the A2A call ran.
+
+#### D. Confirm the final incident outcome
+
+Wait for the **Incident successfully processed...** toast. The detail panel closes and the incident list refreshes. Find the same row again and click **View**:
+
+- **Status** should be **Escalated** (`ESCALATED` in the API).
+- **Description** should now summarize the resulting action and the human decision.
+- The processing form is replaced by **This incident has been escalated.**
+
+These checks prove that the Quarkus application continued after the remote call and your approval. Next, verify which capability actually ran remotely.
+
+#### E. Verify the WildFly call in the application's execution report
+
+Open **[http://localhost:8080/incident-management/report](http://localhost:8080/incident-management/report){:target="_blank"}** in a new tab. This is the application's own report; the core exercise above includes examples of its **System Topology** and **Execution History** views.
+
+1. Under **Execution History**, expand the latest `IncidentProcessingWorkflow` / `processIncident` run. Match its incident number and input report to your SPA submission.
+2. Expand the supervisor and find the remote **`impact-agent`** / **`ImpactAgent`** execution. The supervisor can choose its sub-agents dynamically, so inspect the recorded call rather than relying on a fixed tree position.
+3. Check the remote call's inputs: the system and service you selected, its numeric priority (**2** for incident #1), and the outage description.
+4. Expand the output and look for **Estimated Impact:** and **Justification:**, stored as the workflow's `businessImpact` result.
+5. Follow the later human-approval and resolution entries and correlate them with the SPA's final incident status.
+
+The SPA has no separate WildFly badge. To establish the runtime boundary, combine this recorded A2A execution with the successful AgentCard check on **8888** and the fact that only the WildFly container is serving that port. The Quarkus remote service from the core exercise must remain stopped.
+
+Optionally inspect **[Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}**: select **IncidentProcessingWorkflow** in **Root Agent**, click **Refresh**, and expand the latest run. An empty default root is not evidence of failure; the standalone screenshot-analysis agent may be selected first.
+
+#### F. Check the server runtime and troubleshoot missing evidence
+
+In a third terminal:
 
 ```bash
 podman logs apex-wildfly-impact
 # Or: docker logs apex-wildfly-impact
 ```
 
-The logs should show WildFly starting, `ROOT.war` deploying, and the LangChain4j CDI portable extension registering `com.incidentmanagement.impact.ImpactAgent`. Incident reports and model credentials are not logged by the supplied adapter.
+The logs should show WildFly starting, `ROOT.war` deploying, and the LangChain4j CDI portable extension registering `com.incidentmanagement.impact.ImpactAgent`. The supplied adapter does not log incident reports or model credentials.
 
-Compare the service boundaries with Exercise 7: the same Quarkus caller discovers the same capability at the same public URL. The remote team changed its runtime and CDI integration without rewriting the incident workflow. LLM-generated cost estimates can differ; compare the contract and workflow continuation, not exact wording or dollar amounts.
+- **No Process Incident form:** choose an unfinished incident; completed incidents cannot be submitted again from the SPA.
+- **Processing... with Approval Needed visible:** open that button and complete the decision. The request is waiting for you.
+- **No approval and no remote impact row:** inspect the analysis and supervisor outputs. A non-escalation path can skip the specialist and approval; it does not verify the WildFly integration. Use a fresh unfinished incident and the full outage report above.
+- **Failed to process... or an error on the remote row:** repeat the AgentCard check on 8888, inspect the WildFly logs, and confirm that the container received an API key. After changing its environment, stop and start the container with `run.sh`.
+- **No execution history:** process an incident after the latest main-app restart or hot reload; the monitor's history is held in memory.
+
+**Verification is complete when:** the SPA submission, the recorded remote impact output, your human decision, and the final **Escalated** status all belong to the same run. Compare the contract and workflow continuation with the core exercise; exact LLM wording and cost estimates can differ.
 
 ### 4. Inspect the agent and discuss ownership (3 min)
 
