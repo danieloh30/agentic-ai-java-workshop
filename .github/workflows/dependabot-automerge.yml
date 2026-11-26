@@ -19,12 +19,16 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve Dependabot PR
+        # Major upgrades and unclassified updates need human review after validation.
+        if: contains(fromJSON('["version-update:semver-patch", "version-update:semver-minor"]'), steps.metadata.outputs.update-type)
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto-merge Dependabot PR
+        # Major upgrades and unclassified updates need human review after validation.
+        if: contains(fromJSON('["version-update:semver-patch", "version-update:semver-minor"]'), steps.metadata.outputs.update-type)
         # When several Dependabot PRs land at once (e.g. a grouped quarkus-platform
         # bump across every module), each merge advances `main` and the others fail
         # with "Base branch was modified. Review and try the merge again."
