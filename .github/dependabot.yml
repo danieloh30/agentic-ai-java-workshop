@@ -3,6 +3,11 @@ version: 2
 updates:
   # ── lab project (the main working copy attendees edit) ─────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /lab
     schedule:
       interval: daily
@@ -25,6 +30,11 @@ updates:
 
   # ── exercise 01 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/01-first-agent
     schedule:
       interval: daily
@@ -47,6 +57,11 @@ updates:
 
   # ── exercise 02 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/02-maintenance-agent
     schedule:
       interval: daily
@@ -69,6 +84,11 @@ updates:
 
   # ── exercise 03 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/03-parallel-workflow
     schedule:
       interval: daily
@@ -91,6 +111,11 @@ updates:
 
   # ── exercise 04 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/04-supervisor
     schedule:
       interval: daily
@@ -113,6 +138,11 @@ updates:
 
   # ── exercise 05 — MCP client ───────────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/05-ai-governance
     schedule:
       interval: daily
@@ -135,6 +165,11 @@ updates:
 
   # ── exercise 05 — weather MCP server ──────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/05-ai-governance/weather-mcp-server
     schedule:
       interval: daily
@@ -157,6 +192,11 @@ updates:
 
   # ── exercise 06 ────────────────────────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/06-hitl-observability
     schedule:
       interval: daily
@@ -179,6 +219,11 @@ updates:
 
   # ── exercise 06 — observability reference ─────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/06-hitl-observability/observability-reference
     schedule:
       interval: daily
@@ -201,6 +246,11 @@ updates:
 
   # ── exercise 07 — multi-agent system ──────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/07-a2a/multi-agent-system
     schedule:
       interval: daily
@@ -223,6 +273,11 @@ updates:
 
   # ── exercise 07 — remote A2A agent ────────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/07-a2a/remote-a2a-agent
     schedule:
       interval: daily
@@ -251,6 +306,11 @@ updates:
 
   # ── exercise 08 — lab (Quarkus Flow) ──────────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/08-quarkus-flow/lab
     schedule:
       interval: daily
@@ -276,6 +336,11 @@ updates:
 
   # ── exercise 08 — solution (Quarkus Flow) ────────────────────────────────
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /solutions/08-quarkus-flow
     schedule:
       interval: daily
@@ -301,6 +366,11 @@ updates:
 
   # Shared Part 2 starter and completed application (Exercises 9–14).
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /part2/lab
     schedule:
       interval: daily
@@ -322,6 +392,11 @@ updates:
           - "io.quarkiverse.langchain4j*"
 
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /part2/solution
     schedule:
       interval: daily
@@ -344,6 +419,11 @@ updates:
 
   # Shared Part 3 starter and completed application (Exercises 15–20).
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /part3/lab
     schedule:
       interval: daily
@@ -365,6 +445,11 @@ updates:
           - "io.quarkiverse.langchain4j*"
 
   - package-ecosystem: maven
+    # Quarkus releases are eligible at the next daily check, without a cooldown.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "io.quarkus*"
     directory: /part3/solution
     schedule:
       interval: daily
