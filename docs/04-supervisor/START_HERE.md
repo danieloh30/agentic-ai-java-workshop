@@ -330,7 +330,7 @@ value in `AgenticScope`. Later workflow steps can therefore use the report the u
 
 Open [`IncidentProcessingWorkflow.java`](https://github.com/danieloh30/agentic-ai-java-workshop/blob/main/lab/src/main/java/com/incidentmanagement/agentic/workflow/IncidentProcessingWorkflow.java){:target="_blank"}.
 
-First, add `extends MonitoredAgent` to the interface declaration — this enables the **topology view** in the Dev UI. The framework registers any `MonitoredAgent` workflow as a root agent, allowing it to visualize the full agent tree:
+First, add `extends MonitoredAgent` to the interface declaration — this exposes monitoring for the workflow's topology and recorded executions. The Dev UI can display this monitored workflow as a root:
 
 ```java
 public interface IncidentProcessingWorkflow extends MonitoredAgent {
@@ -371,9 +371,11 @@ Save. Quarkus hot-reloads.
 ## Step 6 — Test all three paths (3 min)
 
 !!! tip "Agentic Dev UI"
-    Before testing, open the [topology view](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} to see the full pipeline: `IncidentProcessingWorkflow` → `IncidentAnalysisWorkflow` + `IncidentSupervisorAgent` (with its 4 sub-agents) + `ResolutionAgent`. This is the first exercise where a **root agent** appears — the topology visualizes `IncidentProcessingWorkflow` as the entry point with all sub-agents branching out beneath it. You'll see this topology grow as you add HITL (Exercise 6) and A2A (Exercise 7).
+    Before testing, open [Dev UI → Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} to see the full pipeline. The root card is labeled **`processIncident`**, with **Type `IncidentProcessingWorkflow`**; its branches contain the analysis workflow, supervisor, and resolution agent. Scroll down and horizontally to follow the branches. If a **Root Agent** selector is present, choose `IncidentProcessingWorkflow`; with one root, the selector is hidden. You'll see this structure grow as you add HITL (Exercise 6) and A2A (Exercise 7).
 
     You can also check the [Agents tab](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} for each agent's type, `outputKey`, and description — a quick sanity check that everything wired correctly after hot reload.
+
+    After processing, switch to **Executions** and click **Refresh** to inspect recorded runs. Expand a session and use the triangles beside parent agent rows to show their children. Long **Input** and **Output** values use hover tooltips; clicking a row does not expand its text. **Topology** shows the declared structure, while **Executions** shows the calls that actually ran.
 
 Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}** to test all three paths. After each, check the **Quarkus terminal logs** for tool calls and the **UI** for status changes.
 

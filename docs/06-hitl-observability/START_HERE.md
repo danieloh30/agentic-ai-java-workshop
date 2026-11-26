@@ -69,9 +69,11 @@ incident-management started in ~4s
     The LGTM container (Grafana + Loki + Tempo + Mimir) is pulled on first run and can take 1–2 minutes. If `http://localhost:3000` isn't reachable, wait for the `DevServices for Observability started` log line before proceeding. If it doesn't appear, restart dev mode (`Ctrl+C` then `./mvnw quarkus:dev`).
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the full agent graph. Notice `EscalationProposalAgent` and `HumanApprovalAgent` — the HITL gate shows up as a distinct agent type in the wiring view.
+    Open [Agentic Dev UI → Agents](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the registration table. Find `EscalationProposalAgent` and `HumanApprovalAgent`, and inspect **Type**, **Output Key**, and **Sub-Agents**.
 
-    Check the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — compare it to Exercise 4. The tree now includes the HITL agents.
+    Switch to [Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} and compare the structure to Exercise 4. The root is **`processIncident`** (Type **`IncidentProcessingWorkflow`**); scroll down and horizontally to find the HITL agents. Select `IncidentProcessingWorkflow` only if a **Root Agent** dropdown is present; it is hidden when only one root is available.
+
+    After an incident completes, open **Executions**, click **Refresh**, and expand its session and parent agent rows to inspect the actual approval path and timings. Hover over shortened **Input** or **Output** text for its tooltip. The row triangles show child calls; they do not expand output text. The **Topology** tab alone does not confirm that a human approved a run.
 
 Open [`EscalationProposalAgent.java`](https://github.com/danieloh30/agentic-ai-java-workshop/blob/main/solutions/06-hitl-observability/src/main/java/com/incidentmanagement/agentic/agents/EscalationProposalAgent.java){:target="_blank"} — this is the same `@Agent` pattern you've been coding, with a `@SystemMessage` that defines escalation criteria and a `@UserMessage` template.
 

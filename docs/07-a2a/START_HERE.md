@@ -84,14 +84,11 @@ Expected:
 ```
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). Notice `ImpactAgent` now shows as **A2AClientAgent** (red badge) instead of a local `Agent` — the framework transparently proxies calls to the remote service.
+    Open [Agentic Dev UI → Agents](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} on the main system (:8080). In the registration table, filter for `ImpactAgent` and check its **Type**: **A2AClientAgent**. The framework proxies calls to the remote service. The generic **AI** badge in the topology or execution report describes the kind of capability; use this **Agents** table to check the A2A client registration.
 
     <a href="../../images/ImpactAgent.png"><img src="../../images/ImpactAgent.png" alt="ImpactAgent shown as A2AClientAgent in Dev UI" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
-    After processing an incident, open **Executions** and select **`IncidentProcessingWorkflow`** in the **Root Agent** dropdown. The [Try it](#try-it-3-min) section below walks through execution history and the app's own topology report. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
-
-!!! warning "A2A topology display error in quarkus-langchain4j 1.13.1"
-    The Dev UI's [Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} tab can show `Failed to generate topology: Cannot read the array length because "args" is null` when you select `IncidentProcessingWorkflow`. This is an upstream graph-rendering issue involving the A2A client proxy; the message alone does not mean incident processing failed. After processing an incident, use the app's [system report](http://localhost:8080/incident-management/report){:target="_blank"} to view the topology, and the Dev UI's **Executions** tab to inspect the run.
+    Use **Topology** to inspect the structure and **Executions** after processing to inspect recorded calls. If multiple roots are available, select **`IncidentProcessingWorkflow`** in **Root Agent**; with a single root, that selector is hidden. The [Try it](#try-it-3-min) section below covers both views. Compared with Exercise 4, `ImpactAgent` is still wired into the same workflow, but execution now happens in a separate JVM on port 8888.
 
 ---
 
@@ -157,12 +154,18 @@ Complete service outage, all API endpoints returning 503, cascading failures acr
 ### Open Dev UI execution history
 
 1. Open **[Agentic Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}** on the main system (:8080). If you are already on the **Agents** or **Topology** tab, click **Executions** in the top navigation.
-2. In the **Root Agent** dropdown at the top-left, select **`IncidentProcessingWorkflow`**.
+2. If **Root Agent** is present, select **`IncidentProcessingWorkflow`**. The dropdown appears only when multiple root agents are available; if it is absent, continue with the displayed workflow.
 3. Click **Refresh** if the page was open before the incident finished processing.
-4. Expand the session/run and its agent rows to inspect the calls, durations, token counts, inputs, and outputs.
+4. Expand the session/run and use the triangles beside parent agent names to show child calls. Inspect the **Duration**, **Model**, **Tokens**, **Input**, and **Output** columns. Hover over shortened input/output text to read its tooltip; the row triangles expand the call tree, not the text.
 
-!!! note "Why are there two root agents, and why is the default empty?"
-    Before the optional multimodal bonus, this exercise has two roots: **`IncidentProcessingWorkflow`**, which handles incidents, and **`IncidentLogAnalysisAgent`**, the standalone screenshot-analysis agent that has not yet been added to the workflow. Dev UI lists roots alphabetically and selects `IncidentLogAnalysisAgent` first. Its execution history is empty because processing an incident does not invoke it. Select **`IncidentProcessingWorkflow`** to see your run. Once you wire the bonus agent into the workflow, it becomes a child of that workflow.
+!!! note "An empty view does not mean a failed run"
+    **Topology** displays the workflow structure; it does not display execution history. Switch to **Executions** for recorded runs. If a **Root Agent** selector is shown, choose the incident workflow rather than another root. If no selector is shown, there is no root-selection step. Process an incident and refresh after completion; do not assume that the optional screenshot-analysis agent always creates a second selectable root.
+
+### Inspect the topology structure
+
+Open **[Dev UI → Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"}**. With a single root, the toolbar can show only **Refresh**, as in this example. The root card is labeled **`processIncident`**, with **Type `IncidentProcessingWorkflow`**. Scroll down and horizontally to follow its branches. **Toggle Edges** controls the data-flow lines; it does not switch to recorded executions.
+
+<a href="../../images/agentic-devui-single-root-topology.png"><img src="../../images/agentic-devui-single-root-topology.png" alt="Dev UI Topology tab with Refresh and no Root Agent selector, showing the processIncident root card, IncidentProcessingWorkflow type, and data-flow legend" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
 ### View the app's topology and execution report
 
@@ -170,11 +173,14 @@ Open **[http://localhost:8080/incident-management/report](http://localhost:8080/
 
 <a href="../../images/agentic-devui-topology.png"><img src="../../images/agentic-devui-topology.png" alt="App system report showing IncidentProcessingWorkflow topology, the remote impact-agent, and human approval" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
-Scroll below **System Topology** to **Execution History** in the same report, then expand a session and its agent rows:
+Scroll below **System Topology** to **Execution History** in the same report, then expand a session and the child-call triangles beside parent agent names:
 
 <a href="../../images/agentic-devui-execution.png"><img src="../../images/agentic-devui-execution.png" alt="App report Execution History showing the completed incident workflow and remote impact-agent call" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
-Notice the execution tree: `processIncident` (SEQUENCE) → `analyzeIncident` (PARALLEL, 3 analysis agents) → `superviseIncidentProcessing` (SEQUENCE with `impact-agent`, `processEscalation`) → `createEscalationProposal` → `analyzeForResolution`. Each row shows duration, token count, input, and output.
+Look for `processIncident` (SEQUENCE), `analyzeIncident` (PARALLEL, three analysis agents), and the supervisor's remote `impact-agent` call, followed by the escalation approval and resolution path. The supervisor chooses calls dynamically, so the exact rows can vary. Each row shows duration, token count, input, and output. Hover over shortened input/output text for a tooltip; there is no separate output-expansion control.
+
+!!! tip "Read a complete input or output when its tooltip is clipped"
+    Open the standalone [app report](http://localhost:8080/incident-management/report){:target="_blank"} outside the Dev UI iframe. If the hover tooltip is still clipped, use your browser's **View Page Source** on that report and search for `Estimated Impact:` or another distinctive output phrase. The generated HTML contains the full text inside a `tt-content` span, even though the table shows a shortened preview. HTML entities such as `&amp;` represent the original characters. This is a way to inspect existing report data; no extra agent invocation is needed.
 
 !!! tip "Execution history is kept in memory"
     Process an incident before inspecting execution history. Restarting or hot-reloading the main app clears the recorded runs; process another incident if the selected workflow's history is empty afterward.
@@ -417,12 +423,16 @@ Open **[http://localhost:8080/incident-management/report](http://localhost:8080/
 1. Under **Execution History**, expand the latest `IncidentProcessingWorkflow` / `processIncident` run. Match its incident number and input report to your SPA submission.
 2. Expand the supervisor and find the remote **`impact-agent`** / **`ImpactAgent`** execution. The supervisor can choose its sub-agents dynamically, so inspect the recorded call rather than relying on a fixed tree position.
 3. Check the remote call's inputs: the system and service you selected, its numeric priority (**2** for incident #1), and the outage description.
-4. Expand the output and look for **Estimated Impact:** and **Justification:**, stored as the workflow's `businessImpact` result.
+4. Read the **Output** column on the `impact-agent` row. Look for **Estimated Impact:** and **Justification:**; the example below starts with `Estimated Impact: $8,000 Justification: ...`. Hover over the shortened text for the complete value. There is no output-expansion button. If the tooltip is clipped, use the [full-text report fallback](#view-the-apps-topology-and-execution-report) above. The caller's `ImpactAgent` maps this returned value to `outputKey = "businessImpact"`; that key need not appear as a separate field in the execution table.
 5. Follow the later human-approval and resolution entries and correlate them with the SPA's final incident status.
+
+Example remote invocation in the execution report (amount and wording vary):
+
+<a href="../../images/wildfly-impact-agent-execution.png"><img src="../../images/wildfly-impact-agent-execution.png" alt="Execution report row for impact-agent under superviseIncidentProcessing, showing payment-gateway and checkout-api inputs, priority 2, and an Estimated Impact and Justification output preview" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
 The SPA has no separate WildFly badge. To establish the runtime boundary, combine this recorded A2A execution with the successful AgentCard check on **8888** and the fact that only the WildFly container is serving that port. The Quarkus remote service from the core exercise must remain stopped.
 
-Optionally inspect **[Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}**: select **IncidentProcessingWorkflow** in **Root Agent**, click **Refresh**, and expand the latest run. An empty default root is not evidence of failure; the standalone screenshot-analysis agent may be selected first.
+Optionally inspect **[Dev UI → Executions](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/executions){:target="_blank"}**: if multiple roots are available, select **IncidentProcessingWorkflow** in **Root Agent**. With a single root, no selector appears. Click **Refresh** and expand the latest run and its parent agent rows. **Topology** is a separate structure view, as shown [above](#inspect-the-topology-structure); switch to **Executions** to inspect recorded calls.
 
 #### F. Check the server runtime and troubleshoot missing evidence
 

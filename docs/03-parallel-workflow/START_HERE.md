@@ -148,14 +148,14 @@ Save both files. Quarkus hot-reloads.
 
 ## Step 3 — Verify in the Dev UI (1 min)
 
-Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the agent graph. Look for these two entries:
+Open [Agentic Dev UI → Agents](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the registration table. Use **Filter agents...** to find these two entries:
 
 | Agent | Type | Key detail |
 |-------|------|------------|
 | IncidentAnalysisWorkflow | ParallelMapperAgent | subAgent = IncidentAnalysisAgent, itemsProvider = "tasks" |
 | IncidentAnalysisAgent | Agent | outputKey = "incidentAnalysis" |
 
-This page visualizes every agent's type, `outputKey`, and sub-agent wiring — use it after every exercise to confirm your changes compiled and registered correctly.
+Check the **Type**, **Output Key**, **Sub-Agents**, and **Details** columns. Use this table after each exercise to confirm your changes compiled and registered correctly. The **Topology** tab displays the structure graph; **Executions** displays recorded invocations.
 
 ??? question "Why not a Java `for` loop instead of `itemsProvider`?"
     `AgenticScope` must be injected per-invocation so each parallel run gets its own scope context, result slot, and `outputKey` entry. A Java loop over LLM calls would run sequentially in the same thread with a shared scope — defeating both the parallelism and the scope isolation.
@@ -173,7 +173,7 @@ cd ../solutions/03-parallel-workflow
 ./mvnw quarkus:dev
 ```
 
-Open the [topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this solution has `IncidentProcessingWorkflow` fully wired, so the full agent tree is visible.
+Open [Dev UI → Topology](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/topology){:target="_blank"} — this solution has `IncidentProcessingWorkflow` fully wired, shown as a `processIncident` root card. Scroll down and horizontally as needed to follow the child branches. If a **Root Agent** selector appears, select `IncidentProcessingWorkflow`; the selector is hidden when only one root is available. This view shows structure even before an incident runs; use **Executions** after processing to inspect actual calls and timings.
 
 Open **[http://localhost:8080](http://localhost:8080){:target="_blank"}**, click **View** on Incident **#5** (email-service/notification-api), and process with:
 

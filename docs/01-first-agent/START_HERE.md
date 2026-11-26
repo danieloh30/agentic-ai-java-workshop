@@ -210,7 +210,7 @@ There should be no standalone-agent warning. `IncidentManagementService` invokes
 **Expected UI:** Incident #5 status → `TRIAGING`
 
 !!! tip "Agentic Dev UI"
-    Open the [Agentic Dev UI](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see all registered agents, their `outputKey`, sub-agents, and wiring. This is the fastest way to confirm your agent compiled and was picked up by the framework.
+    Open the [Agentic Dev UI → Agents](http://localhost:8080/q/dev-ui/quarkus-langchain4j-agentic/agents){:target="_blank"} to see the registration table: **Name**, **Type**, **Description**, **Output Key**, **Sub-Agents**, and **Details**. Use **Filter agents...** to find your agent and confirm it compiled and was picked up by the framework. **Topology** is the separate structure view; **Executions** shows recorded runs once a monitored workflow is available and has been invoked.
 
 Now process Incident **#6** (search-engine/product-search, status: `OPEN`) with:
 ```
