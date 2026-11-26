@@ -237,6 +237,12 @@ Stop both Quarkus processes (`Ctrl+C` in each terminal) before moving to Exercis
 
 ---
 
+## Optional extension — WildFly impact agent (+15–20 min)
+
+Continue Riley's Apex SRE story in [Exercise 7B](WILDFLY.md): host the remote impact agent on WildFly with LangChain4j CDI, using Podman or Docker locally. Keep the Quarkus main application as the caller and verify the A2A contract across runtimes. This is separate from the core 10-minute exercise and the multimodal bonus below.
+
+---
+
 ## Bonus — Multimodal log analysis (optional, +5 min)
 
 <span class="badge badge--code-along">Code</span>

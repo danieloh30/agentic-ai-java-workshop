@@ -1,8 +1,7 @@
 # Exercise 07 — Remote agents (A2A)
 
-`solution/` contains:
+- `multi-agent-system/` — Quarkus incident-management caller (port 8080).
+- `remote-a2a-agent/` — Quarkus impact-assessment service (port 8888).
+- `wildfly-impact-agent/` — optional WildFly / LangChain4j CDI replacement for the remote impact service (host port 8888).
 
-- `multi-agent-system/` — main fleet app (port 8080)
-- `remote-a2a-agent/` — pricing A2A service (port 8888)
-
-Upstream: `section-2/step-07`. Docs: `docs/07-a2a/START_HERE.md`
+Run one remote implementation at a time. See [Exercise 7](../../docs/07-a2a/START_HERE.md) and [optional Exercise 7B](../../docs/07-a2a/WILDFLY.md).
