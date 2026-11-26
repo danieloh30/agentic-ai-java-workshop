@@ -1,6 +1,6 @@
 package com.incidentmanagement.evidence;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.incidentmanagement.ScriptedModel;
 import dev.langchain4j.mcp.client.McpClient;
 import io.quarkiverse.langchain4j.mcp.runtime.McpClientName;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @QuarkusTestResource(ScriptedModel.class)
 class DeploymentEvidenceClientTest {
     @Inject @McpClientName("evidence") McpClient realClient;
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
 
     @Test
     void discoversBeforeExecutionAndReturnsEvidenceAcrossRepeatedRequests() {

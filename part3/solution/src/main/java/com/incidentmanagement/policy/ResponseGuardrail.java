@@ -1,6 +1,6 @@
 package com.incidentmanagement.policy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.incidentmanagement.model.Recommendation;
 
 import dev.langchain4j.data.message.AiMessage;
@@ -12,7 +12,7 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ResponseGuardrail implements OutputGuardrail {
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
 
     @Override
     public OutputGuardrailResult validate(AiMessage message) {

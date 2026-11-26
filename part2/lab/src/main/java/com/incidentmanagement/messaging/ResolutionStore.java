@@ -1,7 +1,7 @@
 package com.incidentmanagement.messaging;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import com.incidentmanagement.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -13,7 +13,7 @@ import java.util.*;
 /** Registration, correlation, duplicate protection and latest-result queries are supplied. */
 @ApplicationScoped
 public class ResolutionStore {
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
 
     @Transactional
     public IncidentEvent register(Integer incidentId, String report) {
@@ -25,7 +25,7 @@ public class ResolutionStore {
         ProcessingRequest row = new ProcessingRequest();
         row.requestId = event.requestId(); row.incidentId = incidentId; row.processingStatus = "PUBLISHED";
         try { row.inputJson = mapper.writeValueAsString(event); }
-        catch (JsonProcessingException e) { throw new IllegalStateException(e); }
+        catch (JacksonException e) { throw new IllegalStateException(e); }
         row.persistAndFlush();
         if (incident.status != IncidentStatus.RESOLVED && incident.status != IncidentStatus.ESCALATED)
             incident.status = IncidentStatus.IN_PROGRESS;
@@ -37,7 +37,7 @@ public class ResolutionStore {
         ProcessingRequest row = find(requestId);
         if (row == null) throw new NotFoundException("Unknown request");
         try { return mapper.readValue(row.inputJson, IncidentEvent.class); }
-        catch (JsonProcessingException e) { throw new IllegalStateException(e); }
+        catch (JacksonException e) { throw new IllegalStateException(e); }
     }
 
     @Transactional

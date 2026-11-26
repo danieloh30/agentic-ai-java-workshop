@@ -5,7 +5,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.incidentmanagement.agents.*;
 import com.incidentmanagement.model.*;
 import com.incidentmanagement.policy.*;
@@ -34,7 +34,7 @@ class ResponseTest {
     @Inject ModelInvocations agent;
     @Inject ResponseStore store;
     @Inject ResponseWorker worker;
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
     @Inject EvaluationService evaluations;
 
     @BeforeEach

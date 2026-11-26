@@ -1,6 +1,6 @@
 package com.incidentmanagement.evidence;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.mcp.client.McpClient;
 import io.quarkiverse.langchain4j.mcp.runtime.McpClientName;
@@ -12,7 +12,7 @@ import java.util.Map;
 @ApplicationScoped
 public class DeploymentEvidenceClient {
     @Inject @McpClientName("evidence") McpClient client;
-    @Inject ObjectMapper mapper;
+    @Inject JsonMapper mapper;
 
     public DeploymentEvidence fetch(String service) {
         try {
