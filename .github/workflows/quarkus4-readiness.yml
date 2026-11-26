@@ -1,0 +1,76 @@
+name: Quarkus 4 MCP compatibility
+
+on:
+  schedule:
+    # Dependabot checks at 06:00 Eastern; probe released artifacts afterwards.
+    - cron: "30 6 * * *"
+      timezone: America/New_York
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/quarkus4_readiness*.py"
+      - ".github/workflows/quarkus4-readiness.yml"
+      - ".github/dependabot.yml"
+      - "part2/**"
+      - "**/pom.xml"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: quarkus4-readiness-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: monitor
+          persist-credentials: false
+      - name: Test monitor safeguards
+        run: python3 -m unittest discover -s monitor/scripts -p 'quarkus4_readiness_test.py' -v
+      - name: Resolve the isolated migration commit
+        id: migration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/418" --jq '.head.sha')
+          [[ "$sha" =~ ^[a-f0-9]{40}$ ]]
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.migration.outputs.sha }}
+          path: migration
+          persist-credentials: false
+      - name: Select released Quarkus 4 and compatible extension candidates
+        run: python3 monitor/scripts/quarkus4_readiness.py resolve --output compatibility-report
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+          cache-dependency-path: |
+            migration/part2/**/pom.xml
+            compatibility-report/versions.json
+      - name: Test both Part 2 projects with the candidate stack
+        env:
+          MIGRATION_SHA: ${{ steps.migration.outputs.sha }}
+          ALLOW_KNOWN_BLOCKER: ${{ github.event_name == 'pull_request' }}
+        run: |
+          args=(probe --migration-root migration --output compatibility-report --migration-sha "$MIGRATION_SHA")
+          # PRs validate the monitor while the known upstream blocker exists.
+          # Daily/manual runs remain red while blocked, and turn green only when both suites pass.
+          if [[ "$ALLOW_KNOWN_BLOCKER" == true ]]; then args+=(--allow-known-blocker); fi
+          python3 monitor/scripts/quarkus4_readiness.py "${args[@]}"
+      - name: Publish versions and compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: quarkus4-mcp-compatibility-${{ github.run_id }}
+          path: compatibility-report/
+          if-no-files-found: warn
+          retention-days: 14
