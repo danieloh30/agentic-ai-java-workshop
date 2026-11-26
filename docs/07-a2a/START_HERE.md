@@ -399,7 +399,7 @@ Leave **Choose File** empty for this test; screenshot enrichment belongs to the 
 
 Example approval dialog for incident #1 (model-generated wording may vary):
 
-<a href="../../images/wildfly-human-approval.png"><img src="../../images/wildfly-human-approval.png" alt="Human approval dialog for incident 1 showing payment-gateway / checkout-api, business impact, the submitted outage report, an AI escalation recommendation, and Resolve Incident and Escalate to Management buttons" style="width:100%;max-width:960px;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
+<a href="../../images/wildfly-human-approval.png"><img src="../../images/wildfly-human-approval.png" alt="Human approval dialog for incident 1 showing payment-gateway / checkout-api, business impact, the submitted outage report, an AI escalation recommendation, and Resolve Incident and Escalate to Management buttons" style="width:100%;max-width:560px;height:auto;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);"></a>
 
 **Expected in the SPA:** a toast starts with **Decision: ESCALATE**, and the proposal disappears. The workflow then resumes. Make the decision within five minutes, before the demo approval timeout.
 
