@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 CENTRAL = "https://repo.maven.apache.org/maven2/"
 PROJECTS = ("part2/lab", "part2/solution")
 VERSION = re.compile(r"^(\d+(?:\.\d+){1,3})(?:[.-](Alpha|Beta|CR|RC|Final)(\d*))?$", re.I)
-BLOCKERS = ("io/quarkus/jackson/ObjectMapperCustomizer", "io.quarkus.jackson.ObjectMapperCustomizer")
+BLOCKER = re.compile(r"(?:ClassNotFoundException|NoClassDefFoundError)[^\n]*io[./]quarkus[./]jackson[./]ObjectMapperCustomizer")
 
 
 def version_key(value):
@@ -124,7 +124,7 @@ def classify(returncode, log, counts, evidence_passed):
             "Could not resolve host", "Could not transfer artifact", "Could not resolve dependencies",
             "Could not find a valid Docker environment", "Could not connect to Ryuk")):
         return "error"
-    if any(term in log for term in BLOCKERS):
+    if BLOCKER.search(log):
         return "blocked"
     return "regression"
 

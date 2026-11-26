@@ -57,6 +57,7 @@ class ReadinessTest(unittest.TestCase):
         self.assertEqual('blocked', monitor.classify(1, marker, counts, False))
         self.assertEqual('error', monitor.classify(1, marker + '\nCould not transfer artifact', counts, False))
         self.assertEqual('regression', monitor.classify(1, 'AssertionFailedError: protocol mismatch', counts, False))
+        self.assertEqual('regression', monitor.classify(1, 'Migrated io.quarkus.jackson.ObjectMapperCustomizer\nAssertionFailedError', counts, False))
         self.assertEqual('error', monitor.classify(124, '', counts, False))
 
     def test_one_passing_project_does_not_clear_the_blocker(self):
