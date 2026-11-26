@@ -85,7 +85,6 @@ nav:
       - "5. AI governance": 05-ai-governance/START_HERE.md
       - "6. Human gate + tracing": 06-hitl-observability/START_HERE.md
       - "7. Remote agents (A2A)": 07-a2a/START_HERE.md
-      - "7B. WildFly impact agent (optional)": 07-a2a/WILDFLY.md
       - "8. Quality loop (bonus)": 08-quarkus-flow/START_HERE.md
   - "Part 2 — From Patterns to Production":
       - "9. Structured planning": 09-plan-execute/START_HERE.md

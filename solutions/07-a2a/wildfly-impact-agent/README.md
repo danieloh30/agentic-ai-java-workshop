@@ -1,8 +1,8 @@
-# Optional Exercise 7B — WildFly impact agent
+# Exercise 7 optional runtime — WildFly impact agent
 
 Riley's Apex Systems impact-assessment agent, hosted on WildFly with LangChain4j CDI. The Quarkus Exercise 7 application remains the A2A caller. This is an optional 15–20 minute extension.
 
-See the [exercise guide](../../../docs/07-a2a/WILDFLY.md) for the enterprise context, verification steps, and discussion prompts.
+See the [Exercise 7 optional WildFly subsection](../../../docs/07-a2a/START_HERE.md#optional-wildfly-impact-agent) for the enterprise context, verification steps, and discussion prompts.
 
 Prerequisites: Java 25, the existing workshop Maven wrapper, an exported `OPENAI_API_KEY`, and running Podman or Docker. Free port 8888 by stopping Exercise 7's Quarkus remote agent first.
 
