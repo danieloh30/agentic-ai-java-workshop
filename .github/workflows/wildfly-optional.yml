@@ -1,0 +1,40 @@
+name: WildFly optional exercise
+
+on:
+  pull_request:
+    paths:
+      - "solutions/07-a2a/wildfly-impact-agent/**"
+      - "solutions/07-a2a/multi-agent-system/**"
+      - ".github/workflows/wildfly-optional.yml"
+  push:
+    branches: [main]
+    paths:
+      - "solutions/07-a2a/wildfly-impact-agent/**"
+      - "solutions/07-a2a/multi-agent-system/**"
+      - ".github/workflows/wildfly-optional.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  container-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Test actual WildFly and Quarkus A2A interoperability
+        env:
+          CONTAINER_ENGINE: docker
+        run: python3 solutions/07-a2a/wildfly-impact-agent/smoke.py
+      - name: Show server diagnostics on failure
+        if: failure()
+        run: |
+          if test -f solutions/07-a2a/wildfly-impact-agent/target/smoke-server.log; then
+            tail -100 solutions/07-a2a/wildfly-impact-agent/target/smoke-server.log
+          fi
